@@ -1,63 +1,52 @@
-# IS207 — Main Project
+<p align="center">
+  <a href="https://www.uit.edu.vn/" title="Trường Đại học Công nghệ Thông tin">
+    <img src="https://i.imgur.com/WmMnSRt.png" alt="Trường Đại học Công nghệ Thông tin | University of Information Technology">
+  </a>
+</p>
 
-Repository đồ án chính môn **Phát triển ứng dụng web — IS207.R11**, nhóm **PHP Is Awesome**, lớp thực hành **TH.2**.
+<h1 align="center"><b>IS207.R11 - PHÁT TRIỂN ỨNG DỤNG WEB</b></h1>
 
-## Trạng thái
+## BẢNG MỤC LỤC
 
-**Giai đoạn hiện tại: xác định đề tài và chuẩn bị báo cáo TH2.** Tên sản phẩm, phạm vi nghiệp vụ và ngày báo cáo TH2 đang chờ nhóm xác nhận. Repository dùng tên môn học và có thể đổi tên khi đề tài được chốt.
+- [Giới thiệu môn học](#giới-thiệu-môn-học)
+- [Giới thiệu đồ án môn học](#giới-thiệu-đồ-án-môn-học)
+- [Thành viên nhóm](#thành-viên-nhóm)
 
-Repository này hiện chứa tài liệu khởi tạo. Ứng dụng PHP và cơ sở dữ liệu chưa được triển khai; chưa có demo hoặc hướng dẫn chạy một hệ thống hoàn chỉnh.
+## GIỚI THIỆU MÔN HỌC
 
-## Liên kết
+- **Tên môn học:** Phát triển ứng dụng web
+- **Mã môn học:** IS207.R11
+- **Giảng viên hướng dẫn:** ThS. **Tạ Việt Phương**
+- **Email:** *phuongtv@uit.edu.vn*
 
-- [Project Hub chung trên Notion](https://app.notion.com/p/3ee533490aed81719583de1253e9cb2d)
-- [Project chính — Board và checklist TH2](https://app.notion.com/p/3ee533490aed8193a1a6cb261a1391e7)
-- [Repository Mini Project — MajorWeave](https://github.com/haiphamt/majorweave-mini-project)
-- [Thỏa thuận và đóng góp](https://app.notion.com/p/3ee533490aed8146a1d1c3cee0c0bd5f)
+---
 
-## Nhóm thực hiện và phân công TH2
+## GIỚI THIỆU ĐỒ ÁN MÔN HỌC
 
-| Thành viên | Phần phụ trách |
-|---|---|
-| Phạm Tuấn Hải | Điều phối, chốt phạm vi, tích hợp và duyệt cuối |
-| Nguyễn Thị Quỳnh Hân | Nhu cầu thị trường, khách hàng, đối thủ và đề xuất đề tài |
-| Phạm Công Định | Project Charter, SOW, yêu cầu và luồng nghiệp vụ |
-| Chung Minh Hiếu | Định vị thương hiệu, palette, logo, typography và style guide |
-| Lê Nguyễn Hữu Hiếu | Sitemap, sketch/wireframe và mockup trang chủ |
-| Triệu Quang Huy | Repository/giới thiệu, WBS/tiến độ và gói báo cáo TH2 |
+- **Tên đề tài:** TravelGo - Nền tảng khám phá địa điểm và lập lịch trình du lịch thông minh
+- **Repository:** [haiphamt/is207-main-project](https://github.com/haiphamt/is207-main-project)
+- **Thiết kế Figma:** [TravelGo](https://www.figma.com/design/QYzdMjHKiquZjUAvHUdXhq/TravelGo?node-id=43-2)
 
-Phân công là kế hoạch, chưa phải xác nhận đóng góp đã hoàn thành. Mỗi thành viên dùng tài khoản Git riêng; liên kết commit/PR và minh chứng vào task `MAxx` trên Notion.
+TravelGo là đồ án xây dựng nền tảng web hỗ trợ người dùng khám phá địa điểm ăn uống, cà phê, vui chơi và du lịch theo nhu cầu, sở thích và khu vực. Dự án hướng tới việc kết hợp tìm kiếm địa điểm, xem bản đồ, lập lịch trình và lựa chọn điểm đến cùng bạn bè trong một trải nghiệm thống nhất.
 
-## Yêu cầu công nghệ của môn học
+**Các chức năng dự kiến:**
 
-- Backend chính: **PHP**.
-- Cơ sở dữ liệu chính: **MySQL/MariaDB**.
-- Mã nguồn thể hiện phân tách trách nhiệm **Model — View — Controller**.
-- Frontend: HTML, CSS, JavaScript hoặc thư viện/framework phù hợp; stack cụ thể chờ nhóm quyết định.
-- Node/npm có thể dùng cho công cụ build frontend. Node.js, Python và Java trong mini là các hướng học của sinh viên, không quyết định backend của đồ án chính.
+- Tìm kiếm và lọc địa điểm theo thành phố, khu vực, danh mục và đánh giá.
+- Xem thông tin chi tiết, hình ảnh, giờ hoạt động và vị trí địa điểm trên bản đồ.
+- Lưu địa điểm yêu thích, tham khảo và chia sẻ đánh giá.
+- Tạo lịch trình thủ công hoặc nhận gợi ý bằng AI theo thời gian, ngân sách và sở thích; quản lý các hoạt động trong chuyến đi.
+- Tạo phòng cùng bạn bè, bình chọn và thống nhất địa điểm phù hợp với nhóm.
+- Đóng góp địa điểm mới; hỗ trợ quản trị viên quản lý địa điểm, người dùng và kiểm duyệt nội dung.
 
-## Mục tiêu báo cáo TH2
+---
 
-Xem [checklist chi tiết](docs/TH2_CHECKLIST.md): đề tài/thị trường, nhận diện, Charter/SOW và quản lý dự án, repository/trang giới thiệu, sketch/mockup trang chủ và sitemap.
+## THÀNH VIÊN NHÓM
 
-## Quy trình đóng góp
-
-1. Nhận task trên Notion, ghi đầu ra và tiêu chí hoàn thành.
-2. Tạo branch theo công việc, ví dụ `docs/ma04-project-charter`.
-3. Commit có ý nghĩa, mở Pull Request và gắn mã task.
-4. Thành viên khác kiểm tra; chỉ ghi hoàn thành sau khi có review và bằng chứng.
-5. Cập nhật README với đề tài, kiến trúc, cấu hình/chạy, SQL/seed và demo khi các phần đó được hiện thực.
-
-Không đưa secret hoặc thông tin đăng nhập thật vào repository. Khi dùng AI, lưu các quyết định và cách xác minh kết quả thực tế trong AI Development Log của nhóm.
-
-## Cấu trúc hiện tại
-
-```text
-README.md                Giới thiệu và trạng thái đồ án
-docs/TH2_CHECKLIST.md     Checklist và đầu ra báo cáo TH2
-.github/                 Mẫu Pull Request
-```
-
-## Kiến trúc, dữ liệu và vận hành
-
-Kiến trúc, ERD, module và quy trình triển khai sẽ được bổ sung sau khi chốt đề tài/SOW. Hướng dẫn cài đặt/chạy, cấu hình môi trường, migration/SQL/seed, tài khoản demo và kết quả kiểm thử phải phản ánh hệ thống thực tế.
+| STT | MSSV | Họ và Tên | Github | Email |
+|-----|:----:|-----------|--------|-------|
+| 1 | 24520442 | Phạm Tuấn Hải | [haiphamt](https://github.com/haiphamt) | 24520442@gm.uit.edu.vn |
+| 2 | 24520013 | Nguyễn Thị Quỳnh Hân | [QuynhHan486](https://github.com/QuynhHan486) | nguyenhan04081999@gmail.com |
+| 3 | 24520306 | Phạm Công Định | [Dingglebell](https://github.com/Dingglebell) | dinhphmlp@gmail.com |
+| 4 | 24520486 | Chung Minh Hiếu | [chungminhhieu2311-collab](https://github.com/chungminhhieu2311-collab) | chungminhhieu2311@gmail.com |
+| 5 | 24520495 | Lê Nguyễn Hữu Hiếu | [lihanhutiu](https://github.com/lihanhutiu) | huuhieu1209@gmail.com |
+| 6 | 24520708 | Triệu Quang Huy | [1can5ez](https://github.com/1can5ez) | 24520708@gm.uit.edu.vn |
