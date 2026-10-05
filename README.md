@@ -24,7 +24,7 @@
 ## GIỚI THIỆU ĐỒ ÁN MÔN HỌC
 
 - **Tên đề tài:** TravelGo - Nền tảng khám phá địa điểm và lập lịch trình du lịch thông minh
-- **Repository:** [haiphamt/is207-main-project](https://github.com/haiphamt/is207-main-project)
+- **Repository:** [haiphamt/is207-main-project](https://github.com/haiphamt/TravelGo)
 - **Thiết kế Figma:** [TravelGo](https://www.figma.com/design/QYzdMjHKiquZjUAvHUdXhq/TravelGo?node-id=43-2)
 
 TravelGo là đồ án xây dựng nền tảng web hỗ trợ người dùng khám phá địa điểm ăn uống, cà phê, vui chơi và du lịch theo nhu cầu, sở thích và khu vực. Dự án hướng tới việc kết hợp tìm kiếm địa điểm, xem bản đồ, lập lịch trình và lựa chọn điểm đến cùng bạn bè trong một trải nghiệm thống nhất.
