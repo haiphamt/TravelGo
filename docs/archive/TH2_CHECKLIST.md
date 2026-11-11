@@ -1,5 +1,7 @@
 # Checklist báo cáo TH2
 
+> **Tài liệu lưu trữ.** Checklist này thuộc đợt báo cáo TH2. Xem [README hiện hành](../../README.md#giới-thiệu-đồ-án-môn-học) để tìm phân công lập trình.
+
 Nguồn: ảnh yêu cầu “IV. Bài tập về nhà” do nhóm cung cấp. Ngày báo cáo TH2 đang chờ xác nhận. Các đầu ra dưới đây là kế hoạch, chưa đánh dấu hoàn thành.
 
 | Nhóm yêu cầu | Task Notion | Chủ trì | Đầu ra |
