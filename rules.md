@@ -16,11 +16,32 @@
 
 ## 3. Nhánh, commit và pull request
 
-1. Cập nhật nhánh gốc trước khi tách nhánh. Chọn nhánh đã có phần mã mà task phụ thuộc. Trong lúc frontend chưa được hợp nhất vào `main`, các task cần mã frontend lấy mốc từ `feat/travelgo-frontend`. Ghi nhánh đích trong PR để người review biết nơi tích hợp.
-2. Tạo nhánh riêng theo task, ví dụ `feat/auth-roles`, `feat/place-api`, `fix/trip-validation`. Dùng tài khoản GitHub của mình. Kiểm tra `git status` và `git diff --staged` trước khi commit.
+1. Cả nhóm thống nhất một nhánh tích hợp trước khi tách nhánh. Mốc hiện có cả frontend và quy tắc nhóm là `feat/travelgo-frontend`. Nếu bắt đầu trước khi mốc này vào `main`, tạo nhánh từ `feat/travelgo-frontend` và mở PR về nhánh đó. Sau khi nhóm hợp nhất mốc bàn giao, lấy `main` đã cập nhật làm gốc cho task mới.
+2. Tạo nhánh riêng theo task. Dùng `feat/` cho chức năng mới, `fix/` cho sửa lỗi và `test/` cho task chỉ bổ sung kiểm thử. Dùng tài khoản GitHub của mình. Kiểm tra `git status` và `git diff --staged` trước khi commit.
 3. Mỗi commit chứa một thay đổi có mục đích rõ, ví dụ `feat(api): add place search filters` hoặc `test(auth): reject updates by unauthorized owners`. Có thể có nhiều commit cho một task.
 4. Push nhánh và mở **một PR cho một task hoặc một nhóm thay đổi liên quan trực tiếp**. Dùng Draft PR khi cần góp ý sớm. Dùng [mẫu PR hiện có](.github/pull_request_template.md) và điền mã task của backlog TravelGo.
 5. Mời ít nhất một thành viên khác review. Nếu chạm `frontend/`, mời người phụ trách frontend xem phần tích hợp. Chỉ hợp nhất sau khi đã xử lý các góp ý cần sửa, giải quyết xung đột và chạy kiểm tra trên bản cuối. Đưa thay đổi vào `main` qua PR đã được review.
+
+### Nhánh đề xuất cho 5 phần việc
+
+| Phần việc | Nhánh bắt đầu |
+| --- | --- |
+| Khung Laravel, MySQL và dữ liệu | `feat/backend-foundation` |
+| Tài khoản và phân quyền | `feat/auth-roles` |
+| Địa điểm, Góc Địa Phương, yêu thích và đánh giá | `feat/places-reviews` |
+| Lịch trình và phòng cùng đi | `feat/trips-rooms` |
+| Đóng góp, quyền quản lý và xét duyệt | `feat/owner-moderation` |
+
+Người phụ trách khung backend mở PR đầu tiên để nhóm dùng chung cấu hình Laravel, MySQL và dữ liệu thử. Những người làm API có thể thống nhất hợp đồng API trong lúc chờ review. Tách nhánh triển khai từ nhánh tích hợp sau khi PR khung backend đã được hợp nhất. Tách nhánh mới khi nhận task độc lập tiếp theo.
+
+Ví dụ tạo nhánh API địa điểm khi nhóm đang tích hợp trên `feat/travelgo-frontend`:
+
+```sh
+git fetch origin
+git switch -c feat/places-reviews origin/feat/travelgo-frontend
+```
+
+Sau khi đã commit, chạy `git push -u origin feat/places-reviews`. Trên GitHub chọn **base** là `feat/travelgo-frontend` và **compare** là `feat/places-reviews`. Khi nhóm đã chuyển mốc tích hợp về `main`, dùng `main` cho cả nhánh gốc và PR đích của task mới.
 
 PR cần cho người review biết:
 
@@ -37,25 +58,32 @@ PR cần cho người review biết:
 - Backend kiểm tra dữ liệu và quyền cho từng thao tác, kể cả khi giao diện đã ẩn nút. Kiểm tra quyền theo đúng tài khoản, địa điểm hoặc phòng. Ví dụ, Chủ cơ sở chỉ sửa địa điểm được cấp quyền và chỉ chủ phòng mới chốt bình chọn.
 - Thống nhất dữ liệu thiếu, danh sách rỗng, phân trang và lỗi quyền truy cập. Giữ `null` cho giá hoặc tọa độ chưa biết, tránh trả giá, điểm đánh giá hoặc trạng thái mở cửa tự điền. Xử lý trường hợp API lỗi hoặc tải chậm trong các trạng thái giao diện đang có.
 
-## 5. Dữ liệu, ảnh và môi trường
+## 5. Quy tắc cho người phụ trách dữ liệu
 
-- Thay đổi cấu trúc MySQL qua migration để các máy chạy lại được. Dùng factory hoặc seed có thể tái tạo cho phát triển và kiểm thử. Nếu cần xóa hoặc chuyển đổi dữ liệu khi chạy migration, ghi rõ ảnh hưởng và cách kiểm tra trong PR.
-- Bảo toàn nguồn, tác giả và giấy phép khi nhập địa điểm hoặc ảnh. Chỉ đưa ảnh đúng địa điểm có quyền dùng lại vào kho công khai. Dữ liệu demo tự tạo phải được ghi rõ là demo. Chuyển dữ liệu thử từ trình duyệt sang hệ thống thật cần có luồng nhập dữ liệu được nhóm thống nhất.
+- Quản lý schema MySQL bằng migration, dữ liệu thử bằng factory hoặc seeder trong `backend/database/`. Khi cần đổi schema đã được hợp nhất, thêm migration mới. Với migration xóa hoặc chuyển đổi dữ liệu, ghi rõ ảnh hưởng và cách kiểm tra trong PR.
+- Khi nhập địa điểm, giữ mã nguồn và ánh xạ với ID trong MySQL. Dùng cặp nguồn và mã nguồn để nhận diện bản ghi đã nhập. Chạy lại importer hoặc seeder cần cho kết quả ổn định và tránh tạo trùng. Kiểm tra địa chỉ, phạm vi tọa độ, danh mục và các trường bắt buộc trước khi đưa vào danh mục.
+- Ghi nguồn, thời điểm lấy dữ liệu và quyền sử dụng trong metadata hiện có hoặc trong PR. Với ảnh, lưu tác giả, liên kết gốc và giấy phép. Đối chiếu đúng địa điểm hoặc chi nhánh trước khi ghép ảnh. Ảnh Local đang chờ xác nhận quyền dùng lại được giữ ngoài kho công khai.
+- Giữ `null` cho giá, giờ, tọa độ hoặc thông tin chưa biết. Dữ liệu demo tự tạo cần có nhãn demo. Dùng dữ liệu thử riêng cho kiểm thử và chạy thử migration hoặc import trên cơ sở dữ liệu phát triển. Chuyển dữ liệu thử từ trình duyệt sang hệ thống thật cần có luồng nhập được nhóm thống nhất.
+- PR dữ liệu cần ghi nguồn, lệnh chạy lại, số bản ghi đã thêm hoặc cập nhật, số mục bị loại và lý do nếu có. Kèm test cho các trường hợp trùng mã, thiếu trường, tọa độ sai, chạy nhập lại hoặc vi phạm ràng buộc có liên quan đến thay đổi.
+
+## 6. Môi trường và bảo mật
+
 - Giữ mật khẩu, token, API key và cấu hình cá nhân trong môi trường cục bộ hoặc dịch vụ quản lý cấu hình. `.env.example` chỉ chứa tên biến và giá trị mẫu. Loại thông tin nhạy cảm khỏi log, ảnh chụp và dữ liệu seed. Báo nhóm để thu hồi ngay nếu secret bị lộ trong commit.
 - Dùng kiểm tra đầu vào phía Laravel, cơ chế phân quyền và truy vấn tham số hóa của framework. Khi gặp lỗi, trả thông báo đủ để người dùng xử lý và giữ chi tiết kỹ thuật trong log phù hợp.
 
-## 6. Kiểm thử thuộc về người làm task
+## 7. Người viết code phải viết kiểm thử
 
-- Với mỗi luồng thay đổi, kiểm tra ít nhất tình huống thành công và các tình huống sai, thiếu quyền hoặc vượt giới hạn có liên quan. Nếu sửa lỗi có thể tái hiện bằng code, thêm hoặc cập nhật test để lỗi khó quay lại.
-- Khi chạm frontend, chạy `npm test` và `npm run build` trong `frontend/`. Khi tích hợp luồng người dùng, thử trực tiếp trên desktop và mobile. Dùng Playwright cho các luồng trình duyệt chính khi bộ test đó được thiết lập.
-- Khi chạm backend, chạy `php artisan test` trong `backend/`. Viết Laravel Feature Test cho API mới hoặc thay đổi quan trọng. Dùng cơ sở dữ liệu kiểm thử và dữ liệu mẫu riêng cho các test ghi hoặc xóa dữ liệu.
-- Ghi cách kiểm tra và kết quả thực tế trong PR. Nếu chưa chạy được một kiểm tra vì còn phụ thuộc task khác, ghi rõ điều còn thiếu để người review biết phần nào chưa được xác minh.
+- Mỗi PR thêm hoặc sửa hành vi của ứng dụng phải có **test tự động mới hoặc test được cập nhật** ngay trong cùng PR. Người làm task chịu trách nhiệm viết và chạy test cho phần mình. Với lỗi đã sửa, test cần tái hiện được tình huống từng gây lỗi.
+- **Logic độc lập** như kiểm tra ngày, giới hạn điểm ghé, chuẩn hóa dữ liệu hoặc tính chi phí cần unit test. Dùng `node:test` trong `frontend/tests/` cho logic TypeScript và PHPUnit trong `backend/tests/Unit/` cho logic PHP.
+- **API, phân quyền và cơ sở dữ liệu** cần Laravel Feature Test trong `backend/tests/Feature/`. Kiểm tra kết quả thành công và các trường hợp đầu vào sai, thiếu quyền, trùng hoặc vượt giới hạn phù hợp với task. Test ghi hoặc xóa dữ liệu chạy trên cơ sở dữ liệu kiểm thử.
+- **Luồng trình duyệt** kiểm tra bằng Playwright khi bộ test chung đã được thiết lập. Khi thay đổi tích hợp, thử luồng liên quan trên desktop và mobile. Trong `frontend/`, chạy `npm test` và `npm run build`. Trong `backend/`, chạy `php artisan test`.
+- Ghi lệnh đã chạy, kết quả và trường hợp test chính trong PR. Nếu test còn chờ phụ thuộc, giữ PR ở trạng thái Draft và ghi rõ phần đang chờ. PR chỉ sửa tài liệu hoặc định dạng có thể ghi cách rà soát phù hợp với thay đổi đó.
 
-## 7. Dùng AI và mã tham khảo
+## 8. Dùng AI và mã tham khảo
 
 - Thành viên chịu trách nhiệm về code mình gửi và phải giải thích được luồng xử lý, cách test và các quyết định chính. Đọc diff do AI tạo trước khi đưa vào PR.
 - Ghi nguồn cho mã, thư viện, ảnh và dữ liệu bên ngoài. Khi AI hỗ trợ thay đổi đáng kể, ghi ngắn gọn phần AI làm và cách bạn kiểm tra kết quả. Giữ quyền truy cập tài khoản và dữ liệu của nhóm trong phạm vi cần thiết cho task.
 
-## 8. Khi nào được đánh dấu hoàn thành
+## 9. Khi nào được đánh dấu hoàn thành
 
 Khi mở PR, cập nhật task sang chờ review và gắn link PR vào backlog. Đánh dấu hoàn thành khi đạt đầu ra đã thống nhất, có kết quả kiểm tra và PR đã được hợp nhất hoặc phần bàn giao đã được nhóm chấp nhận. Ghi rõ phụ thuộc còn mở và các bước cần thiết để thành viên tiếp theo có thể chạy hoặc tích hợp phần đó.
