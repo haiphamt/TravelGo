@@ -1,6 +1,8 @@
 # TravelGo — Phạm vi và định hướng triển khai
 
-**Ngày chốt:** 17/10/2026. **Học phần:** IS207.R11 — Phát triển ứng dụng web. **Giảng viên:** ThS. Tạ Việt Phương. **Loại đồ án:** Project chính. **Nhóm:** 6 thành viên, danh sách tại [README](../README.md#thành-viên-nhóm).
+> **Tài liệu lưu trữ.** Bản định hướng tháng 10 ghi lại quyết định tại thời điểm lập. Xem [README hiện hành](../../README.md#giới-thiệu-đồ-án-môn-học) để biết phạm vi và trạng thái triển khai.
+
+**Ngày chốt:** 17/10/2026. **Học phần:** IS207.R11 — Phát triển ứng dụng web. **Giảng viên:** ThS. Tạ Việt Phương. **Loại đồ án:** Project chính. **Nhóm:** 6 thành viên, danh sách tại [README](../../README.md#thành-viên-nhóm).
 
 Tài liệu ghi nhận các quyết định sau thảo luận của nhóm về đánh giá, Góc Địa Phương, actor, đối thủ và công nghệ. Đây là căn cứ cập nhật yêu cầu, Figma và kế hoạch lập trình; không phải biên bản nghiệm thu phần mềm. Tại thời điểm cập nhật, repository chưa có mã nguồn ứng dụng Angular/Laravel. Tài liệu có sử dụng AI hỗ trợ tổng hợp; nhận định cạnh tranh được giới hạn theo nguồn công khai đã kiểm tra.
 
