@@ -1,0 +1,49 @@
+<div class="workflow-shell">
+  <div class="page-heading">
+    <div><h1>Đóng góp địa điểm</h1><p>Chia sẻ địa điểm bạn biết ở TP.HCM và theo dõi kết quả xét duyệt.</p></div>
+    <a class="button secondary" routerLink="/kham-pha"><tg-icon name="compass" />Khám phá địa điểm</a>
+  </div>
+  <p class="workflow-note"><tg-icon name="info" /><span>Bản thử lưu yêu cầu trên trình duyệt này. Nội dung được duyệt sẽ hiển thị trong danh mục thử trên cùng trình duyệt.</span></p>
+
+  <div class="workflow-actions" role="group" aria-label="Chọn tác vụ đóng góp">
+    @for (item of views; track item.key) {
+      <button type="button" class="button" [class.primary]="view() === item.key" [class.secondary]="view() !== item.key"
+        [attr.aria-pressed]="view() === item.key" (click)="changeView(item.key)">{{ item.label }}</button>
+    }
+  </div>
+
+  @if (view() === 'history') {
+    @if (store.ready()) {
+      <tg-workflow-history [entries]="entries()" [busy]="withdrawing()" (edit)="edit($event)" (withdraw)="withdraw($event)" />
+    } @else {
+      <section class="workflow-panel"><h2>Đóng góp của tôi</h2><p class="muted" role="status">Đang đọc yêu cầu đã lưu…</p></section>
+    }
+  } @else {
+    @if (view() === 'new' && store.catalogStatus() === 'loading') {
+      <p class="muted" role="status">Đang tải danh mục địa điểm…</p>
+    } @else if (view() === 'new' && store.catalogStatus() === 'error') {
+      <section class="workflow-panel">
+        <h2>Chưa tải được danh mục</h2><p class="message error" role="alert">{{ store.catalogError() }}</p>
+        <button type="button" class="button secondary" (click)="store.loadCatalog()">Tải lại danh mục</button>
+      </section>
+    }
+    @if (view() !== 'new' && !editing()) {
+      <section class="workflow-panel">
+        <h2>Chọn địa điểm</h2>
+        <tg-workflow-place-picker [selectedId]="selectedId()" (selectedIdChange)="selectedId.set($event)" />
+        @if (selectedId() && !place() && store.catalogStatus() === 'ready') {
+          <p class="message error" role="alert">Địa điểm từ liên kết hiện không có trong danh mục. Hãy chọn địa điểm khác.</p>
+        }
+      </section>
+    }
+    @if (view() === 'new' || place()) {
+      <tg-proposal-form actor="user" [kind]="formKind()" [place]="view() === 'new' ? null : place()" [editing]="editing()"
+        (completed)="changeView('history')" (cancel)="changeView('history')" />
+    } @else if (editing()) {
+      <section class="workflow-panel"><h2>Bổ sung yêu cầu</h2>
+        <p class="muted">Chưa tìm thấy hồ sơ cần bổ sung trong danh mục.</p>
+        <button class="button secondary" type="button" (click)="changeView('history')">Quay lại lịch sử</button>
+      </section>
+    }
+  }
+</div>

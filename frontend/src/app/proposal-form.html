@@ -1,0 +1,122 @@
+<section class="workflow-panel" aria-labelledby="proposal-heading">
+  <h2 id="proposal-heading" #heading tabindex="-1">{{ editing() ? 'Bổ sung yêu cầu' : labels.kind[kind()] }}</h2>
+  @if (place(); as target) {
+    <p class="muted">{{ target.name }} · {{ target.area }}</p>
+  }
+  @if (editing()?.history?.at(-1); as event) {
+    <p class="workflow-note"><tg-icon name="info" /><span>Quản trị viên yêu cầu bổ sung. {{ event.reason }}</span></p>
+  }
+  @if (stale()) {
+    <p class="workflow-note" role="status"><tg-icon name="info" /><span>Hồ sơ đã thay đổi trong khi bạn nhập. Hãy nạp bản hiện hành để đối chiếu trước khi gửi.</span></p>
+    <div class="workflow-actions"><button class="button secondary" type="button" [disabled]="saving()" (click)="rebase()">Nạp bản mới và giữ phần đã sửa</button></div>
+  } @else if (rebased()) {
+    <p class="workflow-note" role="status"><tg-icon name="check" /><span>Đã nạp bản hiện hành và giữ các trường bạn đã sửa. Hãy kiểm tra lại nội dung đề xuất.</span></p>
+  }
+
+  @if (kind() === 'report' && !reportAvailable()) {
+    <p class="muted">{{ editing() ? 'Đánh giá hoặc ảnh trong yêu cầu đã thay đổi. Bạn có thể gửi báo cáo cho phiên bản hiện hành.' : 'Địa điểm này chưa có đánh giá thử hiện hành để báo cáo.' }}</p>
+    @if (editing()) { <button class="button secondary" type="button" (click)="cancel.emit()">Quay lại lịch sử</button> }
+  } @else {
+    <form (ngSubmit)="send()" ngNativeValidate>
+      <div class="workflow-fields">
+        @if (kind() === 'update') {
+          <label class="workflow-wide">
+            <span>Nội dung cập nhật</span>
+            <select name="change" [ngModel]="change()" (ngModelChange)="change.set($event)">
+              @for (item of changes; track item) { <option [ngValue]="item">{{ labels.change[item] }}</option> }
+            </select>
+          </label>
+        }
+
+        @if (details()) {
+          <label><span>Tên địa điểm</span><input name="name" [(ngModel)]="fields.name" maxlength="240" required /></label>
+          <label><span>Danh mục</span><select name="category" [(ngModel)]="fields.category">
+            @for (category of categories; track category.id) { <option [ngValue]="category.id">{{ category.name }}</option> }
+          </select></label>
+          <label class="workflow-wide"><span>Địa chỉ hoặc khu vực tại TP.HCM</span><input name="area" [(ngModel)]="fields.area" maxlength="240" [required]="creating()" /></label>
+          <label class="workflow-wide"><span>Mô tả</span><textarea name="description" rows="3" maxlength="1200" [(ngModel)]="fields.description"></textarea></label>
+          <label><span>Món chính, mỗi dòng một món</span><textarea name="products" rows="3" maxlength="2019" [(ngModel)]="fields.productsText"></textarea></label>
+          <label><span>Giá tham khảo (đồng/người)</span><input name="price" type="number" min="0" step="1" placeholder="Chưa có giá" [(ngModel)]="fields.price" /></label>
+          <div class="workflow-wide">
+            <label><span>Ảnh địa điểm (JPG, PNG hoặc WebP, tối đa 5 MB)</span>
+              <input type="file" accept="image/jpeg,image/png,image/webp" [disabled]="photoReading() || saving()" (change)="readPhoto($event)" />
+            </label>
+            @if (photoReading()) { <p class="muted small" role="status">Đang đọc ảnh…</p> }
+          </div>
+          @if (photo()) {
+            <div class="workflow-wide workflow-photo-preview">
+              <img [src]="photo()" alt="Ảnh địa điểm được đề xuất" />
+              <button type="button" class="text-button" [disabled]="saving()" (click)="removePhoto()">Bỏ ảnh đã chọn</button>
+            </div>
+            <label class="workflow-wide"><span>Ghi công ảnh</span><input name="credit" maxlength="160" required [(ngModel)]="credit" /></label>
+            <label class="workflow-wide workflow-check"><input name="rights" type="checkbox" required [(ngModel)]="rightsConfirmed" />
+              <span>Tôi có quyền sử dụng ảnh này cho đề xuất.</span>
+            </label>
+          }
+        }
+
+        @if (creating() || change() === 'hours' && kind() === 'update') {
+          <label class="workflow-wide"><span>Giờ bán tham khảo</span><textarea name="hours" rows="3" [(ngModel)]="fields.hours" maxlength="240" placeholder="Để trống nếu chưa biết"></textarea></label>
+        }
+        @if (move()) {
+          <label class="workflow-wide"><span>Địa chỉ hoặc mốc nhận biết tại vị trí mới</span><input name="moveArea" [(ngModel)]="fields.area" maxlength="240" required /></label>
+        }
+        @if (creating() || move()) {
+          <label><span>Vĩ độ</span><input name="lat" type="number" min="-90" max="90" step="any" [required]="move()" [(ngModel)]="fields.lat" /></label>
+          <label><span>Kinh độ</span><input name="lng" type="number" min="-180" max="180" step="any" [required]="move()" [(ngModel)]="fields.lng" /></label>
+          <label class="workflow-wide workflow-check"><input name="hcm" type="checkbox" required [(ngModel)]="hcmConfirmed" />
+            <span>Tôi xác nhận địa điểm này nằm tại TP.HCM.</span>
+          </label>
+        }
+
+        @if (kind() === 'update') {
+          <label><span>Hiệu lực từ (giờ TP.HCM)</span><input name="effectiveFrom" type="datetime-local" [(ngModel)]="effectiveFrom" /><small class="muted">Để trống để áp dụng khi được duyệt.</small></label>
+          @if (change() === 'temporary-move' || change() === 'pause') {
+            <label><span>Hiệu lực đến (giờ TP.HCM)</span><input name="effectiveUntil" type="datetime-local" [required]="change() === 'temporary-move'" [(ngModel)]="effectiveUntil" /></label>
+          }
+        }
+
+        @if (kind() === 'claim') {
+          <label><span>Mối quan hệ với địa điểm</span><select name="relationship" [(ngModel)]="relationship">
+            <option value="owner">Chủ cơ sở</option><option value="representative">Người đại diện của Chủ cơ sở</option>
+          </select></label>
+          <label class="workflow-wide"><span>Thông tin đối chiếu trong tình huống thử</span>
+            <textarea name="evidence" [(ngModel)]="evidence" maxlength="600" rows="3" required></textarea>
+            <small class="muted">Chỉ hiển thị trong yêu cầu và màn xét duyệt. Dùng mô tả thử nghiệm, tránh nhập giấy tờ hoặc liên hệ cá nhân.</small>
+          </label>
+          <label class="workflow-wide workflow-check"><input name="agreement" type="checkbox" required [(ngModel)]="agreement" />
+            <span>{{ relationship === 'representative' ? 'Tôi xác nhận có sự đồng ý của Chủ cơ sở trong tình huống thử.' : 'Tôi xác nhận đồng ý gửi yêu cầu quản lý trong tình huống thử.' }}</span>
+          </label>
+        }
+
+        @if (kind() === 'report' && review(); as current) {
+          <div class="workflow-wide workflow-note"><tg-icon name="star" /><span>{{ current.rating }}/5 · Đánh giá thử ngày {{ current.updatedAt | date:'dd/MM/yyyy':'+0700' }}
+            @if (current.text) { <br />{{ current.text }} }
+          </span></div>
+          <label class="workflow-wide"><span>Nội dung muốn báo cáo</span><select name="photoIndex" [(ngModel)]="photoIndex" [disabled]="!!editing()">
+            <option [ngValue]="null">Bài đánh giá</option>
+            @for (photo of reviewPhotos(); track photo.index) { <option [ngValue]="photo.index">Ảnh số {{ photo.index + 1 }}</option> }
+          </select></label>
+          @if (reviewPhotos().length) {
+            <ul class="workflow-wide workflow-review-photos">
+              @for (photo of reviewPhotos(); track photo.index) {
+                <li><img [src]="photo.src" [alt]="'Ảnh đánh giá số ' + (photo.index + 1)" /><small>Ảnh {{ photo.index + 1 }}</small></li>
+              }
+            </ul>
+          }
+        }
+
+        <label class="workflow-wide"><span>{{ kind() === 'report' ? 'Lý do báo cáo' : 'Lý do gửi yêu cầu' }}</span>
+          <textarea name="reason" rows="3" maxlength="600" [(ngModel)]="reason" required></textarea>
+        </label>
+      </div>
+      @if (error()) { <p class="message error" role="alert">{{ error() }}</p> }
+      <div class="workflow-actions">
+        <button class="button primary" type="submit" [disabled]="!store.ready() || store.catalogStatus() !== 'ready' || stale() || saving() || photoReading()">
+          <tg-icon name="check" />{{ saving() ? 'Đang lưu…' : editing() ? 'Gửi lại yêu cầu' : 'Gửi yêu cầu' }}
+        </button>
+        @if (editing()) { <button class="button secondary" type="button" [disabled]="saving()" (click)="cancel.emit()">Hủy bổ sung</button> }
+      </div>
+    </form>
+  }
+</section>

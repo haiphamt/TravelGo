@@ -1,0 +1,299 @@
+@if (store.catalogStatus() === "loading") {
+  <div class="empty-state detail-state" role="status"><tg-icon name="compass" /><h1>Đang tải địa điểm…</h1></div>
+} @else if (store.catalogStatus() === "error") {
+  <div class="empty-state detail-state" role="alert"><h1>Chưa tải được địa điểm</h1><p>{{ store.catalogError() }}</p><button type="button" class="button primary" (click)="store.loadCatalog()">Thử lại</button></div>
+} @else if (place(); as place) {
+  @let description = introduction();
+  @let sourceHours = hours();
+  <div class="detail-page">
+    <div class="detail-gallery-wrap">
+      <a class="back-link detail-back" [routerLink]="backRoute()" [queryParams]="returnParams()">
+        <tg-icon name="back" />{{ backLabel() }}
+      </a>
+      @if (place.images.length) {
+        <tg-photo-gallery [images]="place.images" [name]="place.name" [credit]="place.photoCredit" />
+      }
+      @if (place.photoSource; as photo) {
+        <p class="photo-source-links">
+          <a [href]="photo.url" target="_blank" rel="noopener noreferrer">Xem ảnh gốc<tg-icon name="external" /></a>
+          <a [href]="photo.licenseUrl" target="_blank" rel="noopener noreferrer">{{ photo.license }}</a>
+        </p>
+      }
+    </div>
+    <div class="detail-body">
+      <header class="detail-heading">
+        <div>
+          <div class="detail-badges">
+            @if (category(); as label) { <span>{{ label }}</span> }
+            @if (place.local) { <span>Góc Địa Phương</span> }
+          </div>
+          <h1>{{ place.name }}</h1>
+          <p class="detail-address"><tg-icon name="pin" />{{ place.area }}</p>
+          <div class="detail-facts">
+            @if (review(); as rating) {
+              <span class="detail-score"><tg-icon name="star" />{{ rating.rating }}/5 · 1 đánh giá TravelGo bản thử</span>
+            } @else {
+              <span>Chưa có đánh giá TravelGo</span>
+            }
+            <span>{{ money(place.price) }}{{ place.price === null ? '' : ' / người' }}</span>
+          </div>
+        </div>
+        <button type="button" class="detail-favorite" [disabled]="!store.ready()"
+          [attr.aria-pressed]="store.hasFavorite(place.id)"
+          [attr.aria-label]="store.hasFavorite(place.id) ? 'Bỏ yêu thích' : 'Yêu thích'"
+          [title]="store.hasFavorite(place.id) ? 'Bỏ yêu thích' : 'Yêu thích'"
+          (click)="store.toggleFavorite(place.id)">
+          <i class="fa-solid fa-heart" aria-hidden="true"></i>
+        </button>
+      </header>
+      @if (place.demoChange; as change) {
+        <p class="workflow-note detail-change"><tg-icon name="info" />{{ change.status === 'paused' ? 'Tạm nghỉ trong bản thử' : change.status === 'closed' ? 'Ngừng bán trong bản thử' : 'Có thông tin được cập nhật trong bản thử' }} · Có hiệu lực từ {{ change.effectiveFrom | date:'dd/MM/yyyy HH:mm':'+0700' }} @if (change.effectiveUntil) { đến {{ change.effectiveUntil | date:'dd/MM/yyyy HH:mm':'+0700' }} }</p>
+      }
+      <div class="detail-columns">
+        <aside class="detail-quick-info detail-panel" aria-labelledby="detail-info-title">
+          <h2 id="detail-info-title">Thông tin nhanh</h2>
+          <dl class="detail-info-list">
+            @if (place.sourceDistrict) {
+              <div><dt>Khu vực từ nguồn</dt><dd>{{ place.sourceDistrict }}</dd></div>
+            }
+            <div><dt>{{ place.demoChange?.fields?.includes('lat') ? 'Tọa độ trong bản thử' : 'Tọa độ từ nguồn' }}</dt><dd>{{ coordinates(place) }}</dd></div>
+            @if (place.local || !sourceHours) {
+              <div>
+                <dt>{{ place.demoChange?.fields?.includes('hours') ? 'Giờ trong bản thử' : 'Giờ theo hồ sơ' }}</dt>
+                <dd>
+                  {{ sourceHours || 'Chưa có thông tin' }}
+                  @if (!place.demoChange?.fields?.includes('hours') && place.localProfile?.hours?.weekdays?.length) {
+                    <small class="muted">Xem lịch theo thứ trong phần Giờ bán tham khảo.</small>
+                  }
+                </dd>
+              </div>
+            }
+            <div><dt>Chi phí dự kiến / người</dt><dd>{{ money(place.price) }}</dd></div>
+          </dl>
+          <div class="detail-actions">
+            @if (hasCoordinates(place)) {
+              <a class="detail-action detail-directions" [href]="directions(place)" target="_blank" rel="noopener noreferrer">
+                <tg-icon name="external" />Chỉ đường trên Google Maps
+              </a>
+            } @else {
+              <p class="small muted">Chưa thể mở chỉ đường vì nguồn chưa có tọa độ.</p>
+            }
+            <a class="detail-action" routerLink="/ban-do" [queryParams]="mapParams()"><tg-icon name="map" />Xem trên bản đồ TravelGo</a>
+            <button type="button" class="detail-action detail-plan" [disabled]="!store.ready()" (click)="store.addTrip(place.id)">
+              <tg-icon name="plus" />Thêm vào lịch trình
+            </button>
+            <a class="detail-action detail-plan" routerLink="/lich-trinh/tao-ai">
+              <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>Tạo lịch trình bằng AI
+            </a>
+            <a class="detail-action" routerLink="/chu-co-so" [queryParams]="{place:place.id, view:workflow.canManage(place.id) ? 'manage' : null}">
+              <tg-icon name="store" />{{ workflow.canManage(place.id) ? 'Mở khu vực quản lý' : 'Yêu cầu quản lý địa điểm' }}
+            </a>
+            <a class="text-button detail-update" routerLink="/dong-gop" [queryParams]="{place:place.id}">Đề xuất cập nhật</a>
+          </div>
+        </aside>
+        <div class="detail-main">
+          @if (description || place.local || sourceHours || amenities().length) {
+            <section class="detail-panel detail-description detail-intro">
+              <h2>{{ description ? 'Giới thiệu' : 'Thông tin địa điểm' }}</h2>
+              @if (description) { <p>{{ description }}</p> }
+              @if (place.local) {
+                <div class="message">
+                  <tg-icon name="info" />
+                  <div>
+                    <strong>{{ place.mobile ? 'Điểm bán có thể di chuyển' : 'Kiểm tra thông tin trước khi ghé' }}</strong>
+                    <p>Hồ sơ tham khảo, chưa được nhóm TravelGo xác minh thực địa. Giờ bán hoặc vị trí có thể thay đổi. Đánh giá không tự thay đổi thông tin địa điểm.</p>
+                  </div>
+                </div>
+              }
+              @if ((!place.local && sourceHours) || amenities().length) {
+                <dl class="detail-recorded-facts">
+                  @if (!place.local && sourceHours) {
+                    <div>
+                      <dt>{{ place.demoChange?.fields?.includes('hours') ? 'Giờ trong bản thử' : 'Giờ theo hồ sơ' }}</dt>
+                      <dd>{{ sourceHours === '24/7' ? '24 giờ mỗi ngày' : sourceHours }}</dd>
+                    </div>
+                  }
+                  @if (amenities().length) {
+                    <div>
+                      <dt>Tiện ích theo hồ sơ</dt>
+                      <dd>
+                        <ul class="detail-amenities">
+                          @for (label of amenities(); track label) { <li>{{ label }}</li> }
+                        </ul>
+                      </dd>
+                    </div>
+                  }
+                </dl>
+              }
+            </section>
+          }
+          @if (place.local) {
+            <section class="detail-panel detail-description local-products-section">
+              <h2>Món chính trong hồ sơ</h2>
+              @if (place.products.length) { <ul class="local-products">@for (product of place.products; track product) { <li><tg-icon name="utensils" />{{ product }}</li> }</ul> }
+              @else { <p>Chưa có thông tin món bán từ nguồn.</p> }
+              <p class="small muted">{{ place.demoChange?.fields?.includes('products') ? 'Món chính được cập nhật trong bản thử.' : (place.localProfile?.productsNote || 'Món chính được biên soạn từ thông tin nguồn, chưa phải thực đơn đầy đủ.') }}</p>
+              @if (place.localProfile?.categoryLabel; as group) { <p class="small muted">Nhóm món tham khảo do TravelGo phân loại: <strong>{{ group }}</strong>.</p> }
+              <dl class="local-missing-fields"><div><dt>Giá món</dt><dd>{{ money(place.price) }}</dd></div><div><dt>Liên hệ công khai</dt><dd>Chưa có thông tin được đối chiếu để cung cấp.</dd></div></dl>
+            </section>
+            @if (place.localProfile; as profile) {
+              <section class="detail-panel detail-description local-hours-section" aria-labelledby="local-hours-title">
+                <h2 id="local-hours-title">Giờ bán tham khảo</h2>
+                @if (place.demoChange?.fields?.includes('hours')) {
+                  <p class="local-hours-summary">{{ place.hours || 'Chưa cập nhật giờ bán' }}</p><p class="small muted">Giờ bán được cập nhật trong bản thử. Không dùng để xác nhận cửa hàng đang mở.</p>
+                } @else {
+                  @if (profile.hours.weekdays.length) {
+                    <dl class="local-weekdays">@for (day of profile.hours.weekdays; track day) { <div><dt>{{ weekdayLabel(day) }}</dt><dd>{{ weekdayHours(day) }}</dd></div> }</dl>
+                  } @else {
+                    <p class="local-hours-summary">{{ profile.hours.summary || 'Nguồn chưa có giờ bán.' }}</p>
+                    <p class="small muted">Nguồn không ghi rõ lịch theo từng thứ.</p>
+                  }
+                  @for (warning of profile.hours.qualityFlags; track warning) { <p class="local-hours-warning"><tg-icon name="info" />{{ warning }}</p> }
+                  <p class="small muted">Giờ bán từ <a [href]="profile.hours.sourceUrl" target="_blank" rel="noopener noreferrer">{{ profile.hours.sourceLabel }}<tg-icon name="external" /></a>.</p>
+                  <p class="small muted">@if (profile.hours.observedAt) { Nguồn ghi nhận giờ bán: {{ profile.hours.observedAt | date:'dd/MM/yyyy':'+0700' }}. } @else { Nguồn chưa có ngày ghi nhận giờ bán. } TravelGo chưa xác nhận lại lịch này; không dùng để khẳng định hiện đang mở cửa.</p>
+                }
+              </section>
+            }
+          }
+          <section class="detail-panel detail-reviews" aria-labelledby="detail-reviews-title">
+            <header>
+              <div>
+                <h2 id="detail-reviews-title">Trải nghiệm trên TravelGo</h2>
+                <p class="muted">{{ review() ? '1 đánh giá bản thử' : 'Chưa có đánh giá' }}</p>
+              </div>
+              <a class="text-button" [routerLink]="['/dia-diem', place.id, 'danh-gia']" [queryParams]="reviewParams()">
+                {{ ownReview() ? 'Sửa đánh giá của tôi' : 'Viết đánh giá' }}
+              </a>
+            </header>
+            @if (review(); as review) {
+              <article class="review-entry">
+                <div class="review-author">
+                  <span class="avatar">TH</span>
+                  <div>
+                    <strong
+                      >Bạn <span class="muted normal">· Bản dùng thử</span></strong
+                    >
+                    <p>
+                      {{ review.updatedAt | date: "dd/MM/yyyy" }}
+                      @if (review.visitedOn) {
+                        · Ngày ghé: {{ review.visitedOn | date: "dd/MM/yyyy" }}
+                      }
+                    </p>
+                  </div>
+                  <span class="rating"
+                    ><tg-icon name="star" />{{ review.rating }}/5</span
+                  >
+                </div>
+                @if (review.text) {
+                  <p class="review-text">{{ review.text }}</p>
+                } @else {
+                  <p class="muted">Chỉ chấm sao, chưa có nhận xét.</p>
+                }
+                <div class="review-photos">
+                  @for (photo of store.visibleReviewPhotos(place.id); track photo.index) {
+                    <img
+                      [src]="photo.src"
+                      [alt]="'Ảnh đính kèm đánh giá ' + (photo.index + 1)"
+                    />
+                  }
+                </div>
+                @if (workflow.visibleReply(place.id); as reply) {
+                  <div class="workflow-reply"><strong>Phản hồi của Chủ cơ sở</strong><span class="small muted"> · Bản dùng thử · {{ reply.updatedAt | date:'dd/MM/yyyy':'+0700' }}</span><p>{{ reply.text }}</p></div>
+                }
+                <div class="review-actions">
+                  <a
+                    class="text-button"
+                    [routerLink]="['/dia-diem', place.id, 'danh-gia']"
+                    [queryParams]="reviewParams()"
+                    >Chỉnh sửa</a
+                  ><button
+                    class="text-button danger"
+                    (click)="confirmDelete.set(true)"
+                  >
+                    Xóa đánh giá
+                  </button>
+                  <a class="text-button" routerLink="/dong-gop" [queryParams]="{place:place.id,report:'review'}">Báo cáo đánh giá hoặc ảnh</a>
+                </div>
+                @if (confirmDelete()) {
+                  <div class="delete-confirm" role="alert">
+                    <span
+                      >Xóa đánh giá và các ảnh đính kèm trên trình duyệt này?</span
+                    ><button
+                      class="button secondary"
+                      (click)="confirmDelete.set(false)"
+                    >
+                      Giữ lại</button
+                    ><button
+                      class="button danger-button"
+                      (click)="deleteReview(place.id)"
+                    >
+                      Xóa đánh giá
+                    </button>
+                  </div>
+                }
+              </article>
+            } @else if (ownReview()) {
+              <div class="workflow-note"><tg-icon name="info" />Đánh giá của bạn đang ẩn theo quyết định trong bản thử. <a [routerLink]="['/dia-diem',place.id,'danh-gia']" [queryParams]="reviewParams()">Mở bài của tôi</a></div>
+            } @else {
+              <div class="empty-state compact">
+                <tg-icon name="star" />
+                <h3>Chia sẻ trải nghiệm đầu tiên</h3>
+                <p>
+                  Chấm sao, kể điều hữu ích hoặc thêm ảnh món ăn, không gian bạn đã
+                  ghé.
+                </p>
+              </div>
+            }
+            <p class="demo-note">
+              Điểm TravelGo độc lập với Google Maps. Ảnh và ngày ghé do người viết
+              cung cấp, chưa xác minh việc ghé thực tế.
+            </p>
+          </section>
+          <section class="detail-sources" aria-labelledby="detail-sources-title">
+            <h2 id="detail-sources-title" class="sr-only">Nguồn thông tin</h2>
+            <p class="detail-source-row">
+              <strong>Nguồn dữ liệu</strong>
+              @if (place.sourceLicense === 'ODbL-1.0') {
+                <a [href]="place.sourceUrl" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Hồ sơ ' + place.name + ' trên OpenStreetMap'">© OpenStreetMap contributors<tg-icon name="external" /></a>
+                <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">ODbL 1.0</a>
+              } @else {
+                @if (place.sourceUrl) {
+                  <a [href]="place.sourceUrl" target="_blank" rel="noopener noreferrer">{{ place.sourceLabel }}<tg-icon name="external" /></a>
+                } @else { <span>{{ place.sourceLabel }}</span> }
+                <span>{{ place.sourceLicense }}</span>
+              }
+              @if (place.sourceUpdatedAt) {
+                <span>Bản ghi nguồn cập nhật <time [attr.datetime]="place.sourceUpdatedAt">{{ place.sourceUpdatedAt | date:'dd/MM/yyyy':'+0700' }}</time></span>
+              }
+            </p>
+            @if (place.localProfile; as profile) {
+              <details class="detail-source-more">
+                <summary>Các nguồn đã đối chiếu</summary>
+                @if (profile.collectedAt || profile.preparedAt) {
+                  <dl class="local-source-dates">
+                    @if (profile.collectedAt) { <div><dt>Thu thập hồ sơ từ nguồn</dt><dd>{{ profile.collectedAt | date:'dd/MM/yyyy':'+0700' }}</dd></div> }
+                    @if (profile.preparedAt) { <div><dt>Chuẩn bị bộ tham khảo</dt><dd>{{ profile.preparedAt | date:'dd/MM/yyyy':'+0700' }}</dd></div> }
+                  </dl>
+                }
+                <ul>
+                  @for (source of profile.sources; track source.url) {
+                    <li>
+                      <a [href]="source.url" target="_blank" rel="noopener noreferrer">{{ source.label }}<tg-icon name="external" /></a>
+                      @if (source.updatedAt) { <span> · Bản ghi nguồn cập nhật {{ source.updatedAt | date:'dd/MM/yyyy':'+0700' }}</span> }
+                    </li>
+                  }
+                </ul>
+              </details>
+            }
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="empty-state detail-state">
+    <tg-icon name="search" />
+    <h1>Không tìm thấy địa điểm</h1>
+    <a class="button primary" routerLink="/kham-pha">Về trang khám phá</a>
+  </div>
+}

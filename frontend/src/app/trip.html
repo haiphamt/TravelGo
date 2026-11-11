@@ -1,0 +1,252 @@
+<div class="mx-auto max-w-7xl p-4 pb-24 md:pb-10 lg:p-8">
+  <section class="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <a routerLink="/lich-trinh" class="text-sm font-semibold text-slate-600"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Lịch trình của bạn</a>
+      <h1 class="mt-2 text-3xl font-black text-slate-800">Chỉnh sửa chuyến đi</h1>
+      <p class="mt-2 max-w-2xl text-sm text-slate-600">Sắp xếp điểm ghé, điều chỉnh giờ và dự trù chi phí.</p>
+    </div>
+  </section>
+    @if (store.state().savedTrips?.length) {
+      <div class="saved-trip-bar">
+        <label for="saved-trip">Lịch trình đang mở</label>
+        <select id="saved-trip" [value]="activeTrip().id" [disabled]="coverReading() || savingInfo()" (change)="openTrip($event)">
+          <option [value]="activeTrip().id">{{ activeTrip().name }}{{ activeTrip().date ? ' · ' + (activeTrip().date | date:'dd/MM/yyyy') : '' }}</option>
+          @for (plan of store.state().savedTrips; track plan.id) {
+            <option [value]="plan.id">{{ plan.name }}{{ plan.date ? ' · ' + (plan.date | date:'dd/MM/yyyy') : '' }}</option>
+          }
+        </select>
+      </div>
+    }
+    @if (store.catalogStatus() === "loading") {
+      <div class="empty-state" role="status"><h2>Đang tải danh mục cho lịch trình…</h2></div>
+    } @else if (store.catalogStatus() === "error") {
+      <div class="empty-state" role="alert"><h2>Chưa tải được danh mục</h2><p>Các điểm đã lưu vẫn được giữ trên trình duyệt. {{ store.catalogError() }}</p><button class="button primary" (click)="store.loadCatalog()">Thử lại</button></div>
+    } @else if (hasTrip()) {
+      <div class="trip-layout mx-auto max-w-7xl">
+        <section>
+          <app-planner-trip-form heading="Thông tin chuyến đi"
+            descriptionHint="Bạn có thể tiếp tục chỉnh sửa thông tin cơ bản, sau đó thêm quán và sắp xếp lịch trình bên dưới."
+            [title]="tripInfo().name" [description]="tripInfo().note" [coverPreviewUrl]="tripInfo().cover"
+            [startDate]="tripInfo().date" [endDate]="tripInfo().endDate"
+            (titleChange)="editInfo('name', $event)" (descriptionChange)="editInfo('note', $event)"
+            (coverChange)="editInfo('cover', $event)" (coverReadingChange)="coverReading.set($event)"
+            (startDateChange)="editInfo('date', $event)" (endDateChange)="editInfo('endDate', $event)" />
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <button type="button" class="button primary" (click)="saveInfo()" [disabled]="!pendingInfo() || coverReading() || savingInfo()">Lưu thông tin chuyến đi</button>
+            @if (pendingInfo()) {
+              <button type="button" class="button secondary" (click)="pendingInfo.set(null)" [disabled]="coverReading() || savingInfo()">Bỏ thay đổi</button>
+              <span class="text-sm text-slate-600">Thay đổi chưa lưu</span>
+            }
+          </div>
+          <div class="section-heading">
+            <h2>Lộ trình chi tiết</h2>
+            <span class="muted"
+              >{{ store.state().trip.length }}/5 điểm đã lưu</span
+            >
+          </div>
+          @if (!store.tripPlaces().length) {
+            <p class="message">Chưa có điểm ghé để sắp xếp. Hãy chọn từ danh mục bên dưới.</p>
+          }
+          <ol class="trip-list">
+            @for (
+              item of store.tripPlaces();
+              track item.placeId;
+              let index = $index
+            ) {
+              <li [class.trip-with-day]="multiDay() && (index === 0 || day(item) !== day(store.tripPlaces()[index - 1]))">
+                @if (multiDay() && (index === 0 || day(item) !== day(store.tripPlaces()[index - 1]))) {
+                  <h3 class="trip-day-label">{{ day(item) | date:'dd/MM/yyyy' }}</h3>
+                }
+                <span class="trip-index">{{ index + 1 }}</span>
+                <div class="trip-item-stack">
+                <div class="trip-item">
+                  @if (item.place.image) {
+                    <img [src]="item.place.image" [alt]="'Ảnh từ hồ sơ nguồn của ' + item.place.name" />
+                  } @else {
+                    <span class="avatar" aria-label="Chưa có ảnh địa điểm"><tg-icon name="image" /></span>
+                  }
+                  <div class="trip-item-info">
+                    <a [routerLink]="['/dia-diem', item.placeId]">{{
+                      item.place.name
+                    }}</a>
+                    <p>{{ item.place.area }}</p>
+                    <span>{{ money(item.place.price) }}{{ item.place.price === null ? "" : " / người" }}</span>
+                    @if (item.place.local) {
+                      <span class="local-trip-tag"
+                        >Góc Địa Phương · Giờ bán cần kiểm tra</span
+                      >
+                    }
+                    @if (item.plannedStatus) {<span class="local-trip-tag">{{ item.plannedStatus === 'paused' ? 'Tạm nghỉ trong bản thử' : 'Ngừng bán trong bản thử' }}</span>}
+                  </div>
+                  <div class="trip-item-controls">
+                    <label
+                      ><span class="sr-only">Giờ ghé {{ item.place.name }}</span
+                      ><input
+                        type="time"
+                        [value]="item.time"
+                        (change)="changeTime(item.placeId, $event)"
+                    /></label>
+                    <div>
+                      <button
+                        class="icon-button"
+                        [disabled]="!neighbor(index, -1)"
+                        [attr.aria-label]="
+                          'Đưa ' + item.place.name + ' lên trước'
+                        "
+                        (click)="move(item.placeId, neighbor(index, -1))"
+                      >
+                        <tg-icon name="up" /></button
+                      ><button
+                        class="icon-button"
+                        [disabled]="!neighbor(index, 1)"
+                        [attr.aria-label]="
+                          'Đưa ' + item.place.name + ' xuống sau'
+                        "
+                        (click)="move(item.placeId, neighbor(index, 1))"
+                      >
+                        <tg-icon name="down" /></button
+                      ><button
+                        class="icon-button danger"
+                        [attr.aria-label]="
+                          'Bỏ ' + item.place.name + ' khỏi lịch trình'
+                        "
+                        (click)="remove(item.placeId)"
+                      >
+                        <tg-icon name="trash" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="trip-point-fields">
+                  @if (multiDay()) {
+                    <label>Ngày ghé<span class="sr-only"> {{ item.place.name }}</span><input type="date" [value]="day(item)"
+                      [attr.min]="store.state().tripDate" [attr.max]="store.state().tripEndDate" (change)="savePointDate(item.placeId, $event)" /></label>
+                  }
+                  <label>Ghi chú điểm ghé<span class="sr-only"> {{ item.place.name }}</span><input type="text" maxlength="180"
+                    [value]="item.note || ''" (change)="saveNote($event, item.placeId)" /></label>
+                  <label>Chi phí dự kiến (đồng/người)<span class="sr-only"> {{ item.place.name }}</span><input type="number" min="0" step="1" inputmode="numeric"
+                    [value]="item.estimatedCost ?? ''" (change)="saveEstimatedCost(item.placeId, $event)" /></label>
+                </div>
+                @if (item.changed) {
+                  <section class="trip-change" [attr.aria-label]="'Thay đổi tại ' + item.place.name">
+                    <h3>Điểm ghé có thông tin mới</h3>
+                    <p>So sánh bản lưu với hồ sơ đang hiển thị trước khi đổi kế hoạch.</p>
+                    <dl><div><dt>Trong lịch trình</dt><dd>{{ item.place.area }} · {{ coordinateLabel(item.place) }} · {{ item.place.hours || 'Chưa có giờ bán' }} · {{ money(item.place.price) }}</dd></div>
+                      <div><dt>Hồ sơ hiện tại</dt><dd>{{ item.currentPlace.area }} · {{ coordinateLabel(item.currentPlace) }} · {{ item.currentPlace.hours || 'Chưa có giờ bán' }} · {{ money(item.currentPlace.price) }} @if (item.change?.status) { · {{ item.change?.status === 'paused' ? 'Tạm nghỉ trong bản thử' : 'Ngừng bán trong bản thử' }} }</dd></div></dl>
+                    <div class="workflow-actions">
+                      <button class="button primary" type="button" [disabled]="resolving()" (click)="resolve(item.placeId, 'update')">Dùng thông tin mới</button>
+                      <button class="button secondary" type="button" [disabled]="resolving()" (click)="resolve(item.placeId, 'keep')">Giữ kế hoạch cũ</button>
+                      <button class="button secondary" type="button" [attr.aria-expanded]="replaceId() === item.placeId" (click)="chooseReplacement(item.placeId)">{{ replaceId() === item.placeId ? 'Đóng chọn điểm thay thế' : 'Thay điểm ghé' }}</button>
+                    </div>
+                    @if (replaceId() === item.placeId) {
+                      <tg-workflow-place-picker [selectedId]="replacement()" (selectedIdChange)="replacement.set($event)" />
+                      <button class="button primary" type="button" [disabled]="resolving() || !replacement() || replacement() === item.placeId" (click)="resolve(item.placeId, 'update', replacement())">Xác nhận điểm thay thế</button>
+                    }
+                  </section>
+                }
+                </div>
+              </li>
+            }
+          </ol>
+          @if (store.state().trip.length < 5) {
+            <div class="trip-add-panel">
+              <button class="button secondary" type="button" [attr.aria-expanded]="addingPoint()" (click)="addingPoint.set(!addingPoint())"><tg-icon name="plus" />{{ addingPoint() ? 'Đóng chọn địa điểm' : 'Thêm địa điểm' }}</button>
+              @if (addingPoint()) {
+                <tg-workflow-place-picker [selectedId]="newPoint()" (selectedIdChange)="newPoint.set($event)" />
+                <button class="button primary" type="button" [disabled]="!newPoint() || savingPoint()" (click)="appendPoint()">Thêm điểm đã chọn</button>
+              }
+            </div>
+          }
+          <p class="inline-note">
+            <tg-icon name="info" />Giờ ghé do bạn sắp xếp; chưa tính thời gian
+            di chuyển hoặc kiểm tra giờ mở cửa.
+          </p>
+          @if (timeWarning()) {
+            <p class="message error" role="alert">
+              Thứ tự giờ ghé chưa tăng dần. Hãy chỉnh lại giờ hoặc sắp xếp các
+              điểm trước khi đi.
+            </p>
+          }
+        </section>
+        <aside class="trip-summary custom-shadow rounded-3xl border border-slate-100 bg-white p-6">
+          <div class="mb-3 flex items-center justify-between">
+            <h2 class="font-black text-slate-800">Ngân sách chuyến đi</h2>
+            <i class="fa-solid fa-wallet text-orange-700" aria-hidden="true"></i>
+          </div>
+          <p class="text-3xl font-black text-orange-700">{{ money(total()) }}</p>
+          <p class="text-sm text-slate-600">Dự trù tại các điểm · mỗi người</p>
+          <div class="workflow-fields my-4">
+            <label class="workflow-wide">Ngân sách dự kiến mỗi người (đồng)
+              <input type="number" min="0" step="1" inputmode="numeric"
+                [value]="store.state().tripBudget ?? ''" (change)="saveBudget($event)" />
+            </label>
+          </div>
+          @if (store.tripPlaces().length) {
+            <ol class="m-0 space-y-2 border-t border-slate-100 px-0 pt-4 text-sm">
+              @for (item of store.tripPlaces(); track item.placeId; let index = $index) {
+                <li class="flex justify-between gap-3">
+                  <span class="min-w-0 text-slate-600">{{ index + 1 }}. {{ item.place.name }}</span>
+                  <span class="shrink-0 text-right">
+                    <strong class="font-semibold text-slate-700">{{ projectedCost(item) === null ? 'Chưa có giá' : money(projectedCost(item)) }}</strong>
+                    @if (item.estimatedCost != null) { <small class="block text-slate-600">Bạn dự trù</small> }
+                    @else if (item.place.price != null) { <small class="block text-slate-600">Giá từ nguồn</small> }
+                  </span>
+                </li>
+              }
+            </ol>
+          }
+          <p class="muted small">
+            @if (unknownPrices()) {
+              {{ unknownPrices() }} điểm chưa có giá hoặc dự trù; tổng hiện chỉ gồm khoản đã có.
+            } @else {
+              Ước tính cho một người, chưa gồm di chuyển và khoản phát sinh.
+            }
+          </p>
+          @if (missingCoordinates()) { <p class="message">{{ missingCoordinates() }} điểm chưa có tọa độ, không được đưa vào liên kết chỉ đường. Các điểm vẫn được giữ trong lịch trình.</p> }
+          @for (route of mapRoutes(); track route.day) { <a
+            class="button primary full"
+            [href]="route.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><tg-icon name="external" />{{ multiDay() ? 'Chỉ đường ngày ' + (route.day | date:'dd/MM') : 'Mở lộ trình trên Google Maps' }}</a
+          > }
+          @if (mapRoutes().length) { <p class="small muted">
+            Maps sẽ tính đường từ các tọa độ được gửi. Một số thiết bị có thể
+            giới hạn số điểm trung gian.
+          </p> }
+          <a class="button secondary full" routerLink="/goc-dia-phuong"
+            ><tg-icon name="store" />Thêm điểm ghé địa phương</a
+          >
+          <p class="demo-note">
+            Lịch trình chỉ lưu trên trình duyệt này. Kiểm tra lại vị trí và giờ nguồn trước khi đi.
+          </p>
+        </aside>
+      </div>
+    } @else {
+      <div class="empty-state">
+        <tg-icon name="calendar" />
+        <h2>Bạn chưa có lịch trình</h2>
+        <p>Chọn một chuyến đã lưu hoặc tạo chuyến mới.</p><a class="button primary" routerLink="/lich-trinh">Danh sách lịch trình</a>
+        <a class="button secondary" routerLink="/kham-pha"
+          >Khám phá địa điểm<tg-icon name="arrow"
+        /></a>
+      </div>
+    }
+    @if (store.catalogStatus() === "ready" && unavailableCount()) {
+      <section class="message" aria-labelledby="unavailable-trip-title">
+        <div>
+          <h2 id="unavailable-trip-title">Điểm chưa có trong danh mục</h2>
+          <p>{{ unavailableCount() }} điểm vẫn được giữ trong bản lưu, nhưng chưa được đưa vào liên kết chỉ đường. Bạn có thể kiểm tra lại nguồn hoặc chủ động bỏ từng điểm.</p>
+          <ul>
+            @for (item of unavailableTrip(); track item.placeId) {
+              <li>
+                <p class="small" style="overflow-wrap:anywhere">Mã địa điểm: {{ item.placeId }} · Giờ ghé: {{ item.time }}</p>
+                <button class="button secondary" [attr.aria-label]="'Bỏ điểm chưa có trong danh mục ' + item.placeId" (click)="remove(item.placeId)">Bỏ điểm này</button>
+              </li>
+            }
+          </ul>
+        </div>
+      </section>
+    }
+
+</div>

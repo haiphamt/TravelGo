@@ -1,0 +1,7710 @@
+{
+  "metadata": {
+    "attribution": "© OpenStreetMap contributors",
+    "attributionUrl": "https://www.openstreetmap.org/copyright",
+    "license": "ODbL-1.0",
+    "licenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "source": "Geofabrik Vietnam OSM extract",
+    "sourceUrl": "https://download.geofabrik.de/asia/vietnam.html",
+    "sourceRecord": "hcm-osm-source-records.json",
+    "sourceRecordSha256": "72edae18ceb210d16ad8ef12ac134cb6fc90c9c7d0959c24d205ca9beced475b",
+    "osmDataTimestamp": "2026-11-07T21:21:36Z",
+    "rules": {
+      "wifi": "internet_access contains wlan, or wifi=yes/free",
+      "outdoor": "outdoor_seating contains one of yes, parklet, pedestrian_zone, street, sidewalk, patio, terrace, balcony, veranda, roof, garden, beach, courtyard, separate",
+      "takeaway": "takeaway=yes/only",
+      "wheelchair": "wheelchair=yes",
+      "hotel": "tourism=hotel",
+      "homestay": "tourism=homestay, homestay=yes, or lodging with the word homestay in an OSM name tag",
+      "viewpoint": "tourism=viewpoint",
+      "districts": "Explicit addr:district labels with Quận, Huyện or Thành phố (including TP.). District N and Quan N normalize to Quận N; the top-level HCM label is excluded."
+    }
+  },
+  "places": {
+    "osm:node/10031937862": [
+      "outdoor"
+    ],
+    "osm:node/10041056008": [
+      "wifi"
+    ],
+    "osm:node/10048601367": [
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/10058060493": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/10079597976": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/10079618336": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/10079740340": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/10086438317": [
+      "wifi"
+    ],
+    "osm:node/10089399920": [
+      "wifi"
+    ],
+    "osm:node/10115640432": [
+      "hotel"
+    ],
+    "osm:node/10137213715": [
+      "outdoor"
+    ],
+    "osm:node/10139340663": [
+      "outdoor"
+    ],
+    "osm:node/10154666914": [
+      "outdoor"
+    ],
+    "osm:node/10158711218": [
+      "wifi"
+    ],
+    "osm:node/10180272048": [
+      "takeaway"
+    ],
+    "osm:node/10206045147": [
+      "takeaway"
+    ],
+    "osm:node/10215649363": [
+      "takeaway"
+    ],
+    "osm:node/10215649375": [
+      "takeaway"
+    ],
+    "osm:node/10215649387": [
+      "takeaway"
+    ],
+    "osm:node/10215649388": [
+      "takeaway"
+    ],
+    "osm:node/10223608917": [
+      "viewpoint"
+    ],
+    "osm:node/10232377317": [
+      "wifi"
+    ],
+    "osm:node/10243680039": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/10259377069": [
+      "takeaway"
+    ],
+    "osm:node/10288696809": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/10288742609": [
+      "wifi"
+    ],
+    "osm:node/10294185714": [
+      "takeaway"
+    ],
+    "osm:node/10294185724": [
+      "takeaway"
+    ],
+    "osm:node/10294185725": [
+      "takeaway"
+    ],
+    "osm:node/10295994210": [
+      "hotel"
+    ],
+    "osm:node/10298031276": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/10302052409": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/10303285243": [
+      "takeaway"
+    ],
+    "osm:node/10303285244": [
+      "takeaway"
+    ],
+    "osm:node/10303285246": [
+      "takeaway"
+    ],
+    "osm:node/10538327809": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/10539261009": [
+      "wifi"
+    ],
+    "osm:node/10548539715": [
+      "hotel"
+    ],
+    "osm:node/10554249792": [
+      "outdoor"
+    ],
+    "osm:node/10556586410": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/10556704764": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/10562292708": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/10572348809": [
+      "hotel",
+      "homestay"
+    ],
+    "osm:node/10586161922": [
+      "wifi"
+    ],
+    "osm:node/10586384828": [
+      "takeaway"
+    ],
+    "osm:node/10586444881": [
+      "takeaway"
+    ],
+    "osm:node/10589461306": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/10609410705": [
+      "wifi"
+    ],
+    "osm:node/1063799175": [
+      "hotel"
+    ],
+    "osm:node/1063804286": [
+      "hotel"
+    ],
+    "osm:node/1063804290": [
+      "hotel"
+    ],
+    "osm:node/1063811183": [
+      "hotel"
+    ],
+    "osm:node/1063816041": [
+      "hotel"
+    ],
+    "osm:node/1063817100": [
+      "hotel"
+    ],
+    "osm:node/10692906351": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/10706803505": [
+      "hotel"
+    ],
+    "osm:node/10707993054": [
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/10725548624": [
+      "takeaway"
+    ],
+    "osm:node/10727103900": [
+      "takeaway"
+    ],
+    "osm:node/10734176205": [
+      "wifi"
+    ],
+    "osm:node/10736243173": [
+      "hotel"
+    ],
+    "osm:node/10741323906": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/10749959495": [
+      "wifi"
+    ],
+    "osm:node/10750591447": [
+      "takeaway"
+    ],
+    "osm:node/10763917628": [
+      "takeaway"
+    ],
+    "osm:node/10771425770": [
+      "takeaway"
+    ],
+    "osm:node/10771425771": [
+      "takeaway"
+    ],
+    "osm:node/10773212160": [
+      "takeaway"
+    ],
+    "osm:node/10773212162": [
+      "takeaway"
+    ],
+    "osm:node/10778185206": [
+      "wifi"
+    ],
+    "osm:node/10780370911": [
+      "takeaway"
+    ],
+    "osm:node/10794819160": [
+      "takeaway"
+    ],
+    "osm:node/10794829523": [
+      "takeaway"
+    ],
+    "osm:node/10794829526": [
+      "takeaway"
+    ],
+    "osm:node/10804118806": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/10813698530": [
+      "takeaway"
+    ],
+    "osm:node/10813698532": [
+      "takeaway"
+    ],
+    "osm:node/10855868870": [
+      "wifi"
+    ],
+    "osm:node/10880445575": [
+      "takeaway"
+    ],
+    "osm:node/10880445576": [
+      "takeaway"
+    ],
+    "osm:node/10886452005": [
+      "hotel"
+    ],
+    "osm:node/10891224796": [
+      "outdoor"
+    ],
+    "osm:node/10918050505": [
+      "hotel"
+    ],
+    "osm:node/10982233705": [
+      "takeaway"
+    ],
+    "osm:node/11009716706": [
+      "hotel"
+    ],
+    "osm:node/11037465980": [
+      "takeaway"
+    ],
+    "osm:node/11055959705": [
+      "wifi"
+    ],
+    "osm:node/11056054205": [
+      "wifi"
+    ],
+    "osm:node/11056307307": [
+      "wifi"
+    ],
+    "osm:node/11075049338": [
+      "takeaway"
+    ],
+    "osm:node/11080705505": [
+      "wifi"
+    ],
+    "osm:node/11104600819": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/11122888706": [
+      "wifi"
+    ],
+    "osm:node/11181063934": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/11196010230": [
+      "outdoor"
+    ],
+    "osm:node/11200752863": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/1124626713": [
+      "hotel"
+    ],
+    "osm:node/11283090169": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/11287674769": [
+      "wifi"
+    ],
+    "osm:node/11296507269": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/11299066105": [
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/11308870517": [
+      "hotel"
+    ],
+    "osm:node/11332616523": [
+      "outdoor"
+    ],
+    "osm:node/11332720856": [
+      "hotel"
+    ],
+    "osm:node/11363987283": [
+      "outdoor"
+    ],
+    "osm:node/11364877769": [
+      "wifi"
+    ],
+    "osm:node/11374776247": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/11389260043": [
+      "wifi"
+    ],
+    "osm:node/11395309769": [
+      "hotel"
+    ],
+    "osm:node/11395311869": [
+      "hotel"
+    ],
+    "osm:node/11407996976": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/11415835651": [
+      "hotel"
+    ],
+    "osm:node/11433413570": [
+      "hotel"
+    ],
+    "osm:node/11438716839": [
+      "takeaway"
+    ],
+    "osm:node/11438716852": [
+      "takeaway"
+    ],
+    "osm:node/11449101346": [
+      "takeaway"
+    ],
+    "osm:node/11457538362": [
+      "takeaway"
+    ],
+    "osm:node/11482203272": [
+      "outdoor"
+    ],
+    "osm:node/11493933366": [
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/11493934358": [
+      "wheelchair"
+    ],
+    "osm:node/11494719178": [
+      "hotel"
+    ],
+    "osm:node/11513546708": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/11515767084": [
+      "hotel"
+    ],
+    "osm:node/11515767085": [
+      "hotel"
+    ],
+    "osm:node/11515795248": [
+      "hotel"
+    ],
+    "osm:node/11515795249": [
+      "hotel"
+    ],
+    "osm:node/11515795250": [
+      "hotel"
+    ],
+    "osm:node/11515846157": [
+      "hotel"
+    ],
+    "osm:node/11515870721": [
+      "hotel"
+    ],
+    "osm:node/11515870722": [
+      "hotel"
+    ],
+    "osm:node/11515870723": [
+      "hotel"
+    ],
+    "osm:node/11515870724": [
+      "hotel"
+    ],
+    "osm:node/11515870725": [
+      "hotel"
+    ],
+    "osm:node/11515870726": [
+      "hotel"
+    ],
+    "osm:node/11515870727": [
+      "hotel"
+    ],
+    "osm:node/11515870728": [
+      "hotel"
+    ],
+    "osm:node/11515870729": [
+      "hotel"
+    ],
+    "osm:node/11515870730": [
+      "hotel"
+    ],
+    "osm:node/11517878469": [
+      "hotel"
+    ],
+    "osm:node/11517957369": [
+      "hotel"
+    ],
+    "osm:node/11518188469": [
+      "wifi"
+    ],
+    "osm:node/11524968469": [
+      "hotel"
+    ],
+    "osm:node/11527617757": [
+      "hotel"
+    ],
+    "osm:node/11527617758": [
+      "hotel"
+    ],
+    "osm:node/11527617762": [
+      "takeaway"
+    ],
+    "osm:node/11527617763": [
+      "takeaway"
+    ],
+    "osm:node/11527625169": [
+      "takeaway"
+    ],
+    "osm:node/11527964469": [
+      "wifi"
+    ],
+    "osm:node/11533096030": [
+      "hotel"
+    ],
+    "osm:node/11533096031": [
+      "hotel"
+    ],
+    "osm:node/11533096032": [
+      "hotel"
+    ],
+    "osm:node/11533096033": [
+      "hotel"
+    ],
+    "osm:node/11533096034": [
+      "hotel"
+    ],
+    "osm:node/11533096035": [
+      "hotel"
+    ],
+    "osm:node/11545371575": [
+      "wifi"
+    ],
+    "osm:node/11587627019": [
+      "takeaway"
+    ],
+    "osm:node/11616168569": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/11640349669": [
+      "hotel"
+    ],
+    "osm:node/11707462337": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/11752893629": [
+      "hotel"
+    ],
+    "osm:node/11758037370": [
+      "takeaway"
+    ],
+    "osm:node/11758037469": [
+      "outdoor"
+    ],
+    "osm:node/11760251669": [
+      "wifi"
+    ],
+    "osm:node/11782344870": [
+      "hotel"
+    ],
+    "osm:node/11809696289": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/11811000458": [
+      "takeaway"
+    ],
+    "osm:node/11811148399": [
+      "takeaway"
+    ],
+    "osm:node/11811148772": [
+      "takeaway"
+    ],
+    "osm:node/11817779488": [
+      "hotel"
+    ],
+    "osm:node/11827013648": [
+      "hotel"
+    ],
+    "osm:node/11834067669": [
+      "wifi"
+    ],
+    "osm:node/11834179369": [
+      "wifi"
+    ],
+    "osm:node/11844397840": [
+      "wifi"
+    ],
+    "osm:node/11885257489": [
+      "takeaway"
+    ],
+    "osm:node/11896649069": [
+      "hotel"
+    ],
+    "osm:node/11902603569": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/11903931470": [
+      "wifi"
+    ],
+    "osm:node/11903944369": [
+      "wifi"
+    ],
+    "osm:node/11903944370": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/11909342969": [
+      "wifi"
+    ],
+    "osm:node/11911512469": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/11914729924": [
+      "takeaway"
+    ],
+    "osm:node/11915761969": [
+      "wifi"
+    ],
+    "osm:node/11915947569": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/11945304469": [
+      "wifi"
+    ],
+    "osm:node/11945414169": [
+      "wifi"
+    ],
+    "osm:node/11968116969": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/11974364477": [
+      "outdoor"
+    ],
+    "osm:node/11989701573": [
+      "wifi"
+    ],
+    "osm:node/12020061355": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/12049412669": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/12061435644": [
+      "takeaway"
+    ],
+    "osm:node/12072768057": [
+      "hotel"
+    ],
+    "osm:node/12072830744": [
+      "hotel"
+    ],
+    "osm:node/12080350880": [
+      "outdoor"
+    ],
+    "osm:node/12151135569": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/12221756501": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/12228082198": [
+      "outdoor"
+    ],
+    "osm:node/12230294804": [
+      "takeaway"
+    ],
+    "osm:node/12272912607": [
+      "outdoor"
+    ],
+    "osm:node/12295769555": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/12295997501": [
+      "wifi"
+    ],
+    "osm:node/12297055401": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/12298168284": [
+      "wifi"
+    ],
+    "osm:node/12300683628": [
+      "hotel"
+    ],
+    "osm:node/12303603045": [
+      "outdoor"
+    ],
+    "osm:node/12307452542": [
+      "takeaway"
+    ],
+    "osm:node/12307495031": [
+      "takeaway"
+    ],
+    "osm:node/12327812901": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/12336663303": [
+      "takeaway"
+    ],
+    "osm:node/12345317801": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/12345527829": [
+      "outdoor"
+    ],
+    "osm:node/12347802901": [
+      "wifi"
+    ],
+    "osm:node/12348265962": [
+      "hotel"
+    ],
+    "osm:node/12348270418": [
+      "hotel"
+    ],
+    "osm:node/12348311526": [
+      "hotel"
+    ],
+    "osm:node/12357888665": [
+      "outdoor"
+    ],
+    "osm:node/12366280901": [
+      "wifi"
+    ],
+    "osm:node/12366499601": [
+      "wifi"
+    ],
+    "osm:node/12369502584": [
+      "outdoor"
+    ],
+    "osm:node/12373757201": [
+      "hotel"
+    ],
+    "osm:node/12377538021": [
+      "homestay"
+    ],
+    "osm:node/12378680184": [
+      "outdoor"
+    ],
+    "osm:node/12386032943": [
+      "outdoor"
+    ],
+    "osm:node/12387540881": [
+      "outdoor"
+    ],
+    "osm:node/12387835741": [
+      "outdoor"
+    ],
+    "osm:node/12388021209": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/12395419755": [
+      "takeaway"
+    ],
+    "osm:node/12404630144": [
+      "outdoor"
+    ],
+    "osm:node/12412162635": [
+      "outdoor"
+    ],
+    "osm:node/12419706745": [
+      "outdoor"
+    ],
+    "osm:node/12421914696": [
+      "takeaway"
+    ],
+    "osm:node/12422021494": [
+      "outdoor"
+    ],
+    "osm:node/12422885328": [
+      "takeaway"
+    ],
+    "osm:node/12422885329": [
+      "outdoor"
+    ],
+    "osm:node/12424554203": [
+      "wifi"
+    ],
+    "osm:node/12428785743": [
+      "wifi",
+      "wheelchair"
+    ],
+    "osm:node/12429522309": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/12438509756": [
+      "takeaway"
+    ],
+    "osm:node/12442859248": [
+      "outdoor"
+    ],
+    "osm:node/12444000844": [
+      "outdoor"
+    ],
+    "osm:node/12450377400": [
+      "outdoor"
+    ],
+    "osm:node/12452421090": [
+      "takeaway"
+    ],
+    "osm:node/12453142101": [
+      "outdoor"
+    ],
+    "osm:node/12454286901": [
+      "hotel"
+    ],
+    "osm:node/12458578633": [
+      "outdoor"
+    ],
+    "osm:node/12458713280": [
+      "outdoor"
+    ],
+    "osm:node/12460404483": [
+      "takeaway"
+    ],
+    "osm:node/12466418009": [
+      "outdoor"
+    ],
+    "osm:node/12470563501": [
+      "wifi"
+    ],
+    "osm:node/12470978272": [
+      "outdoor"
+    ],
+    "osm:node/12475137501": [
+      "wifi"
+    ],
+    "osm:node/12475137502": [
+      "hotel"
+    ],
+    "osm:node/12475292501": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/12477658464": [
+      "hotel"
+    ],
+    "osm:node/12477658465": [
+      "hotel"
+    ],
+    "osm:node/12477658466": [
+      "hotel"
+    ],
+    "osm:node/12480142901": [
+      "wifi"
+    ],
+    "osm:node/12483471701": [
+      "wifi"
+    ],
+    "osm:node/12485938001": [
+      "wifi"
+    ],
+    "osm:node/12495530443": [
+      "wifi"
+    ],
+    "osm:node/12495803361": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/12498233578": [
+      "wifi"
+    ],
+    "osm:node/12498233581": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/12500363368": [
+      "takeaway"
+    ],
+    "osm:node/12500734401": [
+      "wifi"
+    ],
+    "osm:node/12504148358": [
+      "wifi"
+    ],
+    "osm:node/12504148359": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/12506848566": [
+      "wifi"
+    ],
+    "osm:node/12509423408": [
+      "wifi"
+    ],
+    "osm:node/12509423409": [
+      "outdoor"
+    ],
+    "osm:node/12512457972": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/12513736286": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/12519623529": [
+      "outdoor"
+    ],
+    "osm:node/12520021059": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/12520072378": [
+      "wifi"
+    ],
+    "osm:node/12522290313": [
+      "wifi"
+    ],
+    "osm:node/12526289178": [
+      "outdoor",
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/12528272801": [
+      "hotel"
+    ],
+    "osm:node/12531358139": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/12538599497": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/12539471666": [
+      "outdoor"
+    ],
+    "osm:node/12543004442": [
+      "hotel"
+    ],
+    "osm:node/12543126094": [
+      "wifi"
+    ],
+    "osm:node/12543528921": [
+      "outdoor"
+    ],
+    "osm:node/12545830801": [
+      "wifi"
+    ],
+    "osm:node/12546044601": [
+      "hotel"
+    ],
+    "osm:node/12546104127": [
+      "wifi"
+    ],
+    "osm:node/12546491210": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/12548016211": [
+      "hotel"
+    ],
+    "osm:node/12548021044": [
+      "hotel"
+    ],
+    "osm:node/12548490922": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/12549054628": [
+      "wifi"
+    ],
+    "osm:node/12550759028": [
+      "wifi"
+    ],
+    "osm:node/12553303179": [
+      "hotel"
+    ],
+    "osm:node/12553467979": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/12558742575": [
+      "wifi"
+    ],
+    "osm:node/1256312346": [
+      "wheelchair"
+    ],
+    "osm:node/12569269542": [
+      "outdoor"
+    ],
+    "osm:node/12570727098": [
+      "outdoor"
+    ],
+    "osm:node/12573551596": [
+      "wifi"
+    ],
+    "osm:node/12581969796": [
+      "takeaway"
+    ],
+    "osm:node/12594930882": [
+      "outdoor"
+    ],
+    "osm:node/12595578801": [
+      "hotel"
+    ],
+    "osm:node/12600591571": [
+      "outdoor"
+    ],
+    "osm:node/12606879417": [
+      "outdoor"
+    ],
+    "osm:node/12609571978": [
+      "wheelchair"
+    ],
+    "osm:node/12625143523": [
+      "hotel"
+    ],
+    "osm:node/12625464944": [
+      "wifi"
+    ],
+    "osm:node/12628258751": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/12628492646": [
+      "outdoor"
+    ],
+    "osm:node/12629685802": [
+      "outdoor"
+    ],
+    "osm:node/12629811425": [
+      "outdoor"
+    ],
+    "osm:node/12630090786": [
+      "wheelchair"
+    ],
+    "osm:node/12635082458": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/12640565020": [
+      "outdoor"
+    ],
+    "osm:node/12644660635": [
+      "outdoor"
+    ],
+    "osm:node/12644925782": [
+      "outdoor"
+    ],
+    "osm:node/12646947646": [
+      "outdoor"
+    ],
+    "osm:node/12647241725": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/12652353389": [
+      "outdoor"
+    ],
+    "osm:node/12654268684": [
+      "hotel"
+    ],
+    "osm:node/12654306229": [
+      "hotel"
+    ],
+    "osm:node/12658292848": [
+      "wheelchair"
+    ],
+    "osm:node/12680804946": [
+      "wheelchair"
+    ],
+    "osm:node/12683583297": [
+      "takeaway"
+    ],
+    "osm:node/12690167910": [
+      "wheelchair"
+    ],
+    "osm:node/12692795748": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/12696377133": [
+      "outdoor"
+    ],
+    "osm:node/12698744405": [
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/12707738546": [
+      "hotel"
+    ],
+    "osm:node/12709323330": [
+      "takeaway"
+    ],
+    "osm:node/12712573737": [
+      "outdoor"
+    ],
+    "osm:node/12725754874": [
+      "outdoor"
+    ],
+    "osm:node/12728534045": [
+      "wifi"
+    ],
+    "osm:node/12730355253": [
+      "outdoor"
+    ],
+    "osm:node/12739077367": [
+      "wifi",
+      "homestay"
+    ],
+    "osm:node/1274417188": [
+      "hotel"
+    ],
+    "osm:node/12747522762": [
+      "outdoor"
+    ],
+    "osm:node/1276258120": [
+      "viewpoint"
+    ],
+    "osm:node/12778436919": [
+      "outdoor"
+    ],
+    "osm:node/12778516686": [
+      "wheelchair"
+    ],
+    "osm:node/12799683291": [
+      "takeaway"
+    ],
+    "osm:node/12799703809": [
+      "takeaway"
+    ],
+    "osm:node/12799703819": [
+      "takeaway"
+    ],
+    "osm:node/12799857411": [
+      "wifi"
+    ],
+    "osm:node/12803576003": [
+      "outdoor"
+    ],
+    "osm:node/12803583719": [
+      "outdoor"
+    ],
+    "osm:node/12803901853": [
+      "takeaway"
+    ],
+    "osm:node/12809499489": [
+      "outdoor"
+    ],
+    "osm:node/12813469637": [
+      "outdoor"
+    ],
+    "osm:node/12813469641": [
+      "takeaway"
+    ],
+    "osm:node/12816068713": [
+      "takeaway"
+    ],
+    "osm:node/12823521141": [
+      "takeaway"
+    ],
+    "osm:node/12839983177": [
+      "takeaway"
+    ],
+    "osm:node/12839983191": [
+      "outdoor"
+    ],
+    "osm:node/12860099581": [
+      "takeaway"
+    ],
+    "osm:node/12862442389": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/12872964229": [
+      "outdoor"
+    ],
+    "osm:node/12873041699": [
+      "outdoor"
+    ],
+    "osm:node/12874730901": [
+      "wifi"
+    ],
+    "osm:node/12876361501": [
+      "hotel"
+    ],
+    "osm:node/12879950388": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/12880170399": [
+      "outdoor"
+    ],
+    "osm:node/12880501755": [
+      "outdoor"
+    ],
+    "osm:node/12890286396": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/12921201826": [
+      "hotel"
+    ],
+    "osm:node/12922557607": [
+      "outdoor"
+    ],
+    "osm:node/12922557608": [
+      "takeaway"
+    ],
+    "osm:node/12927945467": [
+      "wheelchair"
+    ],
+    "osm:node/12944535057": [
+      "outdoor"
+    ],
+    "osm:node/12948990101": [
+      "hotel"
+    ],
+    "osm:node/12958243459": [
+      "outdoor"
+    ],
+    "osm:node/12958243463": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/12973583376": [
+      "wheelchair"
+    ],
+    "osm:node/12977223123": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/12985491230": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/12990807330": [
+      "hotel"
+    ],
+    "osm:node/12998446584": [
+      "outdoor"
+    ],
+    "osm:node/13005226801": [
+      "wifi",
+      "homestay"
+    ],
+    "osm:node/13005603021": [
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/13013108501": [
+      "wifi"
+    ],
+    "osm:node/13016460737": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/13030926139": [
+      "takeaway"
+    ],
+    "osm:node/13042672164": [
+      "hotel"
+    ],
+    "osm:node/13043352718": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13069078919": [
+      "wheelchair"
+    ],
+    "osm:node/13075096192": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13075412253": [
+      "outdoor"
+    ],
+    "osm:node/13077472201": [
+      "wifi"
+    ],
+    "osm:node/13080894849": [
+      "outdoor"
+    ],
+    "osm:node/13081226501": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/13084313801": [
+      "hotel"
+    ],
+    "osm:node/13097094264": [
+      "hotel"
+    ],
+    "osm:node/13097094269": [
+      "hotel"
+    ],
+    "osm:node/13097094274": [
+      "hotel"
+    ],
+    "osm:node/13097094284": [
+      "hotel"
+    ],
+    "osm:node/13097094295": [
+      "hotel"
+    ],
+    "osm:node/13097094296": [
+      "hotel"
+    ],
+    "osm:node/13097094297": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13097100002": [
+      "hotel"
+    ],
+    "osm:node/13100443359": [
+      "wheelchair"
+    ],
+    "osm:node/13113995270": [
+      "outdoor"
+    ],
+    "osm:node/13114485602": [
+      "wheelchair"
+    ],
+    "osm:node/13116144043": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/13133056377": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/13140342470": [
+      "wheelchair"
+    ],
+    "osm:node/13146519462": [
+      "outdoor"
+    ],
+    "osm:node/13146519477": [
+      "wifi",
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/13146961820": [
+      "outdoor"
+    ],
+    "osm:node/13158129403": [
+      "wifi"
+    ],
+    "osm:node/13161585201": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13165046921": [
+      "wheelchair"
+    ],
+    "osm:node/13186166078": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/13191984780": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/13192267855": [
+      "outdoor"
+    ],
+    "osm:node/13200465721": [
+      "outdoor"
+    ],
+    "osm:node/13206676701": [
+      "wifi"
+    ],
+    "osm:node/13206822602": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13208090302": [
+      "wifi"
+    ],
+    "osm:node/13227047602": [
+      "wifi"
+    ],
+    "osm:node/13227835501": [
+      "wifi"
+    ],
+    "osm:node/13235862201": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13235963101": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13238408801": [
+      "outdoor"
+    ],
+    "osm:node/13242921801": [
+      "wifi"
+    ],
+    "osm:node/13243225501": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13245358101": [
+      "wifi"
+    ],
+    "osm:node/13247257801": [
+      "wifi"
+    ],
+    "osm:node/13253059391": [
+      "viewpoint"
+    ],
+    "osm:node/13255356828": [
+      "wifi"
+    ],
+    "osm:node/13276961023": [
+      "takeaway"
+    ],
+    "osm:node/13285015463": [
+      "outdoor"
+    ],
+    "osm:node/13289307751": [
+      "outdoor"
+    ],
+    "osm:node/13294164735": [
+      "outdoor"
+    ],
+    "osm:node/13296773101": [
+      "wifi"
+    ],
+    "osm:node/13300070614": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13302871326": [
+      "wifi"
+    ],
+    "osm:node/13302874015": [
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/13303889782": [
+      "takeaway"
+    ],
+    "osm:node/13305569267": [
+      "hotel"
+    ],
+    "osm:node/13307615810": [
+      "hotel"
+    ],
+    "osm:node/13307615812": [
+      "hotel"
+    ],
+    "osm:node/13307638410": [
+      "takeaway"
+    ],
+    "osm:node/13313716243": [
+      "wifi",
+      "hotel",
+      "homestay"
+    ],
+    "osm:node/13316047801": [
+      "hotel"
+    ],
+    "osm:node/13319722322": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/13328952722": [
+      "hotel"
+    ],
+    "osm:node/13335192401": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13340269808": [
+      "outdoor"
+    ],
+    "osm:node/13344455442": [
+      "wheelchair"
+    ],
+    "osm:node/13356991087": [
+      "outdoor"
+    ],
+    "osm:node/13359419301": [
+      "hotel"
+    ],
+    "osm:node/13361095301": [
+      "wifi"
+    ],
+    "osm:node/13361117501": [
+      "wifi"
+    ],
+    "osm:node/13363813014": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/13375722301": [
+      "wifi"
+    ],
+    "osm:node/13389795401": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/13392660002": [
+      "wifi"
+    ],
+    "osm:node/13394452869": [
+      "takeaway"
+    ],
+    "osm:node/13396887402": [
+      "hotel"
+    ],
+    "osm:node/13401311300": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/1340954934": [
+      "hotel"
+    ],
+    "osm:node/13415408728": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/13415542101": [
+      "wifi"
+    ],
+    "osm:node/13415653401": [
+      "outdoor"
+    ],
+    "osm:node/13417458222": [
+      "viewpoint"
+    ],
+    "osm:node/13420414198": [
+      "viewpoint"
+    ],
+    "osm:node/13420538681": [
+      "takeaway"
+    ],
+    "osm:node/13422725801": [
+      "wifi"
+    ],
+    "osm:node/13432410601": [
+      "hotel"
+    ],
+    "osm:node/13437016701": [
+      "outdoor"
+    ],
+    "osm:node/13437487226": [
+      "hotel"
+    ],
+    "osm:node/13440818801": [
+      "wifi"
+    ],
+    "osm:node/13441772704": [
+      "takeaway"
+    ],
+    "osm:node/13441773301": [
+      "outdoor"
+    ],
+    "osm:node/13441773401": [
+      "takeaway"
+    ],
+    "osm:node/13441830301": [
+      "wifi"
+    ],
+    "osm:node/13444696601": [
+      "wifi"
+    ],
+    "osm:node/13447450401": [
+      "wifi"
+    ],
+    "osm:node/13447527201": [
+      "wifi"
+    ],
+    "osm:node/13447585701": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13447997701": [
+      "wifi"
+    ],
+    "osm:node/13455849810": [
+      "outdoor",
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/13463247701": [
+      "hotel"
+    ],
+    "osm:node/13472550602": [
+      "homestay"
+    ],
+    "osm:node/13473315701": [
+      "hotel"
+    ],
+    "osm:node/13475939981": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13478239302": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13504181620": [
+      "hotel"
+    ],
+    "osm:node/13504233437": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13504330100": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13505583039": [
+      "homestay"
+    ],
+    "osm:node/13518301425": [
+      "viewpoint"
+    ],
+    "osm:node/13518301426": [
+      "viewpoint"
+    ],
+    "osm:node/13518302240": [
+      "viewpoint"
+    ],
+    "osm:node/13518302308": [
+      "viewpoint"
+    ],
+    "osm:node/13519231190": [
+      "outdoor"
+    ],
+    "osm:node/13520146104": [
+      "hotel"
+    ],
+    "osm:node/13521003833": [
+      "takeaway"
+    ],
+    "osm:node/13528692501": [
+      "wifi"
+    ],
+    "osm:node/13531426301": [
+      "wifi"
+    ],
+    "osm:node/13531426401": [
+      "wifi"
+    ],
+    "osm:node/13532595201": [
+      "wifi"
+    ],
+    "osm:node/13532633101": [
+      "wifi"
+    ],
+    "osm:node/13532747401": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13532771301": [
+      "wifi"
+    ],
+    "osm:node/13532774901": [
+      "wifi"
+    ],
+    "osm:node/13533560501": [
+      "wifi"
+    ],
+    "osm:node/13534051304": [
+      "outdoor"
+    ],
+    "osm:node/1354004591": [
+      "hotel"
+    ],
+    "osm:node/13540096263": [
+      "takeaway"
+    ],
+    "osm:node/13568617953": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13568617956": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/13568617957": [
+      "takeaway"
+    ],
+    "osm:node/1357552700": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/13586164126": [
+      "outdoor"
+    ],
+    "osm:node/13589005544": [
+      "outdoor"
+    ],
+    "osm:node/13598152837": [
+      "hotel"
+    ],
+    "osm:node/13607388956": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/13608627568": [
+      "hotel"
+    ],
+    "osm:node/13610730466": [
+      "takeaway"
+    ],
+    "osm:node/13611605873": [
+      "outdoor"
+    ],
+    "osm:node/13618095901": [
+      "wifi"
+    ],
+    "osm:node/13623567412": [
+      "hotel"
+    ],
+    "osm:node/13629743723": [
+      "wheelchair"
+    ],
+    "osm:node/13629745380": [
+      "wheelchair"
+    ],
+    "osm:node/13640525601": [
+      "homestay"
+    ],
+    "osm:node/13657260894": [
+      "takeaway"
+    ],
+    "osm:node/13661538444": [
+      "takeaway"
+    ],
+    "osm:node/13662057801": [
+      "hotel"
+    ],
+    "osm:node/13668396353": [
+      "takeaway"
+    ],
+    "osm:node/13671357655": [
+      "wheelchair"
+    ],
+    "osm:node/13674296034": [
+      "outdoor"
+    ],
+    "osm:node/13676681201": [
+      "takeaway"
+    ],
+    "osm:node/13676697701": [
+      "takeaway"
+    ],
+    "osm:node/13683504275": [
+      "wheelchair"
+    ],
+    "osm:node/13684364388": [
+      "hotel"
+    ],
+    "osm:node/13685861401": [
+      "viewpoint"
+    ],
+    "osm:node/13690101201": [
+      "viewpoint"
+    ],
+    "osm:node/13690260203": [
+      "viewpoint"
+    ],
+    "osm:node/13703442286": [
+      "outdoor"
+    ],
+    "osm:node/13705391875": [
+      "outdoor"
+    ],
+    "osm:node/13710080320": [
+      "outdoor"
+    ],
+    "osm:node/13716199433": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/13722505442": [
+      "wheelchair"
+    ],
+    "osm:node/13722857243": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/13729830786": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/13734791821": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/13741794601": [
+      "wifi"
+    ],
+    "osm:node/13741922501": [
+      "wifi"
+    ],
+    "osm:node/13742183999": [
+      "outdoor"
+    ],
+    "osm:node/13743230101": [
+      "wifi"
+    ],
+    "osm:node/13744749021": [
+      "outdoor"
+    ],
+    "osm:node/13747558863": [
+      "outdoor"
+    ],
+    "osm:node/13754826602": [
+      "hotel"
+    ],
+    "osm:node/13754895716": [
+      "wheelchair"
+    ],
+    "osm:node/13760293401": [
+      "wifi"
+    ],
+    "osm:node/13767407801": [
+      "wifi"
+    ],
+    "osm:node/13774995982": [
+      "outdoor"
+    ],
+    "osm:node/13788690000": [
+      "outdoor"
+    ],
+    "osm:node/1378905236": [
+      "hotel"
+    ],
+    "osm:node/13794352295": [
+      "outdoor"
+    ],
+    "osm:node/13797751701": [
+      "wifi"
+    ],
+    "osm:node/13797933901": [
+      "wifi"
+    ],
+    "osm:node/13817897423": [
+      "outdoor"
+    ],
+    "osm:node/13827644959": [
+      "outdoor"
+    ],
+    "osm:node/13847918601": [
+      "wifi"
+    ],
+    "osm:node/13848679201": [
+      "wifi"
+    ],
+    "osm:node/13870837501": [
+      "wifi"
+    ],
+    "osm:node/13871196504": [
+      "takeaway"
+    ],
+    "osm:node/13873212501": [
+      "wifi"
+    ],
+    "osm:node/13904111401": [
+      "wifi"
+    ],
+    "osm:node/13948642717": [
+      "takeaway"
+    ],
+    "osm:node/13951414401": [
+      "wifi"
+    ],
+    "osm:node/13951468701": [
+      "wifi"
+    ],
+    "osm:node/13951494801": [
+      "wifi"
+    ],
+    "osm:node/13953242228": [
+      "hotel"
+    ],
+    "osm:node/13959956201": [
+      "wifi"
+    ],
+    "osm:node/13982278229": [
+      "takeaway"
+    ],
+    "osm:node/14000642110": [
+      "hotel"
+    ],
+    "osm:node/14006259792": [
+      "hotel"
+    ],
+    "osm:node/14007939820": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/14020788832": [
+      "outdoor"
+    ],
+    "osm:node/14026641240": [
+      "outdoor"
+    ],
+    "osm:node/14030833001": [
+      "hotel"
+    ],
+    "osm:node/14065466546": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/14067566601": [
+      "wifi"
+    ],
+    "osm:node/14069609924": [
+      "takeaway"
+    ],
+    "osm:node/14069610303": [
+      "wifi"
+    ],
+    "osm:node/14069845101": [
+      "wifi"
+    ],
+    "osm:node/14069860601": [
+      "wifi"
+    ],
+    "osm:node/14069916494": [
+      "homestay"
+    ],
+    "osm:node/14069983101": [
+      "wifi"
+    ],
+    "osm:node/1407135685": [
+      "wifi"
+    ],
+    "osm:node/14077884599": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/14085073801": [
+      "hotel"
+    ],
+    "osm:node/14089176592": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/14091963759": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/14098262601": [
+      "hotel",
+      "homestay"
+    ],
+    "osm:node/14107123377": [
+      "outdoor"
+    ],
+    "osm:node/14121896001": [
+      "wifi"
+    ],
+    "osm:node/14141945228": [
+      "outdoor"
+    ],
+    "osm:node/14145448230": [
+      "takeaway"
+    ],
+    "osm:node/14145448267": [
+      "takeaway"
+    ],
+    "osm:node/14152870799": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/14158715769": [
+      "takeaway"
+    ],
+    "osm:node/14161791822": [
+      "hotel"
+    ],
+    "osm:node/14167985562": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/14168499915": [
+      "wifi"
+    ],
+    "osm:node/14197423637": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/14197431167": [
+      "outdoor"
+    ],
+    "osm:node/14213373301": [
+      "wifi"
+    ],
+    "osm:node/14213373401": [
+      "wifi"
+    ],
+    "osm:node/14213936001": [
+      "wifi",
+      "hotel",
+      "homestay"
+    ],
+    "osm:node/14219233806": [
+      "outdoor"
+    ],
+    "osm:node/14219544733": [
+      "outdoor"
+    ],
+    "osm:node/14221202506": [
+      "outdoor"
+    ],
+    "osm:node/14223707301": [
+      "wifi"
+    ],
+    "osm:node/14226720566": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/14241623816": [
+      "hotel"
+    ],
+    "osm:node/14241623817": [
+      "hotel"
+    ],
+    "osm:node/14241623837": [
+      "takeaway"
+    ],
+    "osm:node/14241623872": [
+      "takeaway"
+    ],
+    "osm:node/14244888061": [
+      "outdoor"
+    ],
+    "osm:node/14257038501": [
+      "wifi"
+    ],
+    "osm:node/14266915402": [
+      "wifi"
+    ],
+    "osm:node/14276088901": [
+      "hotel"
+    ],
+    "osm:node/14280377374": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/14282198401": [
+      "wifi"
+    ],
+    "osm:node/14284008075": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/14284430037": [
+      "outdoor"
+    ],
+    "osm:node/14286474386": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/14286724598": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/14287665094": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/14287669488": [
+      "outdoor"
+    ],
+    "osm:node/14289471001": [
+      "wifi"
+    ],
+    "osm:node/14292521977": [
+      "takeaway"
+    ],
+    "osm:node/14292522428": [
+      "takeaway"
+    ],
+    "osm:node/14293382265": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/14293793198": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/14295125398": [
+      "takeaway"
+    ],
+    "osm:node/14295226928": [
+      "takeaway"
+    ],
+    "osm:node/14295233195": [
+      "takeaway"
+    ],
+    "osm:node/14295359221": [
+      "takeaway"
+    ],
+    "osm:node/14295376758": [
+      "takeaway"
+    ],
+    "osm:node/14295388601": [
+      "hotel"
+    ],
+    "osm:node/14295463986": [
+      "wheelchair"
+    ],
+    "osm:node/14296440435": [
+      "takeaway"
+    ],
+    "osm:node/14298923317": [
+      "takeaway"
+    ],
+    "osm:node/14302421202": [
+      "outdoor"
+    ],
+    "osm:node/14303715268": [
+      "hotel"
+    ],
+    "osm:node/14303715277": [
+      "outdoor"
+    ],
+    "osm:node/14303715283": [
+      "outdoor"
+    ],
+    "osm:node/14305986001": [
+      "wifi"
+    ],
+    "osm:node/14306045058": [
+      "outdoor"
+    ],
+    "osm:node/14307864326": [
+      "outdoor"
+    ],
+    "osm:node/14309115902": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/14309450718": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/14311554301": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/14311965686": [
+      "hotel"
+    ],
+    "osm:node/14313014604": [
+      "takeaway"
+    ],
+    "osm:node/14314266601": [
+      "hotel"
+    ],
+    "osm:node/14315483535": [
+      "outdoor"
+    ],
+    "osm:node/14317262258": [
+      "takeaway"
+    ],
+    "osm:node/14318580554": [
+      "outdoor"
+    ],
+    "osm:node/14318580561": [
+      "outdoor"
+    ],
+    "osm:node/14319965190": [
+      "takeaway"
+    ],
+    "osm:node/14322397726": [
+      "outdoor"
+    ],
+    "osm:node/14325178684": [
+      "outdoor"
+    ],
+    "osm:node/14329463105": [
+      "hotel"
+    ],
+    "osm:node/14330860297": [
+      "hotel"
+    ],
+    "osm:node/14335672298": [
+      "outdoor"
+    ],
+    "osm:node/14336122701": [
+      "takeaway"
+    ],
+    "osm:node/14337501901": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/14337574501": [
+      "wifi"
+    ],
+    "osm:node/14344366430": [
+      "outdoor"
+    ],
+    "osm:node/14344366658": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/14351947201": [
+      "hotel"
+    ],
+    "osm:node/1499626823": [
+      "wifi",
+      "wheelchair"
+    ],
+    "osm:node/1561811973": [
+      "hotel"
+    ],
+    "osm:node/1614200780": [
+      "wifi"
+    ],
+    "osm:node/1614200877": [
+      "wifi"
+    ],
+    "osm:node/1710192560": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/1711502024": [
+      "wifi",
+      "wheelchair"
+    ],
+    "osm:node/1739970443": [
+      "hotel"
+    ],
+    "osm:node/1769692429": [
+      "takeaway"
+    ],
+    "osm:node/1770193865": [
+      "wifi"
+    ],
+    "osm:node/1770305118": [
+      "wifi"
+    ],
+    "osm:node/1770597616": [
+      "wifi"
+    ],
+    "osm:node/1770597627": [
+      "takeaway"
+    ],
+    "osm:node/1770597707": [
+      "wifi"
+    ],
+    "osm:node/1833691664": [
+      "hotel"
+    ],
+    "osm:node/1969358661": [
+      "takeaway"
+    ],
+    "osm:node/1969579682": [
+      "wifi"
+    ],
+    "osm:node/1969579862": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/1969579905": [
+      "takeaway"
+    ],
+    "osm:node/1969579993": [
+      "takeaway"
+    ],
+    "osm:node/1969599014": [
+      "takeaway"
+    ],
+    "osm:node/1970245474": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/1985346178": [
+      "takeaway"
+    ],
+    "osm:node/1985346319": [
+      "wifi"
+    ],
+    "osm:node/1985346325": [
+      "hotel"
+    ],
+    "osm:node/1997154830": [
+      "hotel"
+    ],
+    "osm:node/2028078829": [
+      "hotel"
+    ],
+    "osm:node/2036596285": [
+      "hotel"
+    ],
+    "osm:node/2036596623": [
+      "takeaway"
+    ],
+    "osm:node/2037626761": [
+      "takeaway"
+    ],
+    "osm:node/2040064098": [
+      "takeaway"
+    ],
+    "osm:node/2041380423": [
+      "takeaway"
+    ],
+    "osm:node/2071459859": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/2078561313": [
+      "outdoor"
+    ],
+    "osm:node/2103831053": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/2119278909": [
+      "wifi"
+    ],
+    "osm:node/2119279066": [
+      "outdoor"
+    ],
+    "osm:node/2139900977": [
+      "wheelchair"
+    ],
+    "osm:node/2141010788": [
+      "takeaway"
+    ],
+    "osm:node/2155768488": [
+      "takeaway"
+    ],
+    "osm:node/2158685397": [
+      "wifi"
+    ],
+    "osm:node/2158751787": [
+      "hotel"
+    ],
+    "osm:node/2176976132": [
+      "takeaway"
+    ],
+    "osm:node/2176976137": [
+      "takeaway"
+    ],
+    "osm:node/2179447381": [
+      "wifi"
+    ],
+    "osm:node/2186742614": [
+      "takeaway"
+    ],
+    "osm:node/2210653874": [
+      "wifi"
+    ],
+    "osm:node/2262455027": [
+      "takeaway"
+    ],
+    "osm:node/2267874379": [
+      "outdoor"
+    ],
+    "osm:node/2267874389": [
+      "hotel"
+    ],
+    "osm:node/2267874391": [
+      "hotel"
+    ],
+    "osm:node/2267874392": [
+      "hotel"
+    ],
+    "osm:node/2267874393": [
+      "hotel"
+    ],
+    "osm:node/2267874421": [
+      "hotel"
+    ],
+    "osm:node/2267874469": [
+      "hotel"
+    ],
+    "osm:node/2267949127": [
+      "hotel"
+    ],
+    "osm:node/2267949128": [
+      "hotel"
+    ],
+    "osm:node/2268280866": [
+      "hotel"
+    ],
+    "osm:node/2268280927": [
+      "hotel"
+    ],
+    "osm:node/2268280973": [
+      "hotel"
+    ],
+    "osm:node/2276291867": [
+      "wifi"
+    ],
+    "osm:node/2276291868": [
+      "hotel"
+    ],
+    "osm:node/2276291869": [
+      "hotel"
+    ],
+    "osm:node/2276291870": [
+      "hotel"
+    ],
+    "osm:node/2276551166": [
+      "wifi"
+    ],
+    "osm:node/2286005141": [
+      "hotel"
+    ],
+    "osm:node/2286005143": [
+      "hotel"
+    ],
+    "osm:node/2286005144": [
+      "hotel"
+    ],
+    "osm:node/2286005145": [
+      "hotel"
+    ],
+    "osm:node/2286005148": [
+      "hotel"
+    ],
+    "osm:node/2286005150": [
+      "hotel"
+    ],
+    "osm:node/2286005152": [
+      "hotel"
+    ],
+    "osm:node/2286005158": [
+      "takeaway"
+    ],
+    "osm:node/2286005159": [
+      "hotel"
+    ],
+    "osm:node/2286005160": [
+      "hotel"
+    ],
+    "osm:node/2286005164": [
+      "hotel"
+    ],
+    "osm:node/2286005165": [
+      "takeaway"
+    ],
+    "osm:node/2286005166": [
+      "hotel"
+    ],
+    "osm:node/2296635575": [
+      "takeaway"
+    ],
+    "osm:node/2301031645": [
+      "takeaway"
+    ],
+    "osm:node/2301108232": [
+      "takeaway"
+    ],
+    "osm:node/2339056698": [
+      "hotel"
+    ],
+    "osm:node/2339056930": [
+      "hotel"
+    ],
+    "osm:node/2340161840": [
+      "takeaway"
+    ],
+    "osm:node/2365200176": [
+      "takeaway"
+    ],
+    "osm:node/2389075912": [
+      "takeaway"
+    ],
+    "osm:node/2392496458": [
+      "wifi"
+    ],
+    "osm:node/2393618974": [
+      "hotel"
+    ],
+    "osm:node/2432348491": [
+      "hotel"
+    ],
+    "osm:node/2434813270": [
+      "takeaway"
+    ],
+    "osm:node/2434814803": [
+      "hotel"
+    ],
+    "osm:node/2441112329": [
+      "wifi"
+    ],
+    "osm:node/2476392981": [
+      "hotel"
+    ],
+    "osm:node/2480865074": [
+      "wifi"
+    ],
+    "osm:node/2539425567": [
+      "wifi"
+    ],
+    "osm:node/2593669468": [
+      "hotel"
+    ],
+    "osm:node/2609878882": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/2614395016": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/2614395020": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/2616958820": [
+      "takeaway"
+    ],
+    "osm:node/2616958842": [
+      "takeaway"
+    ],
+    "osm:node/2623042687": [
+      "wifi"
+    ],
+    "osm:node/2640796686": [
+      "takeaway"
+    ],
+    "osm:node/2646624973": [
+      "hotel"
+    ],
+    "osm:node/2647227967": [
+      "takeaway"
+    ],
+    "osm:node/2648024255": [
+      "hotel"
+    ],
+    "osm:node/2649760588": [
+      "hotel"
+    ],
+    "osm:node/2661048171": [
+      "hotel"
+    ],
+    "osm:node/2663845444": [
+      "hotel"
+    ],
+    "osm:node/2670478776": [
+      "hotel"
+    ],
+    "osm:node/2670548905": [
+      "hotel"
+    ],
+    "osm:node/2671787196": [
+      "takeaway"
+    ],
+    "osm:node/2672496004": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/2672661845": [
+      "takeaway"
+    ],
+    "osm:node/2674331004": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/2676923809": [
+      "wifi"
+    ],
+    "osm:node/2676928762": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/2686083951": [
+      "takeaway"
+    ],
+    "osm:node/2854585999": [
+      "wifi"
+    ],
+    "osm:node/2926911005": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/2926929601": [
+      "hotel"
+    ],
+    "osm:node/2927183601": [
+      "takeaway"
+    ],
+    "osm:node/2927363201": [
+      "hotel"
+    ],
+    "osm:node/2931144501": [
+      "hotel"
+    ],
+    "osm:node/2931146001": [
+      "hotel"
+    ],
+    "osm:node/2933722691": [
+      "hotel"
+    ],
+    "osm:node/2934601307": [
+      "takeaway"
+    ],
+    "osm:node/2940277601": [
+      "takeaway"
+    ],
+    "osm:node/2940290201": [
+      "takeaway"
+    ],
+    "osm:node/2947365333": [
+      "hotel"
+    ],
+    "osm:node/2948811933": [
+      "takeaway"
+    ],
+    "osm:node/2963929792": [
+      "takeaway"
+    ],
+    "osm:node/2980476833": [
+      "takeaway"
+    ],
+    "osm:node/2991926833": [
+      "takeaway"
+    ],
+    "osm:node/2991927435": [
+      "takeaway"
+    ],
+    "osm:node/2997206393": [
+      "takeaway"
+    ],
+    "osm:node/3103940406": [
+      "takeaway"
+    ],
+    "osm:node/3116282958": [
+      "takeaway"
+    ],
+    "osm:node/3116339963": [
+      "takeaway"
+    ],
+    "osm:node/3183954535": [
+      "hotel"
+    ],
+    "osm:node/3193184663": [
+      "takeaway"
+    ],
+    "osm:node/3197129248": [
+      "takeaway"
+    ],
+    "osm:node/3203223162": [
+      "takeaway"
+    ],
+    "osm:node/3208604561": [
+      "hotel"
+    ],
+    "osm:node/3212141008": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/3227787560": [
+      "takeaway"
+    ],
+    "osm:node/3227801938": [
+      "hotel"
+    ],
+    "osm:node/3230868724": [
+      "wifi"
+    ],
+    "osm:node/3235645533": [
+      "hotel"
+    ],
+    "osm:node/3235649458": [
+      "hotel"
+    ],
+    "osm:node/3235651896": [
+      "hotel"
+    ],
+    "osm:node/3235653239": [
+      "takeaway"
+    ],
+    "osm:node/3235666537": [
+      "takeaway"
+    ],
+    "osm:node/3237716654": [
+      "takeaway"
+    ],
+    "osm:node/3240763702": [
+      "wifi"
+    ],
+    "osm:node/3246109346": [
+      "takeaway"
+    ],
+    "osm:node/3247376711": [
+      "takeaway"
+    ],
+    "osm:node/3247376712": [
+      "hotel"
+    ],
+    "osm:node/3250463562": [
+      "takeaway"
+    ],
+    "osm:node/3250483385": [
+      "hotel"
+    ],
+    "osm:node/3253193981": [
+      "hotel"
+    ],
+    "osm:node/3256598177": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/3257722044": [
+      "hotel"
+    ],
+    "osm:node/3261127378": [
+      "hotel"
+    ],
+    "osm:node/3294907175": [
+      "hotel"
+    ],
+    "osm:node/3310696736": [
+      "takeaway"
+    ],
+    "osm:node/3312760023": [
+      "takeaway"
+    ],
+    "osm:node/3319583926": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/3324706843": [
+      "hotel"
+    ],
+    "osm:node/3326697831": [
+      "takeaway"
+    ],
+    "osm:node/3365758422": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/3372131193": [
+      "hotel"
+    ],
+    "osm:node/3372132837": [
+      "hotel"
+    ],
+    "osm:node/3372136320": [
+      "hotel"
+    ],
+    "osm:node/3372144541": [
+      "hotel"
+    ],
+    "osm:node/3473953367": [
+      "hotel"
+    ],
+    "osm:node/3473953368": [
+      "hotel"
+    ],
+    "osm:node/3473955573": [
+      "wifi"
+    ],
+    "osm:node/3473955574": [
+      "hotel"
+    ],
+    "osm:node/3474017277": [
+      "hotel"
+    ],
+    "osm:node/3606992724": [
+      "hotel"
+    ],
+    "osm:node/3607020510": [
+      "wifi"
+    ],
+    "osm:node/3623141993": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/3623255796": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/3623474893": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/3625601694": [
+      "hotel"
+    ],
+    "osm:node/3625601696": [
+      "hotel"
+    ],
+    "osm:node/3626052600": [
+      "hotel"
+    ],
+    "osm:node/3654066993": [
+      "hotel"
+    ],
+    "osm:node/3654067007": [
+      "hotel"
+    ],
+    "osm:node/366379942": [
+      "hotel"
+    ],
+    "osm:node/366386765": [
+      "hotel"
+    ],
+    "osm:node/3756711935": [
+      "outdoor"
+    ],
+    "osm:node/3764254757": [
+      "hotel"
+    ],
+    "osm:node/3780395065": [
+      "takeaway"
+    ],
+    "osm:node/3798941178": [
+      "wifi"
+    ],
+    "osm:node/3806605582": [
+      "hotel"
+    ],
+    "osm:node/3806622351": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/3806835482": [
+      "hotel"
+    ],
+    "osm:node/3902968379": [
+      "takeaway"
+    ],
+    "osm:node/3928662854": [
+      "hotel"
+    ],
+    "osm:node/3938880925": [
+      "hotel"
+    ],
+    "osm:node/3945869998": [
+      "hotel"
+    ],
+    "osm:node/4017540900": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/4032744772": [
+      "takeaway"
+    ],
+    "osm:node/4069903577": [
+      "hotel"
+    ],
+    "osm:node/4089342074": [
+      "takeaway"
+    ],
+    "osm:node/4089362511": [
+      "takeaway"
+    ],
+    "osm:node/4089366197": [
+      "takeaway"
+    ],
+    "osm:node/4089381512": [
+      "takeaway"
+    ],
+    "osm:node/4089382204": [
+      "takeaway"
+    ],
+    "osm:node/4089385463": [
+      "takeaway"
+    ],
+    "osm:node/4089387235": [
+      "takeaway"
+    ],
+    "osm:node/4089388467": [
+      "takeaway"
+    ],
+    "osm:node/4089402948": [
+      "takeaway"
+    ],
+    "osm:node/4089403710": [
+      "takeaway"
+    ],
+    "osm:node/4089404601": [
+      "takeaway"
+    ],
+    "osm:node/4089412564": [
+      "takeaway"
+    ],
+    "osm:node/4089416239": [
+      "takeaway"
+    ],
+    "osm:node/4089419283": [
+      "takeaway"
+    ],
+    "osm:node/4092040193": [
+      "takeaway"
+    ],
+    "osm:node/4094616529": [
+      "hotel"
+    ],
+    "osm:node/4094616530": [
+      "hotel"
+    ],
+    "osm:node/4094632684": [
+      "hotel"
+    ],
+    "osm:node/4097163200": [
+      "hotel"
+    ],
+    "osm:node/4100911589": [
+      "wifi"
+    ],
+    "osm:node/4105347501": [
+      "hotel"
+    ],
+    "osm:node/4115995654": [
+      "takeaway"
+    ],
+    "osm:node/4116050774": [
+      "takeaway"
+    ],
+    "osm:node/4116060181": [
+      "takeaway"
+    ],
+    "osm:node/4117962591": [
+      "wifi"
+    ],
+    "osm:node/411918020": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/4120750189": [
+      "wifi"
+    ],
+    "osm:node/4121579923": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4124534063": [
+      "hotel"
+    ],
+    "osm:node/4125843189": [
+      "takeaway"
+    ],
+    "osm:node/4130744790": [
+      "hotel"
+    ],
+    "osm:node/4133670092": [
+      "wifi"
+    ],
+    "osm:node/4134594889": [
+      "wifi"
+    ],
+    "osm:node/4143264008": [
+      "wifi",
+      "homestay"
+    ],
+    "osm:node/4146833995": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4148747989": [
+      "wifi"
+    ],
+    "osm:node/4169434089": [
+      "hotel"
+    ],
+    "osm:node/4193379889": [
+      "hotel"
+    ],
+    "osm:node/4201974591": [
+      "wifi"
+    ],
+    "osm:node/4208133965": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4210808389": [
+      "hotel"
+    ],
+    "osm:node/4212531394": [
+      "takeaway"
+    ],
+    "osm:node/4213710995": [
+      "hotel"
+    ],
+    "osm:node/4214941891": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4217006541": [
+      "takeaway"
+    ],
+    "osm:node/4221617096": [
+      "wifi"
+    ],
+    "osm:node/4223128990": [
+      "wifi"
+    ],
+    "osm:node/4224939598": [
+      "hotel"
+    ],
+    "osm:node/4227274573": [
+      "wifi"
+    ],
+    "osm:node/4231066793": [
+      "wifi"
+    ],
+    "osm:node/4242307790": [
+      "wifi"
+    ],
+    "osm:node/4242359812": [
+      "wifi"
+    ],
+    "osm:node/4242786289": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4247661690": [
+      "wifi"
+    ],
+    "osm:node/4250039390": [
+      "hotel"
+    ],
+    "osm:node/4254655893": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4256038989": [
+      "hotel"
+    ],
+    "osm:node/4256144389": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4259725089": [
+      "hotel"
+    ],
+    "osm:node/4265464090": [
+      "takeaway"
+    ],
+    "osm:node/4267020994": [
+      "wifi"
+    ],
+    "osm:node/4269089889": [
+      "wifi"
+    ],
+    "osm:node/4269545907": [
+      "wifi"
+    ],
+    "osm:node/4269770703": [
+      "hotel"
+    ],
+    "osm:node/4271032089": [
+      "wifi"
+    ],
+    "osm:node/4274832591": [
+      "takeaway"
+    ],
+    "osm:node/4274832592": [
+      "takeaway"
+    ],
+    "osm:node/4274858294": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/4274858295": [
+      "takeaway"
+    ],
+    "osm:node/4274875190": [
+      "takeaway"
+    ],
+    "osm:node/4274875389": [
+      "takeaway"
+    ],
+    "osm:node/4275134192": [
+      "wifi"
+    ],
+    "osm:node/4278389491": [
+      "hotel"
+    ],
+    "osm:node/4281613793": [
+      "takeaway"
+    ],
+    "osm:node/4281614689": [
+      "takeaway"
+    ],
+    "osm:node/4283418190": [
+      "takeaway"
+    ],
+    "osm:node/4283458193": [
+      "hotel"
+    ],
+    "osm:node/4283882989": [
+      "hotel"
+    ],
+    "osm:node/4283890192": [
+      "hotel"
+    ],
+    "osm:node/4290032796": [
+      "takeaway"
+    ],
+    "osm:node/4290033490": [
+      "takeaway"
+    ],
+    "osm:node/4290152789": [
+      "takeaway"
+    ],
+    "osm:node/4295677837": [
+      "wifi"
+    ],
+    "osm:node/4295679393": [
+      "wifi"
+    ],
+    "osm:node/4298642523": [
+      "takeaway"
+    ],
+    "osm:node/4298799088": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/4298799290": [
+      "takeaway"
+    ],
+    "osm:node/4302054289": [
+      "wifi"
+    ],
+    "osm:node/4310134635": [
+      "wifi"
+    ],
+    "osm:node/4310674793": [
+      "wifi"
+    ],
+    "osm:node/4312456291": [
+      "hotel"
+    ],
+    "osm:node/4316534805": [
+      "wifi"
+    ],
+    "osm:node/4316938489": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4319481392": [
+      "hotel"
+    ],
+    "osm:node/4329767988": [
+      "hotel"
+    ],
+    "osm:node/4332395699": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/4333054190": [
+      "hotel"
+    ],
+    "osm:node/4333190490": [
+      "hotel"
+    ],
+    "osm:node/4335331201": [
+      "wifi"
+    ],
+    "osm:node/4335923590": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4337995789": [
+      "hotel"
+    ],
+    "osm:node/4338055391": [
+      "wifi"
+    ],
+    "osm:node/4348139090": [
+      "wifi"
+    ],
+    "osm:node/4352683291": [
+      "wifi"
+    ],
+    "osm:node/4360822689": [
+      "takeaway"
+    ],
+    "osm:node/4360863889": [
+      "hotel"
+    ],
+    "osm:node/4369409590": [
+      "wifi"
+    ],
+    "osm:node/4380268159": [
+      "hotel"
+    ],
+    "osm:node/4381798790": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/4385092389": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/4391548192": [
+      "wifi"
+    ],
+    "osm:node/4391610589": [
+      "wifi"
+    ],
+    "osm:node/4393480889": [
+      "wifi"
+    ],
+    "osm:node/4394277991": [
+      "hotel"
+    ],
+    "osm:node/4394277992": [
+      "hotel"
+    ],
+    "osm:node/4396060291": [
+      "takeaway"
+    ],
+    "osm:node/4396108093": [
+      "wifi"
+    ],
+    "osm:node/4397106801": [
+      "hotel"
+    ],
+    "osm:node/4399059692": [
+      "hotel"
+    ],
+    "osm:node/4401172307": [
+      "hotel"
+    ],
+    "osm:node/4401850390": [
+      "takeaway"
+    ],
+    "osm:node/4405122989": [
+      "hotel"
+    ],
+    "osm:node/4407613796": [
+      "hotel"
+    ],
+    "osm:node/4412626590": [
+      "wifi"
+    ],
+    "osm:node/4412626690": [
+      "wifi"
+    ],
+    "osm:node/4414223793": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4417109391": [
+      "wifi"
+    ],
+    "osm:node/4417115790": [
+      "wifi"
+    ],
+    "osm:node/4428417889": [
+      "wifi"
+    ],
+    "osm:node/4430291274": [
+      "hotel"
+    ],
+    "osm:node/4438441890": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4439927089": [
+      "wifi"
+    ],
+    "osm:node/4443251989": [
+      "wifi"
+    ],
+    "osm:node/4447554792": [
+      "hotel"
+    ],
+    "osm:node/4447770491": [
+      "wifi"
+    ],
+    "osm:node/4450570790": [
+      "wifi"
+    ],
+    "osm:node/4451886590": [
+      "hotel"
+    ],
+    "osm:node/4452998291": [
+      "viewpoint"
+    ],
+    "osm:node/4453238789": [
+      "wifi"
+    ],
+    "osm:node/4453321310": [
+      "wifi"
+    ],
+    "osm:node/4454814943": [
+      "wheelchair"
+    ],
+    "osm:node/4462610290": [
+      "takeaway"
+    ],
+    "osm:node/4464703689": [
+      "wifi"
+    ],
+    "osm:node/4465852489": [
+      "wifi"
+    ],
+    "osm:node/4466741689": [
+      "wifi"
+    ],
+    "osm:node/4468090696": [
+      "hotel"
+    ],
+    "osm:node/4471042289": [
+      "wifi"
+    ],
+    "osm:node/4471042389": [
+      "wifi"
+    ],
+    "osm:node/4475368596": [
+      "wifi"
+    ],
+    "osm:node/4479047489": [
+      "wifi"
+    ],
+    "osm:node/4483176545": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4486338189": [
+      "wifi"
+    ],
+    "osm:node/4490264191": [
+      "wifi"
+    ],
+    "osm:node/4496341490": [
+      "takeaway"
+    ],
+    "osm:node/4504283091": [
+      "wifi"
+    ],
+    "osm:node/4510000589": [
+      "hotel"
+    ],
+    "osm:node/452094087": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4529352590": [
+      "hotel"
+    ],
+    "osm:node/4530261654": [
+      "hotel"
+    ],
+    "osm:node/4546308513": [
+      "wifi"
+    ],
+    "osm:node/4546479589": [
+      "wifi"
+    ],
+    "osm:node/4547532454": [
+      "outdoor"
+    ],
+    "osm:node/4547717476": [
+      "hotel"
+    ],
+    "osm:node/4547717477": [
+      "hotel"
+    ],
+    "osm:node/4547717478": [
+      "hotel"
+    ],
+    "osm:node/4547815945": [
+      "hotel"
+    ],
+    "osm:node/4548750091": [
+      "hotel"
+    ],
+    "osm:node/4550329993": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/4554750023": [
+      "takeaway"
+    ],
+    "osm:node/4555067091": [
+      "takeaway"
+    ],
+    "osm:node/4555441391": [
+      "takeaway"
+    ],
+    "osm:node/4555504590": [
+      "takeaway"
+    ],
+    "osm:node/4555513291": [
+      "hotel"
+    ],
+    "osm:node/4555513292": [
+      "hotel"
+    ],
+    "osm:node/4555524289": [
+      "takeaway"
+    ],
+    "osm:node/4556337489": [
+      "wifi"
+    ],
+    "osm:node/4558979190": [
+      "wifi"
+    ],
+    "osm:node/4561370930": [
+      "wifi"
+    ],
+    "osm:node/4564698792": [
+      "wifi"
+    ],
+    "osm:node/4570083889": [
+      "wifi"
+    ],
+    "osm:node/4570326791": [
+      "wifi"
+    ],
+    "osm:node/4573478289": [
+      "outdoor"
+    ],
+    "osm:node/4576194591": [
+      "wifi"
+    ],
+    "osm:node/4576217690": [
+      "wifi"
+    ],
+    "osm:node/4576658289": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4577337091": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4578693590": [
+      "wifi"
+    ],
+    "osm:node/4580754190": [
+      "wifi"
+    ],
+    "osm:node/4582585089": [
+      "wifi"
+    ],
+    "osm:node/4582768493": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/4582768494": [
+      "wifi"
+    ],
+    "osm:node/4583480189": [
+      "wifi"
+    ],
+    "osm:node/4583492089": [
+      "takeaway"
+    ],
+    "osm:node/4583527381": [
+      "outdoor"
+    ],
+    "osm:node/4583914589": [
+      "wifi"
+    ],
+    "osm:node/4584726590": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4585727871": [
+      "wifi"
+    ],
+    "osm:node/4588413289": [
+      "wifi"
+    ],
+    "osm:node/4588487990": [
+      "viewpoint"
+    ],
+    "osm:node/4590762489": [
+      "wifi"
+    ],
+    "osm:node/4594359489": [
+      "takeaway"
+    ],
+    "osm:node/4597397789": [
+      "wifi"
+    ],
+    "osm:node/4598094590": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4600234393": [
+      "hotel"
+    ],
+    "osm:node/4601095890": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4601176590": [
+      "viewpoint"
+    ],
+    "osm:node/4601742491": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4605398390": [
+      "hotel"
+    ],
+    "osm:node/4605838990": [
+      "hotel"
+    ],
+    "osm:node/4607172689": [
+      "wifi"
+    ],
+    "osm:node/4607349992": [
+      "wifi"
+    ],
+    "osm:node/4612104689": [
+      "hotel"
+    ],
+    "osm:node/4617502990": [
+      "wifi"
+    ],
+    "osm:node/4621823489": [
+      "wifi"
+    ],
+    "osm:node/4622288328": [
+      "wifi"
+    ],
+    "osm:node/4623800198": [
+      "wifi"
+    ],
+    "osm:node/4625280796": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4631739393": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4633806989": [
+      "hotel"
+    ],
+    "osm:node/4634203089": [
+      "outdoor"
+    ],
+    "osm:node/4635264574": [
+      "wifi",
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/4636295589": [
+      "wifi"
+    ],
+    "osm:node/4639779289": [
+      "wifi"
+    ],
+    "osm:node/4646080095": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/4646551589": [
+      "wifi"
+    ],
+    "osm:node/4646883028": [
+      "hotel"
+    ],
+    "osm:node/4650868790": [
+      "wifi"
+    ],
+    "osm:node/4667725206": [
+      "takeaway"
+    ],
+    "osm:node/4675217599": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4675298491": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4675302892": [
+      "wifi"
+    ],
+    "osm:node/4675324889": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4675324989": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4675324990": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4675325089": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4675861689": [
+      "wifi"
+    ],
+    "osm:node/4676482492": [
+      "wifi"
+    ],
+    "osm:node/4676791891": [
+      "wifi"
+    ],
+    "osm:node/4681543699": [
+      "wifi"
+    ],
+    "osm:node/4682386491": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4686802291": [
+      "wifi"
+    ],
+    "osm:node/4688384689": [
+      "wifi"
+    ],
+    "osm:node/4688667439": [
+      "outdoor"
+    ],
+    "osm:node/4689142589": [
+      "wifi"
+    ],
+    "osm:node/4689758295": [
+      "takeaway"
+    ],
+    "osm:node/4690069290": [
+      "hotel"
+    ],
+    "osm:node/4693374193": [
+      "wifi"
+    ],
+    "osm:node/4696576905": [
+      "wifi",
+      "outdoor",
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/4698948214": [
+      "hotel"
+    ],
+    "osm:node/4702527500": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4702528090": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4703397492": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4703402190": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4703421190": [
+      "wifi"
+    ],
+    "osm:node/4706148389": [
+      "hotel"
+    ],
+    "osm:node/4707949957": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4708271589": [
+      "hotel"
+    ],
+    "osm:node/4711639589": [
+      "hotel"
+    ],
+    "osm:node/4713002589": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4714346191": [
+      "wifi"
+    ],
+    "osm:node/4716032289": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4716084691": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4716460189": [
+      "wifi"
+    ],
+    "osm:node/4719623394": [
+      "takeaway"
+    ],
+    "osm:node/4731902123": [
+      "wifi"
+    ],
+    "osm:node/4732093923": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4737430221": [
+      "wifi"
+    ],
+    "osm:node/4737430223": [
+      "wifi"
+    ],
+    "osm:node/4737435621": [
+      "wifi"
+    ],
+    "osm:node/4737528521": [
+      "wifi"
+    ],
+    "osm:node/4737705428": [
+      "wifi"
+    ],
+    "osm:node/4740873022": [
+      "hotel"
+    ],
+    "osm:node/4741343821": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/4742584593": [
+      "wifi"
+    ],
+    "osm:node/4761236024": [
+      "takeaway"
+    ],
+    "osm:node/4765816206": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/4767350522": [
+      "wifi"
+    ],
+    "osm:node/4767366626": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4768905043": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4770651222": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4770705423": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4771814069": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/4781333222": [
+      "wifi"
+    ],
+    "osm:node/4791195622": [
+      "wifi"
+    ],
+    "osm:node/4802739822": [
+      "wifi"
+    ],
+    "osm:node/4802740221": [
+      "wifi"
+    ],
+    "osm:node/4804324721": [
+      "hotel"
+    ],
+    "osm:node/4809049513": [
+      "outdoor"
+    ],
+    "osm:node/4810736423": [
+      "wifi"
+    ],
+    "osm:node/4810932163": [
+      "hotel"
+    ],
+    "osm:node/4813623621": [
+      "takeaway"
+    ],
+    "osm:node/4815270222": [
+      "wifi"
+    ],
+    "osm:node/4815270223": [
+      "wifi"
+    ],
+    "osm:node/4818288522": [
+      "hotel"
+    ],
+    "osm:node/4819864624": [
+      "wifi"
+    ],
+    "osm:node/4824316023": [
+      "wifi"
+    ],
+    "osm:node/4826375721": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4828147520": [
+      "viewpoint"
+    ],
+    "osm:node/4829207027": [
+      "wifi"
+    ],
+    "osm:node/4831809622": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4835913121": [
+      "wifi"
+    ],
+    "osm:node/4836654587": [
+      "hotel"
+    ],
+    "osm:node/4838067251": [
+      "outdoor"
+    ],
+    "osm:node/4838600629": [
+      "hotel"
+    ],
+    "osm:node/4841251220": [
+      "wifi"
+    ],
+    "osm:node/4844786530": [
+      "homestay"
+    ],
+    "osm:node/4846792121": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4849608925": [
+      "wifi"
+    ],
+    "osm:node/4853734225": [
+      "wifi"
+    ],
+    "osm:node/4855613962": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4856827221": [
+      "hotel"
+    ],
+    "osm:node/4863766622": [
+      "wifi"
+    ],
+    "osm:node/4865605121": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4869310921": [
+      "wifi"
+    ],
+    "osm:node/4872310611": [
+      "takeaway"
+    ],
+    "osm:node/4875439724": [
+      "hotel"
+    ],
+    "osm:node/4882461221": [
+      "wifi"
+    ],
+    "osm:node/4885457021": [
+      "wifi"
+    ],
+    "osm:node/4886670021": [
+      "wifi"
+    ],
+    "osm:node/4893221221": [
+      "wifi"
+    ],
+    "osm:node/4895243817": [
+      "hotel"
+    ],
+    "osm:node/4896549721": [
+      "wifi"
+    ],
+    "osm:node/4897182222": [
+      "wifi"
+    ],
+    "osm:node/4903854231": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4904672321": [
+      "hotel"
+    ],
+    "osm:node/4908284622": [
+      "wifi"
+    ],
+    "osm:node/4918446622": [
+      "wifi"
+    ],
+    "osm:node/4919148221": [
+      "wifi"
+    ],
+    "osm:node/4919152721": [
+      "hotel"
+    ],
+    "osm:node/4921560321": [
+      "wifi"
+    ],
+    "osm:node/4928829323": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/4934692021": [
+      "wifi"
+    ],
+    "osm:node/4945572124": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/4945581021": [
+      "wifi"
+    ],
+    "osm:node/4950854021": [
+      "wifi"
+    ],
+    "osm:node/4953509843": [
+      "hotel"
+    ],
+    "osm:node/4958749023": [
+      "hotel"
+    ],
+    "osm:node/4960234425": [
+      "wifi"
+    ],
+    "osm:node/4960234435": [
+      "viewpoint"
+    ],
+    "osm:node/4960234436": [
+      "viewpoint"
+    ],
+    "osm:node/4982337921": [
+      "wifi"
+    ],
+    "osm:node/4982574354": [
+      "hotel"
+    ],
+    "osm:node/4994992823": [
+      "wifi"
+    ],
+    "osm:node/4999110022": [
+      "wifi"
+    ],
+    "osm:node/5001507622": [
+      "wifi"
+    ],
+    "osm:node/5001514722": [
+      "wifi"
+    ],
+    "osm:node/5002385221": [
+      "wifi"
+    ],
+    "osm:node/5002462321": [
+      "wifi"
+    ],
+    "osm:node/5003536405": [
+      "wifi",
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/5003536418": [
+      "wifi"
+    ],
+    "osm:node/5004072822": [
+      "wifi"
+    ],
+    "osm:node/5004996021": [
+      "outdoor"
+    ],
+    "osm:node/5008004723": [
+      "wifi"
+    ],
+    "osm:node/5021240370": [
+      "outdoor"
+    ],
+    "osm:node/5021248568": [
+      "hotel"
+    ],
+    "osm:node/5030700421": [
+      "wifi"
+    ],
+    "osm:node/5033848321": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5037856321": [
+      "wifi"
+    ],
+    "osm:node/5040316799": [
+      "hotel"
+    ],
+    "osm:node/5042959021": [
+      "wifi"
+    ],
+    "osm:node/5056267321": [
+      "wifi"
+    ],
+    "osm:node/5059311422": [
+      "outdoor"
+    ],
+    "osm:node/5060392421": [
+      "wifi"
+    ],
+    "osm:node/5068379221": [
+      "wifi"
+    ],
+    "osm:node/5070470422": [
+      "hotel"
+    ],
+    "osm:node/5087568412": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5087699886": [
+      "wifi"
+    ],
+    "osm:node/5103204621": [
+      "wifi"
+    ],
+    "osm:node/5104295621": [
+      "viewpoint"
+    ],
+    "osm:node/5105530621": [
+      "takeaway"
+    ],
+    "osm:node/5109359421": [
+      "hotel"
+    ],
+    "osm:node/5110602149": [
+      "wifi"
+    ],
+    "osm:node/5134873621": [
+      "wifi"
+    ],
+    "osm:node/5138271120": [
+      "outdoor"
+    ],
+    "osm:node/5140881021": [
+      "wifi"
+    ],
+    "osm:node/5147674921": [
+      "wifi"
+    ],
+    "osm:node/5154306121": [
+      "hotel"
+    ],
+    "osm:node/5162176022": [
+      "wifi"
+    ],
+    "osm:node/5162176023": [
+      "wifi"
+    ],
+    "osm:node/5164093024": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5169110221": [
+      "wifi"
+    ],
+    "osm:node/5169110521": [
+      "wifi"
+    ],
+    "osm:node/5171025921": [
+      "wifi"
+    ],
+    "osm:node/5171107023": [
+      "wifi"
+    ],
+    "osm:node/5171195522": [
+      "wifi"
+    ],
+    "osm:node/5171270524": [
+      "hotel"
+    ],
+    "osm:node/5177410121": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5179756421": [
+      "wifi"
+    ],
+    "osm:node/5181036121": [
+      "wifi"
+    ],
+    "osm:node/5181352522": [
+      "wifi"
+    ],
+    "osm:node/5181409924": [
+      "hotel"
+    ],
+    "osm:node/5196266021": [
+      "wifi"
+    ],
+    "osm:node/5198480721": [
+      "wifi"
+    ],
+    "osm:node/5199575777": [
+      "hotel"
+    ],
+    "osm:node/5199665121": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5207523125": [
+      "wifi"
+    ],
+    "osm:node/5213467421": [
+      "wifi"
+    ],
+    "osm:node/5219275422": [
+      "hotel"
+    ],
+    "osm:node/5222517682": [
+      "hotel"
+    ],
+    "osm:node/5224203021": [
+      "hotel"
+    ],
+    "osm:node/5224210322": [
+      "wifi"
+    ],
+    "osm:node/5234210521": [
+      "wifi"
+    ],
+    "osm:node/5237625621": [
+      "hotel"
+    ],
+    "osm:node/5244079022": [
+      "wifi"
+    ],
+    "osm:node/5246987522": [
+      "wifi"
+    ],
+    "osm:node/5247153223": [
+      "hotel"
+    ],
+    "osm:node/5250125852": [
+      "takeaway"
+    ],
+    "osm:node/5257343725": [
+      "hotel"
+    ],
+    "osm:node/5258744921": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/5267154421": [
+      "wifi"
+    ],
+    "osm:node/5274814121": [
+      "hotel"
+    ],
+    "osm:node/5277476322": [
+      "wifi"
+    ],
+    "osm:node/5279616421": [
+      "wifi"
+    ],
+    "osm:node/5280987722": [
+      "takeaway"
+    ],
+    "osm:node/5280998721": [
+      "takeaway"
+    ],
+    "osm:node/5281198621": [
+      "wifi"
+    ],
+    "osm:node/5289048828": [
+      "wifi"
+    ],
+    "osm:node/5290098121": [
+      "wifi"
+    ],
+    "osm:node/5291462621": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5291676521": [
+      "hotel"
+    ],
+    "osm:node/5293252521": [
+      "wifi"
+    ],
+    "osm:node/5304711822": [
+      "hotel"
+    ],
+    "osm:node/5305103724": [
+      "wifi"
+    ],
+    "osm:node/5306526021": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5308161122": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5311759821": [
+      "takeaway"
+    ],
+    "osm:node/5311760021": [
+      "takeaway"
+    ],
+    "osm:node/5312703621": [
+      "hotel"
+    ],
+    "osm:node/5312899621": [
+      "wifi"
+    ],
+    "osm:node/5314636422": [
+      "wifi"
+    ],
+    "osm:node/5316003321": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5317654421": [
+      "wifi"
+    ],
+    "osm:node/5319196721": [
+      "wifi"
+    ],
+    "osm:node/5319673321": [
+      "wifi"
+    ],
+    "osm:node/5319692923": [
+      "wifi"
+    ],
+    "osm:node/5319726321": [
+      "wifi"
+    ],
+    "osm:node/5324090929": [
+      "wifi"
+    ],
+    "osm:node/5326673522": [
+      "wifi"
+    ],
+    "osm:node/5328786821": [
+      "hotel"
+    ],
+    "osm:node/5330376621": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5330921222": [
+      "wifi"
+    ],
+    "osm:node/5331271922": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5332006524": [
+      "wifi"
+    ],
+    "osm:node/5333005525": [
+      "takeaway"
+    ],
+    "osm:node/5333193823": [
+      "wifi"
+    ],
+    "osm:node/5333272821": [
+      "wifi"
+    ],
+    "osm:node/5336398121": [
+      "wifi"
+    ],
+    "osm:node/5338832321": [
+      "wifi"
+    ],
+    "osm:node/5348448221": [
+      "wifi"
+    ],
+    "osm:node/5350664330": [
+      "wifi"
+    ],
+    "osm:node/5350664480": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/5350664482": [
+      "hotel"
+    ],
+    "osm:node/5352765361": [
+      "takeaway"
+    ],
+    "osm:node/5358026521": [
+      "wifi"
+    ],
+    "osm:node/5358262721": [
+      "wifi"
+    ],
+    "osm:node/5363380722": [
+      "hotel"
+    ],
+    "osm:node/5366253639": [
+      "takeaway"
+    ],
+    "osm:node/5366253640": [
+      "wifi"
+    ],
+    "osm:node/5366253641": [
+      "takeaway"
+    ],
+    "osm:node/5366253644": [
+      "takeaway"
+    ],
+    "osm:node/5366253650": [
+      "takeaway"
+    ],
+    "osm:node/5366253660": [
+      "takeaway"
+    ],
+    "osm:node/5366253661": [
+      "takeaway"
+    ],
+    "osm:node/5366253683": [
+      "takeaway"
+    ],
+    "osm:node/5366253684": [
+      "takeaway"
+    ],
+    "osm:node/5375623229": [
+      "takeaway"
+    ],
+    "osm:node/5386397021": [
+      "wifi"
+    ],
+    "osm:node/5388501721": [
+      "wifi"
+    ],
+    "osm:node/5398114825": [
+      "wifi"
+    ],
+    "osm:node/5400353821": [
+      "wifi"
+    ],
+    "osm:node/5403567021": [
+      "hotel"
+    ],
+    "osm:node/5403886821": [
+      "wifi"
+    ],
+    "osm:node/5404391221": [
+      "wifi"
+    ],
+    "osm:node/5404586822": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5407227521": [
+      "wifi"
+    ],
+    "osm:node/5409166922": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5412272024": [
+      "wifi"
+    ],
+    "osm:node/5413989621": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5416320321": [
+      "wifi"
+    ],
+    "osm:node/5416626132": [
+      "wifi"
+    ],
+    "osm:node/5417547822": [
+      "wifi"
+    ],
+    "osm:node/5419442821": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/5419915324": [
+      "hotel"
+    ],
+    "osm:node/5420327321": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5420749922": [
+      "wifi"
+    ],
+    "osm:node/5420763723": [
+      "wifi"
+    ],
+    "osm:node/5421558521": [
+      "wifi"
+    ],
+    "osm:node/5421996721": [
+      "wifi"
+    ],
+    "osm:node/5422245644": [
+      "viewpoint"
+    ],
+    "osm:node/5426113821": [
+      "wifi"
+    ],
+    "osm:node/5426869831": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/5428887122": [
+      "wifi"
+    ],
+    "osm:node/5432647622": [
+      "wifi"
+    ],
+    "osm:node/5434955021": [
+      "hotel"
+    ],
+    "osm:node/5442324926": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5442338924": [
+      "wifi"
+    ],
+    "osm:node/5442338925": [
+      "wifi"
+    ],
+    "osm:node/5442787054": [
+      "wifi"
+    ],
+    "osm:node/5448253222": [
+      "wifi"
+    ],
+    "osm:node/5449809624": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5455622567": [
+      "wifi"
+    ],
+    "osm:node/5456731970": [
+      "wifi"
+    ],
+    "osm:node/5458117021": [
+      "wifi"
+    ],
+    "osm:node/5458491424": [
+      "wifi"
+    ],
+    "osm:node/5459140621": [
+      "wifi"
+    ],
+    "osm:node/5461043622": [
+      "wifi"
+    ],
+    "osm:node/5468383325": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5469236221": [
+      "wifi"
+    ],
+    "osm:node/5472247821": [
+      "wifi"
+    ],
+    "osm:node/5474419726": [
+      "hotel"
+    ],
+    "osm:node/5483859821": [
+      "wifi"
+    ],
+    "osm:node/5494160922": [
+      "wifi"
+    ],
+    "osm:node/5495142722": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5495142723": [
+      "hotel"
+    ],
+    "osm:node/5500075523": [
+      "hotel"
+    ],
+    "osm:node/5504474721": [
+      "wifi"
+    ],
+    "osm:node/5513665621": [
+      "hotel"
+    ],
+    "osm:node/5519685924": [
+      "homestay"
+    ],
+    "osm:node/5527212821": [
+      "wifi"
+    ],
+    "osm:node/5530844922": [
+      "wifi"
+    ],
+    "osm:node/5531064722": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5532194622": [
+      "wifi"
+    ],
+    "osm:node/5532623022": [
+      "wifi"
+    ],
+    "osm:node/5547548921": [
+      "hotel"
+    ],
+    "osm:node/5554525633": [
+      "hotel"
+    ],
+    "osm:node/5555661622": [
+      "wifi"
+    ],
+    "osm:node/5556535121": [
+      "wifi"
+    ],
+    "osm:node/5563186922": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5563482621": [
+      "hotel"
+    ],
+    "osm:node/5566149721": [
+      "wifi"
+    ],
+    "osm:node/5568092421": [
+      "outdoor"
+    ],
+    "osm:node/5572779924": [
+      "takeaway"
+    ],
+    "osm:node/5575314522": [
+      "wifi"
+    ],
+    "osm:node/5578056523": [
+      "wifi"
+    ],
+    "osm:node/5584145521": [
+      "wifi"
+    ],
+    "osm:node/5584409522": [
+      "takeaway"
+    ],
+    "osm:node/5593839721": [
+      "hotel",
+      "homestay"
+    ],
+    "osm:node/5594543521": [
+      "wifi"
+    ],
+    "osm:node/5598130321": [
+      "wifi"
+    ],
+    "osm:node/5598591727": [
+      "takeaway"
+    ],
+    "osm:node/5598915567": [
+      "takeaway"
+    ],
+    "osm:node/5598915618": [
+      "hotel"
+    ],
+    "osm:node/5598915619": [
+      "hotel"
+    ],
+    "osm:node/5598915620": [
+      "hotel"
+    ],
+    "osm:node/5598916097": [
+      "hotel"
+    ],
+    "osm:node/5598916098": [
+      "hotel"
+    ],
+    "osm:node/5598916099": [
+      "hotel"
+    ],
+    "osm:node/5598916100": [
+      "hotel"
+    ],
+    "osm:node/5598916285": [
+      "hotel"
+    ],
+    "osm:node/5599070832": [
+      "hotel"
+    ],
+    "osm:node/5599070837": [
+      "hotel"
+    ],
+    "osm:node/5599070839": [
+      "hotel"
+    ],
+    "osm:node/5599070845": [
+      "hotel"
+    ],
+    "osm:node/5599072422": [
+      "hotel"
+    ],
+    "osm:node/5599418866": [
+      "hotel"
+    ],
+    "osm:node/5599783331": [
+      "takeaway"
+    ],
+    "osm:node/5600351755": [
+      "hotel"
+    ],
+    "osm:node/5600351758": [
+      "hotel"
+    ],
+    "osm:node/5601242521": [
+      "wifi"
+    ],
+    "osm:node/5602116363": [
+      "wifi"
+    ],
+    "osm:node/5602612394": [
+      "hotel"
+    ],
+    "osm:node/5604416521": [
+      "hotel"
+    ],
+    "osm:node/5606335877": [
+      "hotel"
+    ],
+    "osm:node/5606378680": [
+      "takeaway"
+    ],
+    "osm:node/5611412152": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5611412156": [
+      "hotel"
+    ],
+    "osm:node/5611412167": [
+      "hotel"
+    ],
+    "osm:node/5611412169": [
+      "hotel"
+    ],
+    "osm:node/5611412171": [
+      "hotel"
+    ],
+    "osm:node/5611412181": [
+      "hotel"
+    ],
+    "osm:node/5611733591": [
+      "takeaway"
+    ],
+    "osm:node/5613330507": [
+      "hotel"
+    ],
+    "osm:node/5613330511": [
+      "hotel"
+    ],
+    "osm:node/5613330517": [
+      "hotel"
+    ],
+    "osm:node/5613330533": [
+      "hotel"
+    ],
+    "osm:node/5613330537": [
+      "hotel"
+    ],
+    "osm:node/5613330539": [
+      "hotel"
+    ],
+    "osm:node/5614467122": [
+      "hotel"
+    ],
+    "osm:node/5614527659": [
+      "hotel"
+    ],
+    "osm:node/5614527663": [
+      "hotel"
+    ],
+    "osm:node/5616373621": [
+      "wifi"
+    ],
+    "osm:node/5617113058": [
+      "takeaway"
+    ],
+    "osm:node/5617113059": [
+      "takeaway"
+    ],
+    "osm:node/5617113060": [
+      "takeaway"
+    ],
+    "osm:node/5617113061": [
+      "wifi",
+      "wheelchair"
+    ],
+    "osm:node/5617113062": [
+      "takeaway"
+    ],
+    "osm:node/5618803073": [
+      "wifi"
+    ],
+    "osm:node/5619500635": [
+      "hotel"
+    ],
+    "osm:node/5619500650": [
+      "takeaway"
+    ],
+    "osm:node/5635303221": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/5638925622": [
+      "hotel"
+    ],
+    "osm:node/5638947422": [
+      "hotel"
+    ],
+    "osm:node/5639839227": [
+      "hotel"
+    ],
+    "osm:node/5650662337": [
+      "wifi"
+    ],
+    "osm:node/5658332722": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5666383122": [
+      "viewpoint"
+    ],
+    "osm:node/5684857023": [
+      "wifi"
+    ],
+    "osm:node/5701447521": [
+      "wheelchair"
+    ],
+    "osm:node/5731772435": [
+      "wifi"
+    ],
+    "osm:node/5734430421": [
+      "takeaway"
+    ],
+    "osm:node/5738074582": [
+      "wifi"
+    ],
+    "osm:node/5738074851": [
+      "wifi"
+    ],
+    "osm:node/5738254414": [
+      "takeaway"
+    ],
+    "osm:node/5740162321": [
+      "takeaway"
+    ],
+    "osm:node/5743382521": [
+      "viewpoint"
+    ],
+    "osm:node/5744397028": [
+      "hotel"
+    ],
+    "osm:node/5746654221": [
+      "hotel"
+    ],
+    "osm:node/5759961721": [
+      "wifi"
+    ],
+    "osm:node/5761145864": [
+      "takeaway"
+    ],
+    "osm:node/5772886353": [
+      "wifi"
+    ],
+    "osm:node/5774244952": [
+      "hotel"
+    ],
+    "osm:node/5777155846": [
+      "takeaway"
+    ],
+    "osm:node/5788502553": [
+      "wifi"
+    ],
+    "osm:node/5802910122": [
+      "hotel"
+    ],
+    "osm:node/5804348060": [
+      "wifi"
+    ],
+    "osm:node/5807061654": [
+      "wifi"
+    ],
+    "osm:node/5808281356": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/5815214253": [
+      "wifi"
+    ],
+    "osm:node/5822036653": [
+      "wifi"
+    ],
+    "osm:node/5831432086": [
+      "wifi"
+    ],
+    "osm:node/5832002285": [
+      "takeaway"
+    ],
+    "osm:node/5832350885": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/5833958885": [
+      "wifi"
+    ],
+    "osm:node/5835767185": [
+      "wifi"
+    ],
+    "osm:node/5837757390": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/5842004787": [
+      "hotel"
+    ],
+    "osm:node/5863371885": [
+      "wifi"
+    ],
+    "osm:node/5865197885": [
+      "wifi"
+    ],
+    "osm:node/5871105085": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/5872611085": [
+      "wifi"
+    ],
+    "osm:node/5875534785": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/5877323186": [
+      "wifi"
+    ],
+    "osm:node/5893970026": [
+      "takeaway"
+    ],
+    "osm:node/5909598785": [
+      "wifi"
+    ],
+    "osm:node/5922563987": [
+      "wifi",
+      "wheelchair",
+      "hotel"
+    ],
+    "osm:node/5925440285": [
+      "wifi"
+    ],
+    "osm:node/5928682490": [
+      "wifi"
+    ],
+    "osm:node/5947837685": [
+      "hotel"
+    ],
+    "osm:node/5950485585": [
+      "wifi"
+    ],
+    "osm:node/5951681385": [
+      "wifi"
+    ],
+    "osm:node/5977136186": [
+      "wifi"
+    ],
+    "osm:node/5983038307": [
+      "wifi"
+    ],
+    "osm:node/6010015586": [
+      "takeaway"
+    ],
+    "osm:node/6029209287": [
+      "wifi"
+    ],
+    "osm:node/6039322885": [
+      "wifi"
+    ],
+    "osm:node/6049078985": [
+      "takeaway"
+    ],
+    "osm:node/6059038924": [
+      "hotel"
+    ],
+    "osm:node/6101656885": [
+      "wifi"
+    ],
+    "osm:node/6111679646": [
+      "outdoor"
+    ],
+    "osm:node/6122963355": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/6123051886": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/6124381090": [
+      "hotel"
+    ],
+    "osm:node/6124516478": [
+      "hotel"
+    ],
+    "osm:node/6124970385": [
+      "wifi"
+    ],
+    "osm:node/6130991590": [
+      "wifi"
+    ],
+    "osm:node/6133794485": [
+      "takeaway"
+    ],
+    "osm:node/6137146356": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/6137146375": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/6150821986": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/6150831685": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/6154787185": [
+      "wifi"
+    ],
+    "osm:node/6161696685": [
+      "hotel"
+    ],
+    "osm:node/6163353085": [
+      "hotel"
+    ],
+    "osm:node/6165485986": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/6169956027": [
+      "hotel"
+    ],
+    "osm:node/6174108085": [
+      "wifi"
+    ],
+    "osm:node/6176076187": [
+      "wifi"
+    ],
+    "osm:node/6177470885": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/6183084986": [
+      "wifi"
+    ],
+    "osm:node/6187223785": [
+      "wheelchair"
+    ],
+    "osm:node/6194847685": [
+      "wifi"
+    ],
+    "osm:node/6197458386": [
+      "wifi"
+    ],
+    "osm:node/6220729002": [
+      "takeaway"
+    ],
+    "osm:node/6220747921": [
+      "takeaway"
+    ],
+    "osm:node/6232490486": [
+      "viewpoint"
+    ],
+    "osm:node/6232490487": [
+      "viewpoint"
+    ],
+    "osm:node/6235238286": [
+      "wifi"
+    ],
+    "osm:node/6239165785": [
+      "homestay"
+    ],
+    "osm:node/6248408385": [
+      "hotel"
+    ],
+    "osm:node/6259592485": [
+      "wifi"
+    ],
+    "osm:node/6262049585": [
+      "wifi"
+    ],
+    "osm:node/6262953835": [
+      "hotel"
+    ],
+    "osm:node/6284052627": [
+      "outdoor"
+    ],
+    "osm:node/6297144199": [
+      "hotel"
+    ],
+    "osm:node/6300904389": [
+      "wifi"
+    ],
+    "osm:node/6301541187": [
+      "hotel"
+    ],
+    "osm:node/6314254009": [
+      "viewpoint"
+    ],
+    "osm:node/6315288819": [
+      "takeaway"
+    ],
+    "osm:node/6315288821": [
+      "takeaway"
+    ],
+    "osm:node/6315288900": [
+      "takeaway"
+    ],
+    "osm:node/6315388810": [
+      "hotel"
+    ],
+    "osm:node/6315390295": [
+      "takeaway"
+    ],
+    "osm:node/6315390429": [
+      "takeaway"
+    ],
+    "osm:node/6315429185": [
+      "wifi"
+    ],
+    "osm:node/6315671662": [
+      "takeaway"
+    ],
+    "osm:node/6315672392": [
+      "hotel"
+    ],
+    "osm:node/6315672452": [
+      "hotel"
+    ],
+    "osm:node/6315672810": [
+      "hotel"
+    ],
+    "osm:node/6315672842": [
+      "takeaway"
+    ],
+    "osm:node/6315672884": [
+      "hotel"
+    ],
+    "osm:node/6315672901": [
+      "hotel"
+    ],
+    "osm:node/6315686291": [
+      "hotel"
+    ],
+    "osm:node/6315686488": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/6315686489": [
+      "hotel"
+    ],
+    "osm:node/6315686603": [
+      "hotel"
+    ],
+    "osm:node/6315687805": [
+      "hotel"
+    ],
+    "osm:node/6315688488": [
+      "hotel"
+    ],
+    "osm:node/6315688909": [
+      "takeaway"
+    ],
+    "osm:node/6315691885": [
+      "hotel"
+    ],
+    "osm:node/6318125511": [
+      "hotel"
+    ],
+    "osm:node/6318125514": [
+      "hotel"
+    ],
+    "osm:node/6318125515": [
+      "hotel"
+    ],
+    "osm:node/6318163393": [
+      "wifi"
+    ],
+    "osm:node/6319103239": [
+      "wheelchair"
+    ],
+    "osm:node/6319103245": [
+      "takeaway"
+    ],
+    "osm:node/6319111453": [
+      "hotel"
+    ],
+    "osm:node/6328917587": [
+      "wifi"
+    ],
+    "osm:node/6328934385": [
+      "wifi"
+    ],
+    "osm:node/6336845787": [
+      "hotel"
+    ],
+    "osm:node/6337053079": [
+      "hotel"
+    ],
+    "osm:node/6338923085": [
+      "wifi"
+    ],
+    "osm:node/6340229354": [
+      "takeaway"
+    ],
+    "osm:node/6341024086": [
+      "wifi"
+    ],
+    "osm:node/6341492585": [
+      "wifi"
+    ],
+    "osm:node/6342279487": [
+      "hotel"
+    ],
+    "osm:node/6342764685": [
+      "hotel"
+    ],
+    "osm:node/6345357685": [
+      "wifi"
+    ],
+    "osm:node/6345750785": [
+      "hotel"
+    ],
+    "osm:node/6347766285": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/6355906490": [
+      "wifi"
+    ],
+    "osm:node/6361692985": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/6361818786": [
+      "wifi"
+    ],
+    "osm:node/6370270085": [
+      "wifi"
+    ],
+    "osm:node/6372334486": [
+      "wifi"
+    ],
+    "osm:node/6375456485": [
+      "wifi"
+    ],
+    "osm:node/6378479785": [
+      "wifi"
+    ],
+    "osm:node/6390336985": [
+      "wifi"
+    ],
+    "osm:node/6416096109": [
+      "wifi"
+    ],
+    "osm:node/6417909889": [
+      "wifi"
+    ],
+    "osm:node/6442018088": [
+      "takeaway"
+    ],
+    "osm:node/6468374670": [
+      "hotel"
+    ],
+    "osm:node/6480055085": [
+      "outdoor"
+    ],
+    "osm:node/6520653696": [
+      "takeaway"
+    ],
+    "osm:node/6533206865": [
+      "outdoor"
+    ],
+    "osm:node/6533209262": [
+      "takeaway"
+    ],
+    "osm:node/6533230666": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/6533525866": [
+      "hotel"
+    ],
+    "osm:node/6544500359": [
+      "hotel"
+    ],
+    "osm:node/6545337122": [
+      "outdoor"
+    ],
+    "osm:node/6579651785": [
+      "wifi"
+    ],
+    "osm:node/6585659185": [
+      "wifi"
+    ],
+    "osm:node/6681094687": [
+      "wifi"
+    ],
+    "osm:node/6683274385": [
+      "wifi"
+    ],
+    "osm:node/6689984285": [
+      "takeaway"
+    ],
+    "osm:node/6691715385": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/6702039671": [
+      "takeaway"
+    ],
+    "osm:node/6702078203": [
+      "hotel"
+    ],
+    "osm:node/6709865203": [
+      "wifi"
+    ],
+    "osm:node/6724555964": [
+      "hotel"
+    ],
+    "osm:node/6724681367": [
+      "hotel"
+    ],
+    "osm:node/6724770920": [
+      "hotel"
+    ],
+    "osm:node/6727410063": [
+      "hotel"
+    ],
+    "osm:node/6727500936": [
+      "hotel"
+    ],
+    "osm:node/6732220985": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/6732362230": [
+      "hotel"
+    ],
+    "osm:node/6732564075": [
+      "hotel"
+    ],
+    "osm:node/6732564076": [
+      "hotel"
+    ],
+    "osm:node/6732705972": [
+      "hotel"
+    ],
+    "osm:node/6735631023": [
+      "hotel"
+    ],
+    "osm:node/6735631024": [
+      "hotel"
+    ],
+    "osm:node/6746670734": [
+      "takeaway"
+    ],
+    "osm:node/6749023685": [
+      "wifi"
+    ],
+    "osm:node/6757123989": [
+      "hotel"
+    ],
+    "osm:node/6757384432": [
+      "hotel"
+    ],
+    "osm:node/6757384433": [
+      "hotel"
+    ],
+    "osm:node/6759753424": [
+      "hotel"
+    ],
+    "osm:node/6770512755": [
+      "takeaway"
+    ],
+    "osm:node/6770635810": [
+      "hotel"
+    ],
+    "osm:node/6770669682": [
+      "wifi"
+    ],
+    "osm:node/6772848755": [
+      "hotel"
+    ],
+    "osm:node/6777683383": [
+      "takeaway"
+    ],
+    "osm:node/6781842305": [
+      "wifi"
+    ],
+    "osm:node/6783760881": [
+      "takeaway"
+    ],
+    "osm:node/6786398502": [
+      "takeaway"
+    ],
+    "osm:node/6791462473": [
+      "takeaway"
+    ],
+    "osm:node/6797965286": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/6807433841": [
+      "takeaway"
+    ],
+    "osm:node/6810864286": [
+      "wifi"
+    ],
+    "osm:node/6811496215": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/6811496216": [
+      "takeaway"
+    ],
+    "osm:node/6813499477": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/6815031385": [
+      "wifi"
+    ],
+    "osm:node/6865444731": [
+      "takeaway"
+    ],
+    "osm:node/6865516789": [
+      "takeaway"
+    ],
+    "osm:node/6865556748": [
+      "takeaway"
+    ],
+    "osm:node/6865653420": [
+      "takeaway"
+    ],
+    "osm:node/6877271685": [
+      "wifi"
+    ],
+    "osm:node/6892187910": [
+      "hotel"
+    ],
+    "osm:node/6892187911": [
+      "hotel"
+    ],
+    "osm:node/6907910710": [
+      "takeaway"
+    ],
+    "osm:node/6907910711": [
+      "takeaway"
+    ],
+    "osm:node/6907910712": [
+      "takeaway"
+    ],
+    "osm:node/6908027802": [
+      "takeaway"
+    ],
+    "osm:node/6908027803": [
+      "takeaway"
+    ],
+    "osm:node/6908092705": [
+      "outdoor"
+    ],
+    "osm:node/6909743957": [
+      "takeaway"
+    ],
+    "osm:node/6909743962": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/6910498087": [
+      "wifi"
+    ],
+    "osm:node/6912031000": [
+      "takeaway"
+    ],
+    "osm:node/6920067303": [
+      "hotel"
+    ],
+    "osm:node/6920067368": [
+      "hotel"
+    ],
+    "osm:node/6920077788": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/6924913885": [
+      "hotel"
+    ],
+    "osm:node/6936295955": [
+      "outdoor"
+    ],
+    "osm:node/6942776845": [
+      "hotel"
+    ],
+    "osm:node/6951957285": [
+      "wifi"
+    ],
+    "osm:node/6959938385": [
+      "hotel"
+    ],
+    "osm:node/6961341085": [
+      "wifi"
+    ],
+    "osm:node/6963032286": [
+      "viewpoint"
+    ],
+    "osm:node/6963032387": [
+      "viewpoint"
+    ],
+    "osm:node/6963032388": [
+      "viewpoint"
+    ],
+    "osm:node/6963032389": [
+      "viewpoint"
+    ],
+    "osm:node/6963035385": [
+      "viewpoint"
+    ],
+    "osm:node/6963035485": [
+      "viewpoint"
+    ],
+    "osm:node/6963035486": [
+      "viewpoint"
+    ],
+    "osm:node/6963035585": [
+      "viewpoint"
+    ],
+    "osm:node/6964595385": [
+      "wifi"
+    ],
+    "osm:node/6965534516": [
+      "hotel"
+    ],
+    "osm:node/6968236339": [
+      "takeaway"
+    ],
+    "osm:node/6969643685": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/6997981004": [
+      "takeaway"
+    ],
+    "osm:node/7006271885": [
+      "wifi"
+    ],
+    "osm:node/7016628658": [
+      "takeaway"
+    ],
+    "osm:node/7016628668": [
+      "takeaway"
+    ],
+    "osm:node/7016628670": [
+      "takeaway"
+    ],
+    "osm:node/7016628673": [
+      "takeaway"
+    ],
+    "osm:node/7017476727": [
+      "takeaway"
+    ],
+    "osm:node/7017490804": [
+      "wheelchair"
+    ],
+    "osm:node/7017552334": [
+      "takeaway"
+    ],
+    "osm:node/7023455451": [
+      "hotel"
+    ],
+    "osm:node/7023471562": [
+      "hotel"
+    ],
+    "osm:node/7025492986": [
+      "hotel"
+    ],
+    "osm:node/7037499749": [
+      "takeaway"
+    ],
+    "osm:node/7037499750": [
+      "takeaway"
+    ],
+    "osm:node/7055623285": [
+      "hotel"
+    ],
+    "osm:node/7062369385": [
+      "wifi"
+    ],
+    "osm:node/7062420885": [
+      "wifi"
+    ],
+    "osm:node/7070055725": [
+      "wifi"
+    ],
+    "osm:node/7084165785": [
+      "wifi"
+    ],
+    "osm:node/7088116685": [
+      "wifi"
+    ],
+    "osm:node/7092158109": [
+      "outdoor"
+    ],
+    "osm:node/7094212659": [
+      "hotel"
+    ],
+    "osm:node/7094212667": [
+      "hotel"
+    ],
+    "osm:node/7094212675": [
+      "hotel"
+    ],
+    "osm:node/7094702392": [
+      "hotel"
+    ],
+    "osm:node/7095322585": [
+      "takeaway"
+    ],
+    "osm:node/7099276226": [
+      "hotel"
+    ],
+    "osm:node/7099276228": [
+      "hotel"
+    ],
+    "osm:node/7104079419": [
+      "hotel"
+    ],
+    "osm:node/7113998090": [
+      "wifi"
+    ],
+    "osm:node/7116707486": [
+      "wifi"
+    ],
+    "osm:node/7118673492": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/7125483786": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/7128373385": [
+      "wifi"
+    ],
+    "osm:node/7138773787": [
+      "wifi"
+    ],
+    "osm:node/7144561421": [
+      "takeaway"
+    ],
+    "osm:node/7144702185": [
+      "wifi"
+    ],
+    "osm:node/7144993913": [
+      "takeaway"
+    ],
+    "osm:node/7155704685": [
+      "wifi"
+    ],
+    "osm:node/7165684985": [
+      "hotel"
+    ],
+    "osm:node/7171079288": [
+      "wifi"
+    ],
+    "osm:node/7180702385": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/7192415585": [
+      "hotel"
+    ],
+    "osm:node/7213947986": [
+      "wifi"
+    ],
+    "osm:node/7216115222": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/7218017585": [
+      "wifi"
+    ],
+    "osm:node/7237200296": [
+      "hotel"
+    ],
+    "osm:node/7239177092": [
+      "takeaway"
+    ],
+    "osm:node/7239180058": [
+      "takeaway"
+    ],
+    "osm:node/7239180627": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/7239206161": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/7243393485": [
+      "wifi"
+    ],
+    "osm:node/7244573685": [
+      "hotel"
+    ],
+    "osm:node/7249751985": [
+      "hotel"
+    ],
+    "osm:node/7258203786": [
+      "wifi"
+    ],
+    "osm:node/7259887283": [
+      "hotel"
+    ],
+    "osm:node/7261602617": [
+      "takeaway"
+    ],
+    "osm:node/7273856285": [
+      "hotel"
+    ],
+    "osm:node/7292443159": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/7293635485": [
+      "wifi"
+    ],
+    "osm:node/729602633": [
+      "takeaway"
+    ],
+    "osm:node/729602639": [
+      "takeaway"
+    ],
+    "osm:node/729602658": [
+      "takeaway"
+    ],
+    "osm:node/729602660": [
+      "takeaway"
+    ],
+    "osm:node/729602661": [
+      "takeaway"
+    ],
+    "osm:node/729602674": [
+      "takeaway"
+    ],
+    "osm:node/729602676": [
+      "takeaway"
+    ],
+    "osm:node/729602677": [
+      "takeaway"
+    ],
+    "osm:node/729602679": [
+      "wheelchair"
+    ],
+    "osm:node/729602693": [
+      "takeaway"
+    ],
+    "osm:node/729602695": [
+      "takeaway"
+    ],
+    "osm:node/729602696": [
+      "takeaway"
+    ],
+    "osm:node/729602698": [
+      "takeaway"
+    ],
+    "osm:node/729602699": [
+      "takeaway"
+    ],
+    "osm:node/729602707": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/729602709": [
+      "takeaway"
+    ],
+    "osm:node/729602711": [
+      "takeaway"
+    ],
+    "osm:node/729602713": [
+      "takeaway"
+    ],
+    "osm:node/729602721": [
+      "takeaway"
+    ],
+    "osm:node/729602723": [
+      "takeaway"
+    ],
+    "osm:node/729602724": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/729602729": [
+      "takeaway"
+    ],
+    "osm:node/729602730": [
+      "takeaway"
+    ],
+    "osm:node/729602748": [
+      "takeaway"
+    ],
+    "osm:node/729602749": [
+      "takeaway"
+    ],
+    "osm:node/729602751": [
+      "takeaway"
+    ],
+    "osm:node/729602756": [
+      "takeaway"
+    ],
+    "osm:node/729602757": [
+      "takeaway"
+    ],
+    "osm:node/729602786": [
+      "takeaway"
+    ],
+    "osm:node/729602816": [
+      "takeaway"
+    ],
+    "osm:node/7304943912": [
+      "hotel"
+    ],
+    "osm:node/7312304285": [
+      "hotel"
+    ],
+    "osm:node/731950295": [
+      "takeaway"
+    ],
+    "osm:node/7340637985": [
+      "wifi"
+    ],
+    "osm:node/7365659026": [
+      "hotel"
+    ],
+    "osm:node/7368201817": [
+      "hotel"
+    ],
+    "osm:node/7368201857": [
+      "hotel"
+    ],
+    "osm:node/7388134221": [
+      "hotel"
+    ],
+    "osm:node/7388387089": [
+      "hotel"
+    ],
+    "osm:node/7402231824": [
+      "hotel"
+    ],
+    "osm:node/7402231894": [
+      "hotel"
+    ],
+    "osm:node/7413485962": [
+      "wifi"
+    ],
+    "osm:node/7417168288": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/7417168289": [
+      "wifi"
+    ],
+    "osm:node/7418353081": [
+      "outdoor"
+    ],
+    "osm:node/7418417985": [
+      "wifi"
+    ],
+    "osm:node/7499945318": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/7502727743": [
+      "wifi"
+    ],
+    "osm:node/7554218586": [
+      "wifi"
+    ],
+    "osm:node/7588459685": [
+      "wifi"
+    ],
+    "osm:node/767010759": [
+      "hotel"
+    ],
+    "osm:node/767010771": [
+      "hotel"
+    ],
+    "osm:node/7766290326": [
+      "takeaway"
+    ],
+    "osm:node/7769754725": [
+      "takeaway"
+    ],
+    "osm:node/7791804390": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/7808540929": [
+      "wifi"
+    ],
+    "osm:node/7820749385": [
+      "takeaway"
+    ],
+    "osm:node/7825605192": [
+      "outdoor"
+    ],
+    "osm:node/7825637651": [
+      "outdoor"
+    ],
+    "osm:node/7857126188": [
+      "viewpoint"
+    ],
+    "osm:node/7860122293": [
+      "takeaway"
+    ],
+    "osm:node/7863460885": [
+      "hotel"
+    ],
+    "osm:node/7864026785": [
+      "viewpoint"
+    ],
+    "osm:node/7872240586": [
+      "viewpoint"
+    ],
+    "osm:node/7912817137": [
+      "outdoor"
+    ],
+    "osm:node/7937133585": [
+      "hotel"
+    ],
+    "osm:node/7941788385": [
+      "viewpoint"
+    ],
+    "osm:node/7941812085": [
+      "viewpoint"
+    ],
+    "osm:node/7941814185": [
+      "viewpoint"
+    ],
+    "osm:node/7944769085": [
+      "viewpoint"
+    ],
+    "osm:node/7944769086": [
+      "viewpoint"
+    ],
+    "osm:node/7944769185": [
+      "viewpoint"
+    ],
+    "osm:node/7947189085": [
+      "viewpoint"
+    ],
+    "osm:node/7947189485": [
+      "viewpoint"
+    ],
+    "osm:node/7947189585": [
+      "viewpoint"
+    ],
+    "osm:node/7951452785": [
+      "viewpoint"
+    ],
+    "osm:node/7958636420": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/7961633588": [
+      "hotel"
+    ],
+    "osm:node/7981555312": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/8008896955": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/8032694062": [
+      "takeaway"
+    ],
+    "osm:node/8038943885": [
+      "hotel"
+    ],
+    "osm:node/8038982486": [
+      "hotel"
+    ],
+    "osm:node/8038982487": [
+      "hotel"
+    ],
+    "osm:node/8038997285": [
+      "hotel"
+    ],
+    "osm:node/8038997385": [
+      "hotel"
+    ],
+    "osm:node/8039111085": [
+      "hotel"
+    ],
+    "osm:node/8039133586": [
+      "hotel"
+    ],
+    "osm:node/8039136185": [
+      "hotel"
+    ],
+    "osm:node/8057387285": [
+      "hotel"
+    ],
+    "osm:node/8057387785": [
+      "hotel"
+    ],
+    "osm:node/8089827300": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/8149536084": [
+      "hotel"
+    ],
+    "osm:node/8149539318": [
+      "hotel"
+    ],
+    "osm:node/8163299792": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/8231116117": [
+      "wifi"
+    ],
+    "osm:node/8269060731": [
+      "takeaway"
+    ],
+    "osm:node/8269120674": [
+      "takeaway"
+    ],
+    "osm:node/8269203801": [
+      "takeaway"
+    ],
+    "osm:node/8305431617": [
+      "takeaway"
+    ],
+    "osm:node/8305459915": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/8363996572": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/837179279": [
+      "hotel"
+    ],
+    "osm:node/8442912885": [
+      "outdoor"
+    ],
+    "osm:node/8491110117": [
+      "viewpoint"
+    ],
+    "osm:node/8498055617": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/8548931428": [
+      "takeaway"
+    ],
+    "osm:node/8548931429": [
+      "takeaway"
+    ],
+    "osm:node/8548931430": [
+      "takeaway"
+    ],
+    "osm:node/8548931431": [
+      "takeaway"
+    ],
+    "osm:node/8570873421": [
+      "takeaway"
+    ],
+    "osm:node/8659413353": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/8724303924": [
+      "wifi"
+    ],
+    "osm:node/8763747611": [
+      "takeaway"
+    ],
+    "osm:node/8866304617": [
+      "outdoor"
+    ],
+    "osm:node/9215303150": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:node/9333088385": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/943230070": [
+      "hotel"
+    ],
+    "osm:node/946794517": [
+      "hotel"
+    ],
+    "osm:node/946794525": [
+      "takeaway"
+    ],
+    "osm:node/9584806614": [
+      "hotel"
+    ],
+    "osm:node/9584814610": [
+      "hotel"
+    ],
+    "osm:node/9584824717": [
+      "hotel"
+    ],
+    "osm:node/9584833419": [
+      "hotel"
+    ],
+    "osm:node/9584833420": [
+      "hotel"
+    ],
+    "osm:node/9584833431": [
+      "hotel"
+    ],
+    "osm:node/9584833438": [
+      "hotel"
+    ],
+    "osm:node/9584833443": [
+      "outdoor",
+      "wheelchair"
+    ],
+    "osm:node/9584833448": [
+      "takeaway"
+    ],
+    "osm:node/9584833451": [
+      "hotel"
+    ],
+    "osm:node/9584833467": [
+      "hotel"
+    ],
+    "osm:node/9584833493": [
+      "hotel"
+    ],
+    "osm:node/9584911947": [
+      "takeaway"
+    ],
+    "osm:node/9585149608": [
+      "hotel"
+    ],
+    "osm:node/9585162927": [
+      "hotel"
+    ],
+    "osm:node/9585162928": [
+      "hotel"
+    ],
+    "osm:node/9585525539": [
+      "hotel"
+    ],
+    "osm:node/9585525540": [
+      "hotel"
+    ],
+    "osm:node/9585525541": [
+      "hotel"
+    ],
+    "osm:node/9585591499": [
+      "takeaway"
+    ],
+    "osm:node/9585591508": [
+      "takeaway"
+    ],
+    "osm:node/9585591512": [
+      "takeaway"
+    ],
+    "osm:node/9585835371": [
+      "hotel"
+    ],
+    "osm:node/9585983490": [
+      "hotel"
+    ],
+    "osm:node/9586251036": [
+      "takeaway"
+    ],
+    "osm:node/9586251038": [
+      "takeaway"
+    ],
+    "osm:node/9586251039": [
+      "outdoor"
+    ],
+    "osm:node/9587113811": [
+      "hotel"
+    ],
+    "osm:node/9587171473": [
+      "wifi"
+    ],
+    "osm:node/9587204847": [
+      "hotel"
+    ],
+    "osm:node/9587204860": [
+      "takeaway"
+    ],
+    "osm:node/9587253812": [
+      "takeaway"
+    ],
+    "osm:node/9587268692": [
+      "takeaway"
+    ],
+    "osm:node/9587269854": [
+      "hotel"
+    ],
+    "osm:node/9587269857": [
+      "hotel"
+    ],
+    "osm:node/9587269858": [
+      "takeaway"
+    ],
+    "osm:node/9587309945": [
+      "hotel"
+    ],
+    "osm:node/9587489374": [
+      "hotel"
+    ],
+    "osm:node/9587536839": [
+      "hotel"
+    ],
+    "osm:node/9587536841": [
+      "hotel"
+    ],
+    "osm:node/9587536849": [
+      "takeaway"
+    ],
+    "osm:node/9587536852": [
+      "outdoor"
+    ],
+    "osm:node/9593340025": [
+      "hotel"
+    ],
+    "osm:node/9593578320": [
+      "takeaway"
+    ],
+    "osm:node/9605292917": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/9655507505": [
+      "wifi"
+    ],
+    "osm:node/9671248630": [
+      "hotel"
+    ],
+    "osm:node/9829539401": [
+      "outdoor"
+    ],
+    "osm:node/9845789742": [
+      "takeaway",
+      "wheelchair"
+    ],
+    "osm:node/9847247247": [
+      "hotel"
+    ],
+    "osm:node/986744046": [
+      "takeaway"
+    ],
+    "osm:node/9920341617": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:node/9921299163": [
+      "takeaway"
+    ],
+    "osm:node/9921739917": [
+      "hotel"
+    ],
+    "osm:node/9921740017": [
+      "hotel"
+    ],
+    "osm:node/9924345017": [
+      "wifi"
+    ],
+    "osm:node/9979334724": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:node/9984827219": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:node/9985120517": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:relation/14666596": [
+      "hotel"
+    ],
+    "osm:relation/15578837": [
+      "hotel"
+    ],
+    "osm:relation/2204742": [
+      "hotel"
+    ],
+    "osm:way/1041054742": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:way/1042136099": [
+      "hotel"
+    ],
+    "osm:way/1042233074": [
+      "hotel"
+    ],
+    "osm:way/1042578069": [
+      "hotel"
+    ],
+    "osm:way/1042820548": [
+      "hotel"
+    ],
+    "osm:way/1042829468": [
+      "wifi",
+      "wheelchair",
+      "hotel"
+    ],
+    "osm:way/1042881028": [
+      "hotel"
+    ],
+    "osm:way/1043421533": [
+      "takeaway"
+    ],
+    "osm:way/1082236685": [
+      "hotel"
+    ],
+    "osm:way/1093364445": [
+      "hotel"
+    ],
+    "osm:way/1132776391": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:way/1139091056": [
+      "hotel"
+    ],
+    "osm:way/1152739363": [
+      "hotel"
+    ],
+    "osm:way/1152853668": [
+      "hotel"
+    ],
+    "osm:way/1153040544": [
+      "hotel"
+    ],
+    "osm:way/1153472354": [
+      "hotel"
+    ],
+    "osm:way/1153818775": [
+      "hotel"
+    ],
+    "osm:way/1153818777": [
+      "hotel"
+    ],
+    "osm:way/1154088054": [
+      "hotel"
+    ],
+    "osm:way/118950645": [
+      "hotel"
+    ],
+    "osm:way/119008631": [
+      "hotel"
+    ],
+    "osm:way/1193135788": [
+      "takeaway"
+    ],
+    "osm:way/1198217668": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:way/1218853057": [
+      "hotel"
+    ],
+    "osm:way/1225035804": [
+      "hotel"
+    ],
+    "osm:way/1226056367": [
+      "hotel"
+    ],
+    "osm:way/1227147496": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:way/1234026236": [
+      "hotel"
+    ],
+    "osm:way/1238737217": [
+      "hotel"
+    ],
+    "osm:way/1241302737": [
+      "outdoor"
+    ],
+    "osm:way/1273247317": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/1273609118": [
+      "hotel"
+    ],
+    "osm:way/1288202239": [
+      "takeaway"
+    ],
+    "osm:way/1290273079": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:way/1320099516": [
+      "outdoor"
+    ],
+    "osm:way/1324035536": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:way/1332147534": [
+      "hotel"
+    ],
+    "osm:way/1340344170": [
+      "takeaway"
+    ],
+    "osm:way/1345298000": [
+      "hotel"
+    ],
+    "osm:way/1348765572": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/1349710004": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:way/1349922284": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:way/1350305916": [
+      "wifi"
+    ],
+    "osm:way/1350675519": [
+      "takeaway"
+    ],
+    "osm:way/1350675522": [
+      "hotel"
+    ],
+    "osm:way/1353139944": [
+      "hotel"
+    ],
+    "osm:way/1356240615": [
+      "hotel"
+    ],
+    "osm:way/1359978998": [
+      "hotel"
+    ],
+    "osm:way/1362893365": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/1377261941": [
+      "wifi"
+    ],
+    "osm:way/138673259": [
+      "hotel"
+    ],
+    "osm:way/140703174": [
+      "hotel"
+    ],
+    "osm:way/1458755642": [
+      "takeaway"
+    ],
+    "osm:way/1458935208": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:way/1463053909": [
+      "takeaway"
+    ],
+    "osm:way/1463053929": [
+      "takeaway"
+    ],
+    "osm:way/1463053930": [
+      "takeaway"
+    ],
+    "osm:way/1463053941": [
+      "takeaway"
+    ],
+    "osm:way/1463053946": [
+      "takeaway"
+    ],
+    "osm:way/1463053949": [
+      "takeaway"
+    ],
+    "osm:way/1463053987": [
+      "hotel"
+    ],
+    "osm:way/1463054022": [
+      "takeaway"
+    ],
+    "osm:way/1463054047": [
+      "hotel"
+    ],
+    "osm:way/1463633176": [
+      "takeaway"
+    ],
+    "osm:way/1463680059": [
+      "hotel"
+    ],
+    "osm:way/1463878471": [
+      "hotel"
+    ],
+    "osm:way/1463943310": [
+      "takeaway"
+    ],
+    "osm:way/1468659819": [
+      "takeaway"
+    ],
+    "osm:way/1468659822": [
+      "takeaway"
+    ],
+    "osm:way/1469350414": [
+      "hotel"
+    ],
+    "osm:way/1469350416": [
+      "takeaway"
+    ],
+    "osm:way/1470052568": [
+      "takeaway"
+    ],
+    "osm:way/1470052573": [
+      "takeaway"
+    ],
+    "osm:way/1470052596": [
+      "takeaway"
+    ],
+    "osm:way/1472036876": [
+      "hotel"
+    ],
+    "osm:way/1472036882": [
+      "takeaway"
+    ],
+    "osm:way/1475209635": [
+      "outdoor"
+    ],
+    "osm:way/1476089651": [
+      "takeaway"
+    ],
+    "osm:way/1482251733": [
+      "takeaway"
+    ],
+    "osm:way/1486116585": [
+      "hotel"
+    ],
+    "osm:way/1487437458": [
+      "hotel"
+    ],
+    "osm:way/1487437472": [
+      "hotel"
+    ],
+    "osm:way/1488638555": [
+      "hotel"
+    ],
+    "osm:way/1488638559": [
+      "hotel"
+    ],
+    "osm:way/1488642657": [
+      "hotel"
+    ],
+    "osm:way/1488642659": [
+      "takeaway"
+    ],
+    "osm:way/1489501129": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/1489994556": [
+      "takeaway"
+    ],
+    "osm:way/1489994563": [
+      "takeaway"
+    ],
+    "osm:way/1491399151": [
+      "hotel"
+    ],
+    "osm:way/1491399165": [
+      "takeaway"
+    ],
+    "osm:way/1492074388": [
+      "hotel"
+    ],
+    "osm:way/1492074396": [
+      "takeaway"
+    ],
+    "osm:way/1493380327": [
+      "takeaway"
+    ],
+    "osm:way/1493380374": [
+      "hotel"
+    ],
+    "osm:way/1498100989": [
+      "takeaway"
+    ],
+    "osm:way/1498100990": [
+      "takeaway"
+    ],
+    "osm:way/1498100999": [
+      "hotel"
+    ],
+    "osm:way/1498101016": [
+      "takeaway"
+    ],
+    "osm:way/1498101020": [
+      "hotel"
+    ],
+    "osm:way/1498101025": [
+      "takeaway"
+    ],
+    "osm:way/1499809213": [
+      "takeaway"
+    ],
+    "osm:way/1508272989": [
+      "hotel"
+    ],
+    "osm:way/1523952920": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:way/1524297459": [
+      "takeaway"
+    ],
+    "osm:way/1524313577": [
+      "hotel"
+    ],
+    "osm:way/1524793387": [
+      "takeaway"
+    ],
+    "osm:way/1525476290": [
+      "hotel"
+    ],
+    "osm:way/1525476360": [
+      "takeaway"
+    ],
+    "osm:way/1525682040": [
+      "takeaway"
+    ],
+    "osm:way/1525684367": [
+      "hotel"
+    ],
+    "osm:way/1526459726": [
+      "hotel"
+    ],
+    "osm:way/1526462888": [
+      "hotel"
+    ],
+    "osm:way/1526475314": [
+      "hotel"
+    ],
+    "osm:way/1529700692": [
+      "takeaway"
+    ],
+    "osm:way/1530022326": [
+      "hotel"
+    ],
+    "osm:way/1530464402": [
+      "takeaway"
+    ],
+    "osm:way/1530466356": [
+      "hotel"
+    ],
+    "osm:way/1531410944": [
+      "takeaway"
+    ],
+    "osm:way/1533234100": [
+      "takeaway"
+    ],
+    "osm:way/1533234105": [
+      "takeaway"
+    ],
+    "osm:way/1533383915": [
+      "takeaway"
+    ],
+    "osm:way/1533383929": [
+      "takeaway"
+    ],
+    "osm:way/1533383930": [
+      "takeaway"
+    ],
+    "osm:way/1533417485": [
+      "takeaway"
+    ],
+    "osm:way/1535271330": [
+      "wifi"
+    ],
+    "osm:way/1536253289": [
+      "hotel"
+    ],
+    "osm:way/1536253298": [
+      "hotel"
+    ],
+    "osm:way/1536584421": [
+      "wifi"
+    ],
+    "osm:way/1538958790": [
+      "hotel"
+    ],
+    "osm:way/1539963908": [
+      "takeaway"
+    ],
+    "osm:way/1540713679": [
+      "takeaway"
+    ],
+    "osm:way/1540713680": [
+      "takeaway"
+    ],
+    "osm:way/1540713682": [
+      "takeaway"
+    ],
+    "osm:way/1540713702": [
+      "hotel"
+    ],
+    "osm:way/1540713962": [
+      "takeaway"
+    ],
+    "osm:way/1540991270": [
+      "hotel"
+    ],
+    "osm:way/1540991276": [
+      "hotel"
+    ],
+    "osm:way/1543155942": [
+      "hotel"
+    ],
+    "osm:way/1545383980": [
+      "hotel"
+    ],
+    "osm:way/1545385128": [
+      "hotel"
+    ],
+    "osm:way/1545498106": [
+      "hotel"
+    ],
+    "osm:way/1546857397": [
+      "takeaway"
+    ],
+    "osm:way/1546857406": [
+      "takeaway"
+    ],
+    "osm:way/1547517684": [
+      "takeaway"
+    ],
+    "osm:way/1547517699": [
+      "takeaway"
+    ],
+    "osm:way/1549755891": [
+      "hotel"
+    ],
+    "osm:way/1552317899": [
+      "takeaway"
+    ],
+    "osm:way/1554243401": [
+      "hotel"
+    ],
+    "osm:way/1554243410": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/1554243439": [
+      "hotel"
+    ],
+    "osm:way/1554243441": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/1554259011": [
+      "hotel"
+    ],
+    "osm:way/1554259016": [
+      "hotel"
+    ],
+    "osm:way/1554283274": [
+      "hotel"
+    ],
+    "osm:way/1554417926": [
+      "hotel"
+    ],
+    "osm:way/1557244835": [
+      "outdoor"
+    ],
+    "osm:way/1562147316": [
+      "wifi"
+    ],
+    "osm:way/1563678364": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:way/1563852313": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/1563941385": [
+      "hotel"
+    ],
+    "osm:way/1570099281": [
+      "takeaway"
+    ],
+    "osm:way/1574737061": [
+      "hotel"
+    ],
+    "osm:way/1574737066": [
+      "hotel"
+    ],
+    "osm:way/1574914386": [
+      "takeaway"
+    ],
+    "osm:way/1574914392": [
+      "hotel"
+    ],
+    "osm:way/1575891869": [
+      "hotel"
+    ],
+    "osm:way/1576332561": [
+      "hotel"
+    ],
+    "osm:way/165395836": [
+      "hotel"
+    ],
+    "osm:way/165491081": [
+      "hotel"
+    ],
+    "osm:way/165520768": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/186545012": [
+      "hotel"
+    ],
+    "osm:way/187895161": [
+      "hotel"
+    ],
+    "osm:way/193142007": [
+      "hotel"
+    ],
+    "osm:way/193142021": [
+      "hotel"
+    ],
+    "osm:way/193142038": [
+      "hotel"
+    ],
+    "osm:way/193142046": [
+      "hotel"
+    ],
+    "osm:way/196546229": [
+      "hotel"
+    ],
+    "osm:way/196546231": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/198265272": [
+      "hotel"
+    ],
+    "osm:way/220617817": [
+      "hotel"
+    ],
+    "osm:way/220753348": [
+      "wifi",
+      "outdoor"
+    ],
+    "osm:way/221906200": [
+      "hotel"
+    ],
+    "osm:way/221906216": [
+      "hotel"
+    ],
+    "osm:way/231055017": [
+      "hotel"
+    ],
+    "osm:way/235149416": [
+      "hotel"
+    ],
+    "osm:way/236584050": [
+      "hotel"
+    ],
+    "osm:way/237093640": [
+      "hotel"
+    ],
+    "osm:way/237097605": [
+      "hotel"
+    ],
+    "osm:way/237097614": [
+      "hotel"
+    ],
+    "osm:way/259364930": [
+      "hotel"
+    ],
+    "osm:way/259364933": [
+      "hotel"
+    ],
+    "osm:way/259364955": [
+      "hotel"
+    ],
+    "osm:way/259375903": [
+      "hotel"
+    ],
+    "osm:way/259375906": [
+      "hotel"
+    ],
+    "osm:way/259397815": [
+      "hotel"
+    ],
+    "osm:way/259521859": [
+      "hotel"
+    ],
+    "osm:way/259528281": [
+      "hotel"
+    ],
+    "osm:way/259697508": [
+      "wifi",
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:way/259731488": [
+      "hotel"
+    ],
+    "osm:way/259748599": [
+      "hotel"
+    ],
+    "osm:way/259750558": [
+      "hotel"
+    ],
+    "osm:way/260961850": [
+      "hotel"
+    ],
+    "osm:way/261434414": [
+      "hotel"
+    ],
+    "osm:way/262966596": [
+      "hotel"
+    ],
+    "osm:way/262966615": [
+      "takeaway"
+    ],
+    "osm:way/263170658": [
+      "takeaway"
+    ],
+    "osm:way/263311748": [
+      "hotel"
+    ],
+    "osm:way/263444621": [
+      "hotel"
+    ],
+    "osm:way/263502849": [
+      "hotel"
+    ],
+    "osm:way/263502874": [
+      "hotel"
+    ],
+    "osm:way/264548275": [
+      "hotel"
+    ],
+    "osm:way/267229671": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/287478465": [
+      "hotel"
+    ],
+    "osm:way/289926575": [
+      "hotel"
+    ],
+    "osm:way/289968621": [
+      "hotel"
+    ],
+    "osm:way/289968643": [
+      "hotel"
+    ],
+    "osm:way/292076575": [
+      "hotel"
+    ],
+    "osm:way/302293114": [
+      "hotel"
+    ],
+    "osm:way/306214079": [
+      "wheelchair"
+    ],
+    "osm:way/318314450": [
+      "takeaway"
+    ],
+    "osm:way/326846290": [
+      "hotel"
+    ],
+    "osm:way/327192432": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/390166801": [
+      "hotel"
+    ],
+    "osm:way/390169434": [
+      "takeaway"
+    ],
+    "osm:way/39514795": [
+      "wheelchair"
+    ],
+    "osm:way/39598465": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/39598474": [
+      "hotel"
+    ],
+    "osm:way/39598491": [
+      "hotel"
+    ],
+    "osm:way/39622223": [
+      "takeaway"
+    ],
+    "osm:way/407691072": [
+      "hotel"
+    ],
+    "osm:way/409004249": [
+      "hotel"
+    ],
+    "osm:way/409116783": [
+      "hotel"
+    ],
+    "osm:way/410390689": [
+      "wifi",
+      "takeaway"
+    ],
+    "osm:way/419478165": [
+      "hotel"
+    ],
+    "osm:way/424128028": [
+      "takeaway"
+    ],
+    "osm:way/440707744": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/461455823": [
+      "hotel"
+    ],
+    "osm:way/465297303": [
+      "hotel"
+    ],
+    "osm:way/465318257": [
+      "hotel"
+    ],
+    "osm:way/493174172": [
+      "hotel"
+    ],
+    "osm:way/493567433": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/494693841": [
+      "hotel"
+    ],
+    "osm:way/494806852": [
+      "hotel"
+    ],
+    "osm:way/497872795": [
+      "wifi"
+    ],
+    "osm:way/497872803": [
+      "hotel"
+    ],
+    "osm:way/498534146": [
+      "hotel"
+    ],
+    "osm:way/505037221": [
+      "hotel"
+    ],
+    "osm:way/575041904": [
+      "hotel"
+    ],
+    "osm:way/575252542": [
+      "hotel"
+    ],
+    "osm:way/575252548": [
+      "hotel"
+    ],
+    "osm:way/575252550": [
+      "hotel"
+    ],
+    "osm:way/575252553": [
+      "hotel"
+    ],
+    "osm:way/575252555": [
+      "hotel"
+    ],
+    "osm:way/575252556": [
+      "hotel"
+    ],
+    "osm:way/580153454": [
+      "hotel"
+    ],
+    "osm:way/580153455": [
+      "hotel"
+    ],
+    "osm:way/580153457": [
+      "hotel"
+    ],
+    "osm:way/581208041": [
+      "outdoor"
+    ],
+    "osm:way/585163307": [
+      "wifi"
+    ],
+    "osm:way/585932740": [
+      "hotel"
+    ],
+    "osm:way/589288172": [
+      "outdoor"
+    ],
+    "osm:way/607428554": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:way/609516431": [
+      "takeaway"
+    ],
+    "osm:way/612283146": [
+      "hotel"
+    ],
+    "osm:way/612283147": [
+      "hotel"
+    ],
+    "osm:way/617580452": [
+      "takeaway"
+    ],
+    "osm:way/659972402": [
+      "takeaway"
+    ],
+    "osm:way/659973055": [
+      "takeaway"
+    ],
+    "osm:way/683697158": [
+      "hotel"
+    ],
+    "osm:way/691968358": [
+      "hotel"
+    ],
+    "osm:way/692383401": [
+      "hotel"
+    ],
+    "osm:way/695895012": [
+      "takeaway"
+    ],
+    "osm:way/695895016": [
+      "hotel"
+    ],
+    "osm:way/715982252": [
+      "hotel"
+    ],
+    "osm:way/716914311": [
+      "hotel"
+    ],
+    "osm:way/716914312": [
+      "hotel"
+    ],
+    "osm:way/716914313": [
+      "hotel"
+    ],
+    "osm:way/717286109": [
+      "hotel"
+    ],
+    "osm:way/717601460": [
+      "hotel"
+    ],
+    "osm:way/718503404": [
+      "hotel"
+    ],
+    "osm:way/718518989": [
+      "hotel"
+    ],
+    "osm:way/719049543": [
+      "hotel"
+    ],
+    "osm:way/719049545": [
+      "hotel"
+    ],
+    "osm:way/719482705": [
+      "hotel"
+    ],
+    "osm:way/726762754": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/727014718": [
+      "hotel"
+    ],
+    "osm:way/727014729": [
+      "hotel"
+    ],
+    "osm:way/736162137": [
+      "hotel"
+    ],
+    "osm:way/736971780": [
+      "hotel"
+    ],
+    "osm:way/737948715": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/739006757": [
+      "hotel"
+    ],
+    "osm:way/739799897": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/741084351": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/741632608": [
+      "hotel"
+    ],
+    "osm:way/748630923": [
+      "hotel"
+    ],
+    "osm:way/750360514": [
+      "wifi",
+      "wheelchair",
+      "hotel"
+    ],
+    "osm:way/751056550": [
+      "hotel"
+    ],
+    "osm:way/751056603": [
+      "hotel"
+    ],
+    "osm:way/751277591": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/751277604": [
+      "hotel"
+    ],
+    "osm:way/751277605": [
+      "hotel"
+    ],
+    "osm:way/751277613": [
+      "hotel"
+    ],
+    "osm:way/753518123": [
+      "hotel"
+    ],
+    "osm:way/786548103": [
+      "hotel"
+    ],
+    "osm:way/786548113": [
+      "hotel"
+    ],
+    "osm:way/786548114": [
+      "hotel"
+    ],
+    "osm:way/787836725": [
+      "hotel"
+    ],
+    "osm:way/788089581": [
+      "hotel"
+    ],
+    "osm:way/788089614": [
+      "hotel"
+    ],
+    "osm:way/788644896": [
+      "hotel"
+    ],
+    "osm:way/788644897": [
+      "hotel"
+    ],
+    "osm:way/790270862": [
+      "hotel"
+    ],
+    "osm:way/790270864": [
+      "hotel"
+    ],
+    "osm:way/790292886": [
+      "hotel"
+    ],
+    "osm:way/790292889": [
+      "hotel"
+    ],
+    "osm:way/790292890": [
+      "hotel"
+    ],
+    "osm:way/790292893": [
+      "hotel"
+    ],
+    "osm:way/790292894": [
+      "hotel"
+    ],
+    "osm:way/790292901": [
+      "hotel"
+    ],
+    "osm:way/790292902": [
+      "hotel"
+    ],
+    "osm:way/790529470": [
+      "hotel"
+    ],
+    "osm:way/790529523": [
+      "hotel"
+    ],
+    "osm:way/791041124": [
+      "hotel"
+    ],
+    "osm:way/792193845": [
+      "hotel"
+    ],
+    "osm:way/796932653": [
+      "hotel"
+    ],
+    "osm:way/799546400": [
+      "hotel"
+    ],
+    "osm:way/801958369": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/802069397": [
+      "hotel"
+    ],
+    "osm:way/802069404": [
+      "hotel"
+    ],
+    "osm:way/802104995": [
+      "hotel"
+    ],
+    "osm:way/802104998": [
+      "hotel"
+    ],
+    "osm:way/802105000": [
+      "hotel"
+    ],
+    "osm:way/802105001": [
+      "hotel"
+    ],
+    "osm:way/802105003": [
+      "wifi",
+      "hotel"
+    ],
+    "osm:way/802105004": [
+      "hotel"
+    ],
+    "osm:way/802105005": [
+      "hotel"
+    ],
+    "osm:way/802105006": [
+      "hotel"
+    ],
+    "osm:way/802105008": [
+      "hotel"
+    ],
+    "osm:way/802105034": [
+      "hotel"
+    ],
+    "osm:way/802157422": [
+      "hotel"
+    ],
+    "osm:way/804047525": [
+      "hotel"
+    ],
+    "osm:way/804925986": [
+      "hotel"
+    ],
+    "osm:way/804925987": [
+      "hotel"
+    ],
+    "osm:way/806860829": [
+      "hotel"
+    ],
+    "osm:way/807138075": [
+      "hotel"
+    ],
+    "osm:way/807138076": [
+      "hotel"
+    ],
+    "osm:way/807138079": [
+      "hotel"
+    ],
+    "osm:way/820801081": [
+      "hotel"
+    ],
+    "osm:way/835498201": [
+      "hotel"
+    ],
+    "osm:way/846918265": [
+      "hotel"
+    ],
+    "osm:way/895756047": [
+      "hotel"
+    ],
+    "osm:way/895795394": [
+      "hotel"
+    ],
+    "osm:way/901408258": [
+      "hotel"
+    ],
+    "osm:way/954795481": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:way/954795483": [
+      "outdoor"
+    ],
+    "osm:way/954795484": [
+      "outdoor",
+      "takeaway"
+    ],
+    "osm:way/955564741": [
+      "outdoor",
+      "takeaway"
+    ]
+  },
+  "districts": {
+    "osm:node/10013087268": "Huyện Tân Thành",
+    "osm:node/10013087269": "Huyện Tân Thành",
+    "osm:node/10137213715": "Quận 3",
+    "osm:node/10208698771": "Quận 1",
+    "osm:node/10264005521": "Quận 3",
+    "osm:node/10284359935": "Quận 3",
+    "osm:node/10560797894": "Quận Bình Thạnh",
+    "osm:node/10707993054": "Quận 1",
+    "osm:node/10711290348": "Quận 1",
+    "osm:node/10736286030": "Quận 1",
+    "osm:node/10747303153": "Quận 1",
+    "osm:node/10870507978": "Quận 1",
+    "osm:node/11027685675": "Quận 1",
+    "osm:node/11037465980": "Quận 7",
+    "osm:node/11068177923": "Quận 3",
+    "osm:node/11104600819": "Quận 1",
+    "osm:node/11200752863": "Quận 1",
+    "osm:node/11348772192": "Quận 7",
+    "osm:node/11348772193": "Quận 7",
+    "osm:node/11348772194": "Quận 7",
+    "osm:node/11374776247": "Quận 12",
+    "osm:node/11513546708": "Quận 7",
+    "osm:node/11515768824": "Quận 3",
+    "osm:node/11556628736": "Quận Tân Bình",
+    "osm:node/11562800202": "Thành phố Thủ Đức",
+    "osm:node/11587627010": "Quận 11",
+    "osm:node/11612841315": "Quận 2",
+    "osm:node/11844397840": "Quận Bình Tân",
+    "osm:node/11951472994": "Quận 1",
+    "osm:node/11974364477": "Quận 4",
+    "osm:node/12020061355": "Quận 12",
+    "osm:node/12080350880": "Thành phố Thủ Đức",
+    "osm:node/12151135569": "Quận 7",
+    "osm:node/12196463120": "Thành phố Thủ Đức",
+    "osm:node/12218545648": "Quận 1",
+    "osm:node/12218545669": "Quận 1",
+    "osm:node/12272912607": "Quận 10",
+    "osm:node/12286272106": "Quận 2",
+    "osm:node/12293737569": "Quận 1",
+    "osm:node/12301079079": "Quận 6",
+    "osm:node/12336857399": "Thành phố Thủ Đức",
+    "osm:node/12360655977": "Quận 1",
+    "osm:node/12395419755": "Quận 7",
+    "osm:node/12399860413": "Quận 1",
+    "osm:node/12416637037": "Quận Phú Nhuận",
+    "osm:node/12422922460": "Thành phố Dĩ An",
+    "osm:node/12475137501": "Quận 1",
+    "osm:node/12499995979": "Quận 10",
+    "osm:node/12500363368": "Quận 5",
+    "osm:node/12503916618": "Thành phố Thủ Đức",
+    "osm:node/12509423408": "Quận 1",
+    "osm:node/12509423409": "Quận 1",
+    "osm:node/12513714752": "Quận 3",
+    "osm:node/12518297076": "Quận 12",
+    "osm:node/12520021059": "Quận 6",
+    "osm:node/12520072378": "Quận 6",
+    "osm:node/12531355050": "Quận 6",
+    "osm:node/12533508180": "Quận 1",
+    "osm:node/12543126094": "Quận 7",
+    "osm:node/12546104127": "Quận 7",
+    "osm:node/12548062133": "Quận 7",
+    "osm:node/12548490922": "Quận 8",
+    "osm:node/12549054628": "Quận 5",
+    "osm:node/12564637280": "Quận Tân Phú",
+    "osm:node/12569269542": "Quận Tân Phú",
+    "osm:node/12570838515": "Quận Tân Phú",
+    "osm:node/12573551596": "Quận Tân Phú",
+    "osm:node/12573947607": "Quận Tân Phú",
+    "osm:node/12573947608": "Quận Tân Phú",
+    "osm:node/12581969796": "Quận 7",
+    "osm:node/12621001912": "Quận Tân Bình",
+    "osm:node/12622861662": "Thành phố Thủ Đức",
+    "osm:node/12622868697": "Thành phố Thủ Đức",
+    "osm:node/12633343524": "Quận Tân Phú",
+    "osm:node/12652732639": "Quận 1",
+    "osm:node/12675515185": "Quận Gò Vấp",
+    "osm:node/12690477953": "Quận 1",
+    "osm:node/12692217728": "Quận 2",
+    "osm:node/12692763830": "Quận 1",
+    "osm:node/12709323330": "Quận 10",
+    "osm:node/12715785160": "Quận 3",
+    "osm:node/12823521141": "Quận 5",
+    "osm:node/12839983177": "Quận Phú Nhuận",
+    "osm:node/12860099563": "Quận 3",
+    "osm:node/12872964229": "Quận 1",
+    "osm:node/12873093017": "Quận 1",
+    "osm:node/12879950388": "Quận 8",
+    "osm:node/12914072272": "Quận 1",
+    "osm:node/12998446584": "Quận 2",
+    "osm:node/12999590913": "Quận 2",
+    "osm:node/13001102155": "Thành phố Thủ Đức",
+    "osm:node/13001116488": "Thành phố Thủ Đức",
+    "osm:node/13001133167": "Quận 2",
+    "osm:node/13001138345": "Thành phố Thủ Đức",
+    "osm:node/13002210246": "Quận 2",
+    "osm:node/13005708646": "Huyện Hóc Môn",
+    "osm:node/13005712410": "Huyện Hóc Môn",
+    "osm:node/13083867563": "Quận 1",
+    "osm:node/13124776413": "Quận 1",
+    "osm:node/13158129403": "Quận Tân Phú",
+    "osm:node/13206148822": "Quận 1",
+    "osm:node/13289307751": "Quận Bình Thạnh",
+    "osm:node/13294837801": "Quận 1",
+    "osm:node/13296302633": "Quận 1",
+    "osm:node/13300070614": "Quận 1",
+    "osm:node/13437487226": "Quận 1",
+    "osm:node/13455849810": "Quận Tân Bình",
+    "osm:node/13475939981": "Quận 1",
+    "osm:node/13504330100": "Thành phố Thủ Đức",
+    "osm:node/13535761476": "Quận 10",
+    "osm:node/13568617953": "Quận 1",
+    "osm:node/13568617956": "Quận 1",
+    "osm:node/13624485707": "Quận Tân Phú",
+    "osm:node/13651167867": "Quận 1",
+    "osm:node/13710080320": "Quận 1",
+    "osm:node/13744749021": "Quận 1",
+    "osm:node/13830214661": "Quận 12",
+    "osm:node/13843796858": "Quận Tân Bình",
+    "osm:node/13859382182": "Thành phố Thủ Đức",
+    "osm:node/13913454078": "Quận 1",
+    "osm:node/1407135685": "Quận 1",
+    "osm:node/14071786635": "Thành phố Thủ Đức",
+    "osm:node/14084143459": "Quận Bình Thạnh",
+    "osm:node/14089176592": "Quận 1",
+    "osm:node/14182053204": "Quận 4",
+    "osm:node/14286724598": "Quận 1",
+    "osm:node/14287665094": "Quận 1",
+    "osm:node/14287669488": "Quận 1",
+    "osm:node/14292242099": "Quận 1",
+    "osm:node/14292521977": "Quận Phú Nhuận",
+    "osm:node/14293793198": "Quận 1",
+    "osm:node/14295194452": "Quận Phú Nhuận",
+    "osm:node/14295223849": "Quận Phú Nhuận",
+    "osm:node/14295376758": "Quận 1",
+    "osm:node/14296305676": "Quận Phú Nhuận",
+    "osm:node/14298270062": "Quận 1",
+    "osm:node/14302421202": "Quận 1",
+    "osm:node/14322397726": "Quận Bình Thạnh",
+    "osm:node/14344366430": "Thành phố Vũng Tàu",
+    "osm:node/14344366658": "Quận Tân Bình",
+    "osm:node/1770597707": "Quận 1",
+    "osm:node/1969579993": "Quận 1",
+    "osm:node/2040064098": "Quận 5",
+    "osm:node/2138695625": "Quận 1",
+    "osm:node/2139900977": "Quận 1",
+    "osm:node/2139904216": "Quận 1",
+    "osm:node/2155768488": "Quận Phú Nhuận",
+    "osm:node/2176976131": "Quận 1",
+    "osm:node/2176976133": "Quận 1",
+    "osm:node/2176976134": "Quận 1",
+    "osm:node/2176976137": "Quận 1",
+    "osm:node/2176976138": "Quận 3",
+    "osm:node/2286005165": "Quận 1",
+    "osm:node/2301108233": "Quận 7",
+    "osm:node/2676928762": "Quận 3",
+    "osm:node/2686083951": "Quận 1",
+    "osm:node/2934601307": "Quận 7",
+    "osm:node/3128738682": "Quận 7",
+    "osm:node/3183954535": "Quận 1",
+    "osm:node/3240763702": "Quận 4",
+    "osm:node/3246513533": "Quận 1",
+    "osm:node/3248010584": "Quận 1",
+    "osm:node/3257659065": "Quận 1",
+    "osm:node/3350023231": "Quận 1",
+    "osm:node/3365758422": "Quận 1",
+    "osm:node/3508216224": "Quận 1",
+    "osm:node/3508226903": "Quận 1",
+    "osm:node/3606992724": "Quận 1",
+    "osm:node/3902968379": "Quận 1",
+    "osm:node/4010917250": "Quận 1",
+    "osm:node/4089362511": "Quận 10",
+    "osm:node/4089366197": "Quận Tân Bình",
+    "osm:node/4089381512": "Quận Tân Bình",
+    "osm:node/4089382204": "Quận 7",
+    "osm:node/4089385463": "Quận 1",
+    "osm:node/4089387235": "Quận 7",
+    "osm:node/4089388467": "Quận 7",
+    "osm:node/4089402948": "Quận Tân Bình",
+    "osm:node/4089403710": "Quận Tân Phú",
+    "osm:node/4089404601": "Quận 10",
+    "osm:node/4089412564": "Quận Thủ Đức",
+    "osm:node/4089416239": "Quận 10",
+    "osm:node/4089419283": "Quận Bình Thạnh",
+    "osm:node/4115995654": "Quận 11",
+    "osm:node/4116050774": "Quận 8",
+    "osm:node/4116060181": "Quận Gò Vấp",
+    "osm:node/4250209622": "Quận 9",
+    "osm:node/4274832591": "Quận Phú Nhuận",
+    "osm:node/4635264574": "Quận 1",
+    "osm:node/4696576905": "Quận 7",
+    "osm:node/4737705428": "Quận 1",
+    "osm:node/4815270223": "Quận 1",
+    "osm:node/4855397350": "Quận 7",
+    "osm:node/4855417146": "Quận 7",
+    "osm:node/4855613962": "Quận 1",
+    "osm:node/4861414901": "Quận 7",
+    "osm:node/4869372313": "Quận 7",
+    "osm:node/4883409088": "Quận 7",
+    "osm:node/4883765814": "Quận 7",
+    "osm:node/5087568412": "Quận 1",
+    "osm:node/5346289222": "Quận 1",
+    "osm:node/5349359424": "Quận Tân Bình",
+    "osm:node/5375623229": "Quận 1",
+    "osm:node/5375650946": "Quận 1",
+    "osm:node/5375766600": "Quận 1",
+    "osm:node/5383494321": "Quận 3",
+    "osm:node/5474894122": "Quận 1",
+    "osm:node/5578056523": "Quận 10",
+    "osm:node/5582484321": "Quận 3",
+    "osm:node/5611733591": "Quận 3",
+    "osm:node/5617113058": "Quận 1",
+    "osm:node/5617113059": "Quận 1",
+    "osm:node/5617113060": "Quận 1",
+    "osm:node/5617113061": "Quận 1",
+    "osm:node/5617113062": "Quận 3",
+    "osm:node/5761145864": "Quận 9",
+    "osm:node/5830786091": "Quận 1",
+    "osm:node/5853812887": "Quận 1",
+    "osm:node/5894538749": "Quận 8",
+    "osm:node/6017457104": "Quận 1",
+    "osm:node/6111679646": "Quận 1",
+    "osm:node/6194847685": "Quận Bình Thạnh",
+    "osm:node/6315500444": "Quận 1",
+    "osm:node/6315506680": "Quận 1",
+    "osm:node/6315673301": "Quận 1",
+    "osm:node/6544500359": "Quận 1",
+    "osm:node/6545280449": "Quận Tân Bình",
+    "osm:node/6603231116": "Quận 3",
+    "osm:node/6645617788": "Quận 1",
+    "osm:node/6646675191": "Quận 5",
+    "osm:node/6681094687": "Quận 1",
+    "osm:node/6690830385": "Quận 1",
+    "osm:node/6691715385": "Quận 2",
+    "osm:node/6724581077": "Quận 6",
+    "osm:node/6770512755": "Quận 6",
+    "osm:node/6786567202": "Quận 1",
+    "osm:node/6909743962": "Quận 1",
+    "osm:node/6968236339": "Quận Bình Thạnh",
+    "osm:node/7017552334": "Quận Phú Nhuận",
+    "osm:node/7017596607": "Quận Phú Nhuận",
+    "osm:node/7017888850": "Quận 7",
+    "osm:node/7017888853": "Quận 10",
+    "osm:node/7017888854": "Quận 10",
+    "osm:node/7018371466": "Quận 1",
+    "osm:node/7239177092": "Quận 1",
+    "osm:node/7934391903": "Quận 7",
+    "osm:node/7958636420": "Quận Thủ Đức",
+    "osm:node/7981555312": "Huyện Long Điền",
+    "osm:node/8089827300": "Quận 5",
+    "osm:node/8239099592": "Quận 4",
+    "osm:node/8363996572": "Quận 7",
+    "osm:node/8442912885": "Quận 7",
+    "osm:node/8548604235": "Quận 6",
+    "osm:node/8548931428": "Quận 6",
+    "osm:node/8548931429": "Quận 6",
+    "osm:node/8548931430": "Quận 6",
+    "osm:node/8548931431": "Quận 6",
+    "osm:node/8548931468": "Quận 6",
+    "osm:node/8570873421": "Quận 10",
+    "osm:node/8602774062": "Quận 8",
+    "osm:node/8654087341": "Quận 1",
+    "osm:node/8864613707": "Thành phố Vũng Tàu",
+    "osm:node/9585162929": "Quận 7",
+    "osm:node/9645073798": "Quận 1",
+    "osm:node/9650745819": "Quận 1",
+    "osm:relation/14939719": "Quận 1",
+    "osm:relation/2552505": "Quận 6",
+    "osm:way/1042136099": "Thành phố Thủ Đức",
+    "osm:way/1042523033": "Quận Tân Bình",
+    "osm:way/1042578069": "Quận 7",
+    "osm:way/1042838319": "Quận 4",
+    "osm:way/1042877500": "Quận 1",
+    "osm:way/1042881028": "Quận 3",
+    "osm:way/1043381864": "Quận 2",
+    "osm:way/1046076452": "Quận 2",
+    "osm:way/1152348234": "Quận 3",
+    "osm:way/1153040544": "Quận 3",
+    "osm:way/1153818775": "Quận 3",
+    "osm:way/1153818777": "Quận 3",
+    "osm:way/1153858768": "Quận 3",
+    "osm:way/1221231567": "Quận 10",
+    "osm:way/1223486848": "Quận 1",
+    "osm:way/1223486849": "Quận 1",
+    "osm:way/1288202239": "Quận 8",
+    "osm:way/1290273079": "Quận 1",
+    "osm:way/1306372763": "Thành phố Thủ Đức",
+    "osm:way/1308615149": "Quận Gò Vấp",
+    "osm:way/1313688027": "Quận Bình Tân",
+    "osm:way/1313995379": "Thành phố Thủ Đức",
+    "osm:way/1342039809": "Thành phố Dĩ An",
+    "osm:way/1342039811": "Thành phố Dĩ An",
+    "osm:way/1342049803": "Thành phố Dĩ An",
+    "osm:way/1342050692": "Thành phố Dĩ An",
+    "osm:way/1342050693": "Thành phố Dĩ An",
+    "osm:way/1342052586": "Thành phố Dĩ An",
+    "osm:way/1342698348": "Thành phố Dĩ An",
+    "osm:way/1342698349": "Thành phố Dĩ An",
+    "osm:way/1342698350": "Thành phố Dĩ An",
+    "osm:way/1348765572": "Quận 7",
+    "osm:way/1349922284": "Quận 3",
+    "osm:way/1350608309": "Quận Bình Thạnh",
+    "osm:way/1350675522": "Quận 7",
+    "osm:way/1353139944": "Quận 7",
+    "osm:way/1356010632": "Quận 7",
+    "osm:way/1358149649": "Quận 8",
+    "osm:way/1358678430": "Huyện Bình Chánh",
+    "osm:way/1385763616": "Quận 10",
+    "osm:way/1385763619": "Quận 10",
+    "osm:way/1385763620": "Quận 10",
+    "osm:way/1388259752": "Quận 5",
+    "osm:way/1414562331": "Quận 2",
+    "osm:way/1458935208": "Quận 10",
+    "osm:way/1459467224": "Quận 10",
+    "osm:way/1461456034": "Quận 10",
+    "osm:way/1466439116": "Quận Bình Thạnh",
+    "osm:way/1475209635": "Quận Tân Bình",
+    "osm:way/1488638555": "Quận 1",
+    "osm:way/1488638559": "Quận 1",
+    "osm:way/1489501123": "Quận 1",
+    "osm:way/1489501125": "Quận 1",
+    "osm:way/1489501129": "Quận 1",
+    "osm:way/1499839994": "Thành phố Dĩ An",
+    "osm:way/1499839996": "Thành phố Dĩ An",
+    "osm:way/1499839998": "Thành phố Dĩ An",
+    "osm:way/1499840004": "Thành phố Dĩ An",
+    "osm:way/1523952920": "Quận Bình Thạnh",
+    "osm:way/1525684367": "Quận 1",
+    "osm:way/1525684372": "Quận 1",
+    "osm:way/1553769961": "Thành phố Thủ Dầu Một",
+    "osm:way/231055017": "Quận 7",
+    "osm:way/263311748": "Quận 3",
+    "osm:way/263502849": "Quận 1",
+    "osm:way/289926575": "Quận 1",
+    "osm:way/327192432": "Quận 11",
+    "osm:way/327243239": "Quận 6",
+    "osm:way/32735038": "Quận 1",
+    "osm:way/409116783": "Quận 1",
+    "osm:way/419464702": "Quận 6",
+    "osm:way/430615283": "Thành phố Thủ Đức",
+    "osm:way/456799189": "Quận 11",
+    "osm:way/461455823": "Quận 3",
+    "osm:way/493567433": "Quận 7",
+    "osm:way/494693841": "Quận 1",
+    "osm:way/502252357": "Quận 6",
+    "osm:way/503015601": "Quận Tân Phú",
+    "osm:way/607428554": "Quận 1",
+    "osm:way/609516431": "Quận 1",
+    "osm:way/612477975": "Quận 3",
+    "osm:way/612482867": "Quận 10",
+    "osm:way/624223366": "Quận 8",
+    "osm:way/638537793": "Quận 11",
+    "osm:way/691444045": "Huyện Long Điền",
+    "osm:way/692141955": "Thành phố Thủ Đức",
+    "osm:way/693901570": "Thành phố Thủ Đức",
+    "osm:way/748630923": "Quận 3",
+    "osm:way/801710792": "Quận 1",
+    "osm:way/801950748": "Quận 1",
+    "osm:way/801950766": "Quận 1",
+    "osm:way/846918265": "Quận 1",
+    "osm:way/954460170": "Quận 3",
+    "osm:way/954795481": "Quận 3",
+    "osm:way/961184057": "Quận 7",
+    "osm:way/991591859": "Thành phố Thủ Đức"
+  }
+}

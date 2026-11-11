@@ -1,0 +1,310 @@
+:host {
+  display: block;
+}
+
+.map-view,
+.map-stage {
+  position: relative;
+}
+
+.map-stage {
+  isolation: isolate;
+  overflow: hidden;
+  background: #e2e8f0;
+}
+
+.map-tiles {
+  position: relative;
+  z-index: 0;
+  height: 420px;
+  width: 100%;
+  background: linear-gradient(180deg, #f8fafc, #e2e8f0);
+  font-family: inherit;
+}
+
+.map-tiles:focus-visible {
+  outline: 3px solid var(--brand-text);
+  outline-offset: -3px;
+}
+
+.map-locate,
+.map-count {
+  z-index: 1;
+}
+
+.map-count {
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.map-locate:focus-visible {
+  outline-offset: 2px;
+}
+
+.map-locate-active,
+.map-locate-active:hover {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #175cd3;
+}
+
+.map-query {
+  min-width: 0;
+  border: 0;
+  padding: 0;
+}
+
+.map-query:focus-visible {
+  outline: 0;
+}
+
+.map-search-bar label:focus-within,
+.map-filter-active {
+  box-shadow: 0 0 0 2px #fdba74;
+}
+
+.map-filter-chip,
+.map-dark-button,
+.map-light-button,
+.map-quiet-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+  font-weight: 700;
+}
+
+.map-filter-chip {
+  min-height: 36px;
+  padding: 0.375rem 0.75rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 0.75rem;
+}
+
+.map-filter-chip:hover,
+.map-light-button:hover,
+.map-quiet-button:hover {
+  background: #e2e8f0;
+}
+
+.map-filter-chip[aria-pressed="true"],
+.map-dark-button {
+  background: #0f172a;
+  color: white;
+}
+
+.map-dark-button:hover {
+  background: #334155;
+}
+
+.map-dark-button,
+.map-light-button {
+  min-height: 40px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.map-light-button,
+.map-picker {
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #334155;
+}
+
+.map-quiet-button {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 0.75rem;
+  background: #f8fafc;
+  color: #475569;
+}
+
+.map-picker {
+  min-height: 36px;
+  max-width: 100%;
+  border-radius: 0.75rem;
+  padding: 0.375rem 0.5rem;
+  font: inherit;
+}
+
+.map-options > summary {
+  width: fit-content;
+  padding-block: 0.35rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.map-options > summary:focus-visible {
+  outline: 2px solid var(--brand-text);
+  outline-offset: 3px;
+}
+
+.map-chosen {
+  margin-top: 1rem;
+}
+
+.map-chosen-overlay {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 2;
+  width: min(310px, calc(100% - 2rem));
+  margin: 0;
+}
+
+.map-photo {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  place-items: center;
+  color: #64748b;
+}
+
+.map-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.map-photo img[hidden] {
+  display: none;
+}
+
+.map-results {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.map-result-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.map-result-selected {
+  outline: 2px solid #f97316;
+}
+
+.map-result-select {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  overflow-wrap: anywhere;
+}
+
+/* Leaflet creates these elements outside Angular's template. */
+:host ::ng-deep .map-tiles .leaflet-control-attribution {
+  padding: 2px 5px;
+  font-size: 10px;
+  line-height: 1.5;
+  color: #344054;
+  background: rgb(255 255 255 / 95%);
+}
+
+:host ::ng-deep .map-tiles .leaflet-control-attribution a {
+  color: #1559a3;
+}
+
+:host ::ng-deep .map-tiles .leaflet-control-zoom a:focus-visible,
+:host ::ng-deep .map-pin-wrapper:focus-visible {
+  outline: 3px solid var(--brand-text);
+  outline-offset: 2px;
+}
+
+:host ::ng-deep .map-pin-wrapper {
+  --pin-light: #64748b;
+  --pin-dark: #334155;
+  border: 0;
+  background: transparent;
+}
+
+:host ::ng-deep .map-pin-coffee { --pin-light: #f97316; --pin-dark: #ea580c; }
+:host ::ng-deep .map-pin-food { --pin-light: #fb7185; --pin-dark: #e11d48; }
+:host ::ng-deep .map-pin-lodging { --pin-light: #38bdf8; --pin-dark: #2563eb; }
+:host ::ng-deep .map-pin-nature { --pin-light: #34d399; --pin-dark: #059669; }
+:host ::ng-deep .map-pin-culture { --pin-light: #fbbf24; --pin-dark: #f59e0b; }
+:host ::ng-deep .map-pin-drink { --pin-light: #a78bfa; --pin-dark: #7c3aed; }
+
+:host ::ng-deep .map-pin {
+  position: relative;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pin-light), var(--pin-dark));
+  color: #fff;
+  font-size: 15px;
+  box-shadow: 0 10px 24px rgb(15 23 42 / 24%);
+}
+
+:host ::ng-deep .map-pin::after {
+  position: absolute;
+  bottom: -9px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translateX(-50%) rotate(45deg);
+  border-right: 3px solid #fff;
+  border-bottom: 3px solid #fff;
+  border-bottom-right-radius: 4px;
+  background: inherit;
+  content: "";
+}
+
+:host ::ng-deep .map-pin > i {
+  position: relative;
+  z-index: 1;
+}
+
+:host ::ng-deep .map-pin-cluster .map-pin {
+  width: 52px;
+  height: 52px;
+}
+
+:host ::ng-deep .map-pin-selected .map-pin {
+  outline: 3px solid #0f172a;
+}
+
+:host ::ng-deep .map-pin-count {
+  position: absolute;
+  z-index: 2;
+  top: -6px;
+  right: -6px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: #0f172a;
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .map-results { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1280px) {
+  .map-results { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+  .map-chosen-overlay { left: 1rem; right: 1rem; bottom: 4rem; width: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-locate i { animation: none !important; }
+}

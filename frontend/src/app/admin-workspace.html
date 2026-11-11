@@ -1,0 +1,309 @@
+<header class="admin-page-heading">
+  <h1>{{ heading() }}</h1>
+  <p>Đối chiếu yêu cầu, ghi quyết định và theo dõi lịch sử xử lý.</p>
+</header>
+
+<p class="workflow-note">
+  <tg-icon name="info" />
+  Yêu cầu và quyết định trong bản dùng thử được lưu trên trình duyệt này.
+</p>
+
+@if (store.catalogStatus() === 'error') {
+  <div class="admin-catalog-error">
+    <p role="alert">{{ store.catalogError() }}</p>
+    <button class="button secondary" type="button" (click)="store.loadCatalog()">Tải lại danh mục</button>
+  </div>
+}
+
+<section class="admin-queue" aria-labelledby="queue-title" [attr.aria-busy]="!store.ready()">
+  <div class="admin-queue-controls">
+    <h2 id="queue-title" #queueTitle tabindex="-1">Danh sách yêu cầu</h2>
+    @if (store.ready()) {
+      <div class="admin-status-filters" role="group" aria-label="Lọc nhanh theo trạng thái">
+        @for (filter of quickStatuses; track filter.key) {
+          <button type="button" [attr.aria-pressed]="status() === filter.key" (click)="changeStatus(filter.key)">
+            {{ filter.label }} <span>{{ counts()[filter.key] }}</span>
+          </button>
+        }
+      </div>
+      <div class="workflow-fields workflow-filters admin-fields">
+        <label>
+          Tìm kiếm
+          <span class="admin-search">
+            <tg-icon name="search" />
+            <input type="search" [ngModel]="query()" (ngModelChange)="changeQuery($event)"
+              placeholder="Địa điểm, người gửi, nội dung…" />
+          </span>
+        </label>
+        <label>
+          Loại yêu cầu
+          <select [ngModel]="kind()" (ngModelChange)="changeKind($event)">
+            <option value="">Tất cả loại</option>
+            @for (entry of kinds; track entry[0]) { <option [value]="entry[0]">{{ entry[1] }}</option> }
+          </select>
+        </label>
+        <label>
+          Trạng thái
+          <select [ngModel]="status()" (ngModelChange)="changeStatus($event)">
+            <option value="">Tất cả</option>
+            <option value="processed">Đã xử lý</option>
+            @for (entry of statuses; track entry[0]) { <option [value]="entry[0]">{{ entry[1] }}</option> }
+          </select>
+        </label>
+      </div>
+      <div class="admin-results">
+        <p role="status">{{ filtered().length }} yêu cầu</p>
+        @if (query() || kind() || status()) {
+          <button class="text-button" type="button" (click)="clearFilters()">Xóa bộ lọc</button>
+        }
+      </div>
+    }
+  </div>
+
+  @if (!store.ready()) {
+    <p class="admin-loading" role="status">Đang tải hàng đợi xét duyệt…</p>
+  } @else if (pageEntries().length) {
+    <table class="admin-table" role="table" aria-labelledby="queue-title">
+      <thead role="rowgroup">
+        <tr role="row">
+          <th scope="col" role="columnheader">Địa điểm</th>
+          <th scope="col" role="columnheader" class="admin-type">Loại yêu cầu</th>
+          <th scope="col" role="columnheader" class="admin-sender">Người gửi</th>
+          <th scope="col" role="columnheader">Trạng thái</th>
+          <th scope="col" role="columnheader" class="admin-date">Cập nhật</th>
+          <th scope="col" role="columnheader">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody role="rowgroup">
+        @for (item of pageEntries(); track item.id) {
+          <tr role="row">
+            <th scope="row" role="rowheader">
+              <div class="admin-place">
+                <div class="admin-place-photo">
+                  @if (item.before?.image || item.patch?.photo?.dataUrl; as photo) {
+                    <img [src]="photo" alt="" loading="lazy" />
+                  } @else { <tg-icon name="pin" /> }
+                </div>
+                <div>
+                  <strong>{{ title(item) }}</strong>
+                  @if (address(item); as location) { <small>{{ location }}</small> }
+                  <small class="admin-mobile-meta">{{ labels.kind[item.kind] }} · {{ labels.actor[item.actor] }}</small>
+                  <small class="admin-mobile-meta">Cập nhật {{ item.updatedAt | date:'dd/MM/yyyy HH:mm':'+0700' }}</small>
+                </div>
+              </div>
+            </th>
+            <td role="cell" class="admin-type">{{ labels.kind[item.kind] }}</td>
+            <td role="cell" class="admin-sender">{{ labels.actor[item.actor] }}</td>
+            <td role="cell"><span class="workflow-status" [attr.data-status]="item.status">{{ labels.status[item.status] }}</span></td>
+            <td role="cell" class="admin-date">{{ item.updatedAt | date:'dd/MM/yyyy HH:mm':'+0700' }}</td>
+            <td role="cell">
+              <button #rowActionButton class="button secondary admin-row-action" type="button" aria-haspopup="dialog"
+                [attr.aria-label]="rowAction(item) + ' · ' + title(item)"
+                (click)="select(item, requestDialog, rowActionButton)">
+                {{ rowAction(item) }} <tg-icon name="arrow" />
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (totalPages() > 1) {
+      <nav class="admin-pagination" aria-label="Phân trang yêu cầu">
+        <span>Trang {{ currentPage() }} / {{ totalPages() }}</span>
+        <div>
+          <button class="button secondary" type="button" aria-label="Trang trước" [disabled]="currentPage() === 1" (click)="turnPage(-1)">
+            <tg-icon name="back" />
+          </button>
+          <button class="button secondary" type="button" aria-label="Trang sau" [disabled]="currentPage() === totalPages()" (click)="turnPage(1)">
+            <tg-icon name="arrow" />
+          </button>
+        </div>
+      </nav>
+    }
+  } @else {
+    <div class="admin-empty">
+      <tg-icon name="shield" />
+      @if (query() || status()) {
+        <h3>Không có yêu cầu khớp bộ lọc</h3>
+        <p>Thử tìm bằng từ khóa khác hoặc đổi trạng thái.</p>
+      } @else {
+        <h3>Chưa có yêu cầu{{ kind() ? ' thuộc loại này' : '' }}</h3>
+        <p>Yêu cầu từ Người dùng và Chủ cơ sở trong bản dùng thử sẽ xuất hiện ở đây.</p>
+      }
+    </div>
+  }
+</section>
+
+<dialog class="admin-drawer" #requestDialog aria-labelledby="request-title"
+  (click)="$event.target === requestDialog && requestDialog.close()" (close)="!requestDialog.open && closeDetails()">
+  <div class="admin-drawer-header">
+    <div>
+      <h2 id="request-title">{{ selected() ? title(selected()!) : 'Chi tiết yêu cầu' }}</h2>
+      @if (selected(); as item) {
+        @if (address(item); as location) { <p>{{ location }}</p> }
+        <span class="workflow-status" [attr.data-status]="item.status">{{ labels.status[item.status] }}</span>
+      }
+    </div>
+    <button class="button secondary admin-close" #closeButton type="button" autofocus aria-label="Đóng chi tiết yêu cầu" (click)="requestDialog.close()">
+      <tg-icon name="close" />
+    </button>
+  </div>
+
+  @if (selected(); as item) {
+    <div class="admin-drawer-content">
+      <dl class="admin-metadata">
+        <div><dt>Loại yêu cầu</dt><dd>{{ labels.kind[item.kind] }}</dd></div>
+        <div><dt>Người gửi</dt><dd>{{ labels.actor[item.actor] }}</dd></div>
+        <div><dt>Ngày gửi</dt><dd>{{ item.createdAt | date:'dd/MM/yyyy HH:mm':'+0700' }}</dd></div>
+      </dl>
+      @if (item.placeId && item.kind !== 'new') {
+        <a class="text-button" [routerLink]="['/dia-diem', item.placeId]">Xem hồ sơ hiện tại <tg-icon name="arrow" /></a>
+      }
+      <div class="workflow-request-reason">
+        <strong>Nội dung người gửi</strong>
+        <p>{{ item.reason }}</p>
+      </div>
+
+      @if (item.kind === 'claim') {
+        <section class="admin-detail-section" aria-labelledby="claim-title">
+          <h3 id="claim-title">Đối chiếu quyền quản lý</h3>
+          <dl class="admin-metadata">
+            <div><dt>Quan hệ với địa điểm</dt><dd>{{ item.relationship === 'representative' ? 'Người đại diện' : item.relationship === 'owner' ? 'Chủ cơ sở' : 'Chưa ghi nhận' }}</dd></div>
+            <div><dt>Xác nhận của người gửi</dt><dd>{{ item.agreement ? 'Đã xác nhận sự đồng ý' : 'Chưa ghi nhận' }}</dd></div>
+          </dl>
+          @if (item.evidence) {
+            <div class="workflow-request-reason"><strong>Căn cứ đối chiếu</strong><p>{{ item.evidence }}</p></div>
+          }
+          <p class="muted">Quyền trong bản dùng thử chỉ áp dụng cho địa điểm của yêu cầu này.</p>
+        </section>
+      }
+
+      @if (item.kind === 'new' || item.kind === 'update') {
+        <section class="admin-detail-section" aria-labelledby="change-title">
+          <h3 id="change-title">Đối chiếu đề xuất</h3>
+          <dl class="admin-metadata">
+            @if (item.change) { <div><dt>Loại thay đổi</dt><dd>{{ labels.change[item.change] }}</dd></div> }
+            <div>
+              <dt>Hiệu lực đề xuất</dt>
+              <dd>
+                {{ item.effectiveFrom ? (item.effectiveFrom | date:'dd/MM/yyyy HH:mm':'+0700') : 'Khi được duyệt' }}
+                @if (item.effectiveUntil) { đến {{ item.effectiveUntil | date:'dd/MM/yyyy HH:mm':'+0700' }} }
+              </dd>
+            </div>
+          </dl>
+          @if (staleUpdate()) {
+            <p class="workflow-note"><tg-icon name="info" />Hồ sơ đã thay đổi sau khi nhận đề xuất. Hãy yêu cầu người gửi đối chiếu lại.</p>
+          }
+          @if (compare(item); as rows) {
+            @if (rows.length) {
+              <div class="workflow-compare" role="table" aria-label="Đối chiếu thay đổi">
+                <div class="workflow-compare-head" role="row">
+                  <strong role="columnheader">Thông tin</strong>
+                  <strong role="columnheader">Trước đề xuất</strong>
+                  <strong role="columnheader">Nội dung đề xuất</strong>
+                </div>
+                @for (row of rows; track row.label) {
+                  <div class="workflow-compare-row" role="row">
+                    <strong role="rowheader">{{ row.label }}</strong>
+                    <span role="cell"><small>Trước đề xuất</small>{{ row.before ?? 'Chưa có' }}</span>
+                    <span role="cell"><small>Nội dung đề xuất</small>{{ row.after ?? 'Bỏ thông tin' }}</span>
+                  </div>
+                }
+              </div>
+            }
+          }
+          @if (item.patch?.photo; as photo) {
+            <figure class="workflow-photo">
+              <img [src]="photo.dataUrl" alt="Ảnh bìa trong đề xuất" />
+              <figcaption>{{ photo.credit }}</figcaption>
+            </figure>
+          }
+          @if (coordinates(); as points) {
+            <button type="button" class="button secondary" [attr.aria-expanded]="showMap()" (click)="showMap.update(value => !value)">
+              <tg-icon name="map" />{{ showMap() ? 'Đóng bản đồ đối chiếu' : 'Đối chiếu vị trí trên bản đồ' }}
+            </button>
+            @if (showMap()) { <tg-workflow-map [points]="points" /> }
+          }
+        </section>
+      }
+
+      @if (item.kind === 'report') {
+        <section class="admin-detail-section" aria-labelledby="report-title">
+          <h3 id="report-title">{{ item.photoIndex != null ? 'Ảnh được báo cáo' : 'Đánh giá được báo cáo' }}</h3>
+          @if (targetReview(); as review) {
+            <div class="workflow-request-reason"><strong>Đánh giá trong bản dùng thử · {{ review.rating }}/5 sao</strong><p>{{ review.text || 'Không có nhận xét' }}</p></div>
+            @if (item.photoIndex != null && review.photos[item.photoIndex]; as photo) {
+              <figure class="workflow-photo"><img [src]="photo" alt="Ảnh đánh giá được báo cáo" /></figure>
+            }
+          } @else {
+            <p class="workflow-note"><tg-icon name="info" />Phiên bản đánh giá được báo cáo đã thay đổi hoặc được gỡ.</p>
+            @if (item.reportSnapshot; as snapshot) {
+              <div class="workflow-request-reason"><strong>Nội dung lúc gửi báo cáo · {{ snapshot.rating }}/5 sao</strong><p>{{ snapshot.text || 'Không có nhận xét' }}</p></div>
+              @if (snapshot.photo) {
+                <figure class="workflow-photo"><img [src]="snapshot.photo" alt="Ảnh lưu cùng báo cáo" /></figure>
+              }
+            }
+          }
+          @if (item.reportAction) {
+            <dl class="admin-metadata"><div><dt>Kết quả xử lý</dt><dd>{{ labels.reportAction[item.reportAction] }}</dd></div></dl>
+          }
+        </section>
+      }
+
+      <section class="admin-detail-section" aria-labelledby="history-title">
+        <h3 id="history-title">Lịch sử xử lý</h3>
+        <ol class="admin-history">
+          @for (event of item.history; track $index) {
+            <li>
+              <div><strong>{{ labels.status[event.status] }}</strong> <span>{{ labels.actor[event.actor] }} · {{ event.at | date:'dd/MM/yyyy HH:mm':'+0700' }}</span></div>
+              <p>{{ event.reason }}</p>
+            </li>
+          }
+        </ol>
+      </section>
+
+      @if (feedback(); as result) {
+        @if (result.saved) {
+          <p class="admin-feedback" role="status"><tg-icon name="check" />{{ result.message }}</p>
+        } @else {
+          <p class="admin-feedback admin-feedback-error" role="alert"><tg-icon name="info" />{{ result.message }}</p>
+        }
+      }
+      @if (item.status === 'pending' || (item.kind === 'claim' && item.status === 'approved')) {
+        <section class="admin-detail-section" aria-labelledby="decision-title" [attr.aria-busy]="saving()">
+          <h3 id="decision-title">Quyết định xét duyệt</h3>
+          <div class="workflow-fields">
+            @if (item.kind === 'report') {
+              <label class="workflow-wide">
+                Kết quả khi duyệt báo cáo
+                <select [(ngModel)]="reportAction" [disabled]="saving()">
+                  <option value="keep">Giữ nguyên nội dung</option>
+                  @if (item.photoIndex != null && targetReview()) { <option value="hide-photo">Ẩn ảnh được báo cáo</option> }
+                  @if (targetReview()) { <option value="hide-review">Ẩn đánh giá</option> }
+                </select>
+              </label>
+            }
+            <label class="workflow-wide">
+              Lý do quyết định
+              <textarea rows="3" maxlength="500" [(ngModel)]="reason" [disabled]="saving()" required
+                placeholder="Ghi lý do để người gửi hiểu quyết định…"></textarea>
+            </label>
+          </div>
+          <div class="workflow-actions admin-decision-actions">
+            @let unavailable = saving() || store.catalogStatus() !== 'ready' || !reason.trim();
+            @if (item.status === 'pending') {
+              <button type="button" class="button secondary workflow-reject" [disabled]="unavailable" (click)="decide(item, 'rejected')">Từ chối</button>
+              <button type="button" class="button secondary" [disabled]="unavailable" (click)="decide(item, 'needs-info')">Yêu cầu bổ sung</button>
+              <button type="button" class="button primary" [disabled]="unavailable || staleUpdate()" (click)="decide(item, 'approved')">
+                <tg-icon name="check" />
+                {{ item.kind === 'claim' ? 'Cấp quyền trong bản thử' : item.kind === 'report' ? 'Xử lý báo cáo' : 'Duyệt đề xuất' }}
+              </button>
+            } @else {
+              <button type="button" class="button secondary workflow-reject" [disabled]="unavailable" (click)="decide(item, 'revoked')">Thu hồi quyền trong bản thử</button>
+            }
+          </div>
+        </section>
+      }
+    </div>
+  }
+</dialog>

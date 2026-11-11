@@ -1,0 +1,209 @@
+<div class="mx-auto max-w-7xl p-4 pb-10 lg:p-8">
+  <section class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div>
+      <h1 class="mb-0 mt-2 text-3xl font-black text-slate-900">Bản đồ địa điểm</h1>
+      <p class="mb-0 mt-2 max-w-2xl text-sm leading-6 text-slate-600">{{ nearby() ? 'Danh sách địa điểm trong bán kính 5 km quanh bạn.' : 'Khám phá TP. Hồ Chí Minh hoặc bấm định vị để tìm trong bán kính 5 km.' }}</p>
+    </div>
+    <a class="inline-flex items-center gap-2 text-sm font-semibold text-orange-700 hover:underline" [routerLink]="listRoute()" [queryParams]="listQuery()">
+      {{ listRoute() === '/goc-dia-phuong' ? 'Về Góc Địa Phương' : 'Về trang danh sách' }}
+      <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+    </a>
+  </section>
+
+  <section class="mb-8 rounded-[32px] border border-slate-100 bg-white p-4 shadow-sm" aria-label="Bản đồ OpenStreetMap và công cụ">
+    <div class="map-view">
+      <div class="map-stage rounded-[28px]">
+        <div #mapContainer class="map-tiles" role="region" aria-label="Bản đồ địa điểm TP. Hồ Chí Minh" tabindex="0"></div>
+        @if (!mapReady()) {
+          <div class="map-loading" role="status">
+            <tg-icon name="map" />
+            <p>{{ mapError() || 'Đang chuẩn bị bản đồ…' }}</p>
+            @if (mapError()) { <button type="button" class="button secondary" (click)="initializeMap()">Thử tải bản đồ lại</button> }
+          </div>
+        }
+        <button type="button" class="map-locate absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white/95 text-sm text-slate-700 shadow-lg hover:bg-white" [class.map-locate-active]="nearby()" (click)="locate()" [disabled]="!mapReady() || locating()" [attr.aria-label]="locating() ? 'Đang lấy vị trí' : 'Tìm quanh vị trí trong bán kính 5 km'" title="Tìm quanh vị trí trong bán kính 5 km">
+          <i class="fa-solid" [class.fa-spinner]="locating()" [class.fa-location-crosshairs]="!locating()" [class.animate-spin]="locating()" aria-hidden="true"></i>
+        </button>
+        @if (mapReady() && tileStatus() === 'loading') {
+          <div class="map-count absolute bottom-4 left-4 rounded-2xl bg-white/90 px-4 py-3 text-xs text-slate-700 shadow-sm" role="status">Đang tải nền bản đồ…</div>
+        } @else if (mapReady() && store.catalogStatus() === 'ready') {
+          <div class="map-count absolute bottom-4 left-4 rounded-2xl bg-white/90 px-4 py-3 text-xs text-slate-700 shadow-sm" aria-live="polite">
+            @if (nearby()) {
+              {{ filtered().length.toLocaleString('vi-VN') }} địa điểm trong 5 km
+            } @else {
+              Trang {{ currentPage() }} / {{ pageCount() }} · {{ visibleOnMap().toLocaleString('vi-VN') }} điểm trong khung nhìn
+            }
+          </div>
+        }
+      </div>
+
+      @if (selected(); as place) {
+        <section class="map-chosen rounded-3xl border border-slate-200 bg-white/95 p-4 shadow-lg" [class.map-chosen-overlay]="mapReady() && hasCoordinates(place) && selectedMatches()" aria-labelledby="map-selection-title">
+          <div class="flex items-start gap-3">
+            <div class="map-photo h-16 w-16 shrink-0 rounded-2xl bg-slate-100">
+              <i class="fa-regular fa-image" aria-hidden="true"></i>
+              @if (place.image) { <img [src]="place.image" alt="" [hidden]="selectedPhotoFailed()" (load)="selectedPhotoFailed.set(false)" (error)="selectedPhotoFailed.set(true)" /> }
+            </div>
+            <div class="min-w-0 flex-1">
+              <h2 #selectionHeading id="map-selection-title" class="mb-1 mt-0 text-sm font-bold leading-snug text-slate-900" tabindex="-1">{{ place.name }}</h2>
+              <p class="m-0 line-clamp-2 text-xs text-slate-600">{{ place.area }}</p>
+            </div>
+            <button type="button" class="map-quiet-button" aria-label="Bỏ chọn địa điểm" (click)="clearSelection()"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+          </div>
+          <div class="mt-3 flex flex-wrap items-center justify-between gap-1 text-xs">
+            <span class="font-semibold text-orange-700">{{ categoryLabel(place) }}</span>
+            @if (store.visibleReviewFor(place.id); as review) {
+              <span class="text-orange-700" [attr.aria-label]="'Điểm đánh giá thử ' + review.rating + ' trên 5'"><i class="fa-solid fa-star" aria-hidden="true"></i> {{ review.rating }}/5</span>
+            } @else { <span class="text-slate-600">Chưa có đánh giá</span> }
+          </div>
+          @if (!hasCoordinates(place)) { <p class="mb-0 mt-2 text-xs text-slate-600">Nguồn chưa có tọa độ.</p> }
+          @if (!selectedMatches()) {
+            <p class="mb-0 mt-2 text-xs text-slate-600">Địa điểm nằm ngoài bộ lọc hiện tại.</p>
+            <button class="text-button text-xs" type="button" (click)="showSelected()">Bỏ bộ lọc để xem địa điểm này</button>
+          }
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <a class="map-dark-button flex-1" [routerLink]="['/dia-diem', place.id]" [queryParams]="detailContext()">Xem chi tiết</a>
+            @if (directions(place); as url) {
+              <a class="map-light-button" [href]="url" target="_blank" rel="noopener noreferrer" aria-label="Chỉ đường Google Maps">Map</a>
+            }
+            <button type="button" class="map-quiet-button" [class.text-rose-700]="store.hasFavorite(place.id)" [disabled]="!store.ready()" [attr.aria-pressed]="store.hasFavorite(place.id)" [attr.aria-label]="store.hasFavorite(place.id) ? 'Bỏ yêu thích' : 'Yêu thích'" (click)="store.toggleFavorite(place.id)"><i class="fa-solid fa-heart" aria-hidden="true"></i></button>
+            <button type="button" class="map-quiet-button" [disabled]="!store.ready()" aria-label="Thêm vào lịch trình" (click)="store.addTrip(place.id)"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+          </div>
+        </section>
+      } @else if (selectedId() && store.catalogStatus() === 'ready') {
+        <div class="message" role="status"><div><strong>Không tìm thấy địa điểm được chọn</strong><p>Mã trong liên kết không còn có trong danh mục này.</p><button type="button" class="text-button" (click)="clearSelection()">Bỏ chọn và xem danh sách</button></div></div>
+      }
+    </div>
+
+    @if (mapReady() && tileStatus() === 'error') {
+      <div class="message error" role="alert"><div><strong>Một phần nền bản đồ chưa tải được</strong><div class="feature-actions"><button type="button" class="button secondary" (click)="retryTiles()">Thử tải nền lại</button><button type="button" class="button secondary" (click)="changeTileProvider('osm')">Thử OSM Standard</button></div></div></div>
+    } @else if (usingFallback()) {
+      <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-700">
+        <p class="m-0" role="status">{{ tileStatus() === 'loading' ? 'Đang thử nền dự phòng OpenTopoMap.' : 'Đang dùng nền OpenTopoMap vì OSM Standard tải chưa đủ.' }}</p>
+        @if (tileStatus() === 'ready') { <button type="button" class="text-button" (click)="changeTileProvider('osm')">Thử lại OSM Standard</button> }
+      </div>
+    }
+
+    <form class="map-search-bar mt-4 flex flex-col gap-3 rounded-3xl border border-slate-200 bg-slate-50/90 p-3 md:flex-row md:items-center" role="search" (ngSubmit)="applySearch()">
+      <label class="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <i class="fa-solid fa-magnifying-glass text-sm text-slate-500" aria-hidden="true"></i>
+        <span class="sr-only">Tìm trên bản đồ</span>
+        <input class="map-query w-full bg-transparent text-sm font-medium text-slate-800 placeholder:text-slate-500" type="search" name="mapQuery" placeholder="Tìm tên địa điểm, món ăn, khu vực..." [ngModel]="searchDraft" (ngModelChange)="updateSearch($event)" />
+      </label>
+      <button type="button" class="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-100" [class.map-filter-active]="filtersActive()" aria-controls="map-filter-panel" [attr.aria-expanded]="filtersOpen()" (click)="filtersOpen.set(!filtersOpen())">
+        <i class="fa-solid fa-sliders" aria-hidden="true"></i>Bộ lọc
+      </button>
+    </form>
+
+    <div id="map-filter-panel" class="mt-3 rounded-3xl border border-dashed border-slate-200 bg-white p-4" [hidden]="!filtersOpen()">
+      <div class="mb-3 flex items-center justify-between gap-3">
+        <h2 class="m-0 text-sm font-black text-slate-900">Danh mục cần tìm</h2>
+        <button type="button" class="rounded-full bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-200" (click)="clearFilters()">Xóa lọc</button>
+      </div>
+      <div class="flex flex-wrap gap-2" aria-label="Danh mục địa điểm" role="group">
+        @for (item of categories; track item.id) {
+          <button type="button" class="map-filter-chip" [attr.aria-pressed]="filters().category === item.id" (click)="changeFilters({category: item.id === 'all' ? null : item.id})">
+            <i class="fa-solid" [class]="categoryIcons[item.id]" aria-hidden="true"></i>{{ item.name }}
+          </button>
+        }
+      </div>
+      <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-700">
+        <label class="map-local-toggle"><input type="checkbox" [checked]="filters().localOnly" (change)="toggleLocal($event)" />Chỉ Góc Địa Phương</label>
+        @if (filters().localOnly) {
+          <label class="map-local-type">Nhóm món<select name="localType" class="map-picker" [ngModel]="filters().localType || ''" (ngModelChange)="changeFilters({localType: $event || null, category: null})"><option value="">Tất cả nhóm món</option>@for (type of localTypes(); track type) { <option [value]="type">{{ type }}</option> }</select></label>
+        }
+        @if (filters().area; as area) {
+          <span>Địa chỉ chứa “{{ area }}” <button class="text-button" type="button" (click)="changeFilters({area: null})">Bỏ lọc địa chỉ</button></span>
+        }
+        @if (filters().district; as district) {
+          <button class="map-filter-chip" type="button" [attr.aria-label]="'Bỏ lọc khu vực ' + district" (click)="changeFilters({district: null})">{{ district }} <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        }
+        @if (filters().facet; as facet) {
+          <button class="map-filter-chip" type="button" [attr.aria-label]="'Bỏ lọc ' + facetLabels[facet]" (click)="changeFilters({facet: null})">{{ facetLabels[facet] }} <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        }
+      </div>
+    </div>
+
+    @if (locationMessage() || nearby()) {
+      <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-700">
+        @if (locationMessage()) { <p class="m-0" role="status">{{ locationMessage() }}</p> }
+        @if (nearby()) { <button type="button" class="text-button" [disabled]="locating()" (click)="clearNearby()">Tắt tìm quanh vị trí</button> }
+      </div>
+    }
+    <details class="map-options mt-3 text-xs text-slate-600">
+      <summary>Công cụ bản đồ</summary>
+      <div class="mt-2 flex flex-wrap items-center gap-2">
+        <button type="button" class="map-light-button" [disabled]="!mapReady()" (click)="centerCity()">Về trung tâm</button>
+        <button type="button" class="map-light-button" [disabled]="!mapReady() || !geocoded().length" (click)="fitResults()">Xem tất cả kết quả</button>
+        <label class="inline-flex flex-wrap items-center gap-2">Nền bản đồ<select class="map-picker" [ngModel]="tileProvider()" (ngModelChange)="changeTileProvider($event)" [disabled]="!mapReady()"><option value="osm">OSM Standard</option><option value="topo">OpenTopoMap (OSM)</option></select></label>
+        <a class="ml-auto text-orange-700 hover:underline" href="https://www.openstreetmap.org/fixthemap" target="_blank" rel="noopener noreferrer">Báo lỗi bản đồ <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+      </div>
+    </details>
+  </section>
+
+  @if (store.catalogStatus() === 'loading') {
+    <div class="catalog-status" role="status">Đang tải danh mục địa điểm…</div>
+  } @else if (store.catalogStatus() === 'error') {
+    <div class="empty-state" role="alert"><h2>Chưa tải được danh mục</h2><p>{{ store.catalogError() }}</p><button type="button" class="button primary" (click)="store.loadCatalog()">Thử lại danh mục</button></div>
+  } @else {
+    @if (filtered().length) {
+      <section class="map-results" aria-label="Địa điểm phù hợp">
+        <h2 class="sr-only">Địa điểm phù hợp</h2>
+        @for (place of visible(); track place.id) {
+          <article class="map-result-card rounded-[28px] border border-slate-100 bg-white p-4 shadow-sm" [class.map-result-selected]="selectedId() === place.id">
+            <div class="flex gap-4">
+              <div class="map-photo h-24 w-24 shrink-0 rounded-2xl bg-slate-100">
+                <i class="fa-regular fa-image" aria-hidden="true"></i>
+                @if (place.image) { <img #photo [src]="place.image" alt="" loading="lazy" (load)="photo.hidden = false" (error)="photo.hidden = true" /> }
+              </div>
+              <div class="min-w-0 flex-1">
+                <h3 class="m-0 text-lg font-bold leading-snug text-slate-900">
+                  <button type="button" class="map-result-select line-clamp-2 text-left hover:text-orange-700" [attr.aria-label]="'Chọn ' + place.name + ' trên bản đồ'" [attr.aria-pressed]="selectedId() === place.id" (click)="selectPlace(place)">{{ place.name }}</button>
+                </h3>
+                <p class="mb-0 mt-1 line-clamp-2 text-sm text-slate-600" [title]="place.area">{{ place.area }}</p>
+                <div class="mt-2 flex flex-wrap items-center justify-between gap-1 text-xs">
+                  <span class="font-semibold text-orange-700">{{ categoryLabel(place) }}</span>
+                  @if (store.visibleReviewFor(place.id); as review) {
+                    <span class="text-orange-700" [attr.aria-label]="'Điểm đánh giá thử ' + review.rating + ' trên 5'"><i class="fa-solid fa-star" aria-hidden="true"></i> {{ review.rating }}/5</span>
+                  }
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 flex flex-wrap items-center gap-2">
+              <a class="map-dark-button flex-1" [routerLink]="['/dia-diem', place.id]" [queryParams]="detailContext()">Xem chi tiết</a>
+              @if (directions(place); as url) {
+                <a class="map-light-button" [href]="url" target="_blank" rel="noopener noreferrer" aria-label="Mở bản đồ ngoài">Mở map ngoài</a>
+              }
+              <button type="button" class="map-quiet-button" [class.text-rose-700]="store.hasFavorite(place.id)" [disabled]="!store.ready()" [attr.aria-pressed]="store.hasFavorite(place.id)" [attr.aria-label]="(store.hasFavorite(place.id) ? 'Bỏ yêu thích ' : 'Yêu thích ') + place.name" (click)="store.toggleFavorite(place.id)"><i class="fa-solid fa-heart" aria-hidden="true"></i></button>
+              <button type="button" class="map-quiet-button" [disabled]="!store.ready()" [attr.aria-label]="'Thêm ' + place.name + ' vào lịch trình'" (click)="store.addTrip(place.id)"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+            </div>
+          </article>
+        }
+      </section>
+      <div class="mt-8 flex flex-wrap items-center justify-between gap-4">
+        <p class="m-0 text-sm text-slate-600" aria-live="polite">Hiển thị {{ (currentPage() - 1) * pageSize + 1 }} – {{ (currentPage() - 1) * pageSize + visible().length }} / {{ filtered().length.toLocaleString('vi-VN') }} địa điểm</p>
+        @if (pageCount() > 1) {
+          <nav class="flex flex-wrap items-center gap-2" aria-label="Phân trang địa điểm trên bản đồ">
+            <button type="button" class="map-light-button" [disabled]="currentPage() === 1" (click)="changePage(currentPage() - 1)">Trước</button>
+            <span class="text-sm text-slate-600" aria-live="polite">Trang {{ currentPage() }} / {{ pageCount() }}</span>
+            <button type="button" class="map-light-button" [disabled]="currentPage() === pageCount()" (click)="changePage(currentPage() + 1)">Sau</button>
+          </nav>
+        }
+      </div>
+    } @else {
+      <section class="rounded-[28px] border border-dashed border-slate-200 bg-white px-6 py-10 text-center shadow-sm">
+        <img class="mx-auto h-20 w-20 object-contain" src="/illustrations/location-empty.png" alt="" width="80" height="80" />
+        <h2 class="mb-0 mt-4 text-lg font-black text-slate-900">Không tìm thấy địa điểm phù hợp</h2>
+        <p class="mx-auto mb-3 mt-2 max-w-md text-sm leading-6 text-slate-600">{{ nearby() ? 'Không có địa điểm phù hợp trong bán kính 5 km. Thử đổi từ khóa, xóa bộ lọc hoặc tắt chế độ tìm quanh vị trí.' : 'Thử đổi từ khóa tìm kiếm hoặc bỏ bớt bộ lọc để xem thêm địa điểm.' }}</p>
+        <div class="flex flex-wrap justify-center gap-2">
+          <button type="button" class="map-light-button" (click)="clearFilters()">Xóa bộ lọc</button>
+          @if (nearby()) { <button type="button" class="map-light-button" [disabled]="locating()" (click)="clearNearby()">Xem địa điểm toàn TP.HCM</button> }
+        </div>
+      </section>
+    }
+    <p class="source-note">
+      @if (missingCoordinates()) { {{ missingCoordinates().toLocaleString('vi-VN') }} hồ sơ chưa có tọa độ vẫn có trong danh sách. }
+      <a routerLink="/nguon-du-lieu">Xem nguồn dữ liệu OSM và Góc Địa Phương</a>
+    </p>
+  }
+</div>

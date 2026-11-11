@@ -1,0 +1,84 @@
+<div class="mx-auto max-w-7xl p-4 pb-24 lg:p-8">
+  <header class="mb-7">
+    <a routerLink="/kham-pha" class="mb-4 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-orange-800 hover:underline">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Khám phá địa điểm
+    </a>
+    <h1 class="m-0 text-2xl font-extrabold text-slate-900 md:text-3xl">{{ total }} cơ sở ưu tiên</h1>
+    <p class="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600">
+      Bộ hồ sơ để hoàn thiện ảnh bìa cho TravelGo. Ảnh được đối chiếu theo từng chi nhánh và nguồn sử dụng.
+    </p>
+  </header>
+
+  @if (store.catalogStatus() === 'error') {
+    <div role="alert" class="rounded-2xl border border-red-200 bg-red-50 p-5 text-red-800">
+      <p>{{ store.catalogError() }}</p>
+      <button type="button" class="button secondary" (click)="store.loadCatalog()">Thử lại</button>
+    </div>
+  } @else if (store.catalogStatus() === 'loading') {
+    <p role="status" class="text-slate-600">Đang tải danh sách cơ sở…</p>
+  } @else {
+    <div class="mb-5 flex flex-wrap gap-2" role="group" aria-label="Trạng thái ảnh cơ sở">
+      @for (choice of choices(); track choice.id) {
+        <button type="button" (click)="changeStatus(choice.id)" [attr.aria-pressed]="status() === choice.id"
+          class="inline-flex min-h-11 items-center gap-2 rounded-xl border px-4 py-3 text-sm font-semibold"
+          [class]="status() === choice.id ? 'border-orange-200 bg-orange-50 text-orange-800' : 'border-slate-200 bg-white text-slate-700 hover:border-orange-200'">
+          {{ choice.label }}<span class="tabular-nums">{{ choice.count }}</span>
+        </button>
+      }
+    </div>
+
+    <form class="mb-5 flex flex-wrap gap-3" (submit)="$event.preventDefault(); search(queryInput.value)">
+      <label class="flex min-h-12 min-w-0 flex-1 items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 focus-within:border-orange-700 focus-within:ring-1 focus-within:ring-orange-700">
+        <i class="fa-solid fa-magnifying-glass text-slate-500" aria-hidden="true"></i>
+        <span class="sr-only">Tìm trong danh sách ưu tiên</span>
+        <input #queryInput type="search" [value]="query()" maxlength="180" placeholder="Tên cơ sở, địa chỉ, khu vực…"
+          class="w-full min-w-0 border-0 bg-transparent py-3 text-sm text-slate-800 outline-none" />
+      </label>
+      <button type="submit" class="button primary">Tìm cơ sở</button>
+    </form>
+
+    @if (status() === 'reference') {
+      <p class="mb-5 text-sm leading-relaxed text-slate-600">Các hồ sơ này có ảnh nguồn cộng đồng. Quyền tái sử dụng đang chờ xác nhận hoặc bổ sung ảnh từ Chủ cơ sở.</p>
+    } @else if (status() === 'missing') {
+      <p class="mb-5 text-sm leading-relaxed text-slate-600">Ưu tiên một ảnh bìa nhận ra đúng cơ sở, kèm tác giả, nguồn và quyền sử dụng.</p>
+    }
+
+    <p class="mb-4 text-sm text-slate-600" role="status">{{ filtered().length }} cơ sở phù hợp</p>
+
+    @if ((status() === 'licensed' || status() === 'reference') && visible().length) {
+      <div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
+        @for (entry of visible(); track entry.place.id) {
+          <div class="min-w-0">
+            <tg-place-card [place]="entry.place" [context]="context()" />
+            <a [href]="source(entry.place)" target="_blank" rel="noopener noreferrer"
+              class="mt-2 inline-flex min-h-11 items-center text-xs font-semibold text-orange-800 hover:underline">{{ entry.status === 'licensed' ? 'Nguồn ảnh và giấy phép' : 'Nguồn ảnh tham khảo' }} <i class="fa-solid fa-arrow-up-right-from-square ml-2" aria-hidden="true"></i></a>
+          </div>
+        }
+      </div>
+    } @else if (visible().length) {
+      <ul class="m-0 list-none divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white p-0">
+        @for (entry of visible(); track entry.place.id) {
+          <li class="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-start sm:justify-between sm:gap-5 sm:px-5">
+            <div class="min-w-0">
+              <a [routerLink]="['/dia-diem', entry.place.id]" [queryParams]="context()" class="font-bold text-slate-900 hover:text-orange-800 hover:underline">{{ entry.place.name }}</a>
+              <p class="mb-1 mt-1 break-words text-sm text-slate-600">{{ entry.place.area }}</p>
+              <p class="m-0 text-xs leading-relaxed text-slate-500">{{ categoryLabels[entry.place.category] }} · {{ entry.group }}</p>
+            </div>
+            <div class="flex shrink-0 flex-wrap items-center gap-3 text-xs sm:flex-col sm:items-end">
+              <span class="rounded-lg bg-slate-100 px-2 py-1 font-medium text-slate-700">{{ labels[entry.status] }}</span>
+              <a [href]="source(entry.place)" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-8 items-center gap-2 font-semibold text-orange-800 hover:underline">Xem nguồn<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+            </div>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-600">Thử tìm bằng tên khác hoặc đổi trạng thái ảnh.</p>
+    }
+
+    @if (filtered().length > visible().length) {
+      <div class="mt-6 text-center">
+        <button type="button" class="button secondary" (click)="limit.set(limit() + 24)">Xem thêm cơ sở</button>
+      </div>
+    }
+  }
+</div>

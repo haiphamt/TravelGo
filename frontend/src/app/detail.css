@@ -1,0 +1,130 @@
+.detail-page { max-width: 80rem; margin-inline: auto; padding: 16px 16px 40px; }
+.detail-gallery-wrap { margin-bottom: 24px; }
+.detail-back { min-height: 40px; margin-bottom: 8px; font-size: 13px; font-weight: 600; }
+.detail-gallery-wrap .photo-source-links { margin: 6px 0 0; }
+.detail-body { max-width: 72rem; margin-inline: auto; }
+.detail-heading {
+  position: relative;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.detail-heading h1 { margin: 0 0 10px; color: #0f172a; font-size: 30px; font-weight: 900; overflow-wrap: anywhere; }
+.detail-heading h1, .detail-badges { padding-inline-end: 60px; }
+.detail-badges, .detail-facts, .detail-amenities { display: flex; flex-wrap: wrap; gap: 8px; }
+.detail-badges { margin-bottom: 10px; }
+.detail-badges span, .detail-amenities li {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #9a3412;
+  font-size: 12px;
+  font-weight: 650;
+}
+.detail-address { display: flex; align-items: flex-start; gap: 7px; margin: 0; color: #475569; }
+.detail-address tg-icon, .detail-score tg-icon { width: 16px; height: 16px; flex: none; }
+.detail-address tg-icon { margin-top: 3px; }
+.detail-facts { gap: 6px 14px; margin-top: 12px; color: #475569; font-size: 13px; }
+.detail-score { display: inline-flex; align-items: center; gap: 5px; color: #9a3412; font-weight: 650; }
+.detail-favorite {
+  position: absolute;
+  inset: 0 0 auto auto;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: none;
+  place-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  background: #fff;
+  color: #475569;
+  font-size: 18px;
+}
+.detail-favorite[aria-pressed="true"], .detail-favorite:hover { background: #fff1f2; color: #be123c; }
+.detail-change { margin: 0 0 24px; }
+
+.detail-columns, .detail-main { display: grid; min-width: 0; gap: 20px; }
+.detail-columns { align-items: start; }
+.detail-panel {
+  min-width: 0;
+  margin: 0;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  background: #fff;
+}
+.detail-panel h2 { margin: 0 0 12px; color: #0f172a; font-weight: 850; }
+.detail-panel p:last-child, .detail-panel .message:last-child { margin-bottom: 0; }
+.detail-intro > p { font-size: 15px; }
+.detail-recorded-facts { display: grid; gap: 12px; margin: 0; }
+.detail-recorded-facts > div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+.detail-recorded-facts dt { min-width: 132px; color: #475569; font-size: 13px; }
+.detail-recorded-facts dd { min-width: 0; margin: 0; color: #1e293b; font-weight: 600; overflow-wrap: anywhere; }
+.detail-amenities { margin: 0; padding: 0; list-style: none; }
+.detail-amenities li { background: #f1f5f9; color: #475569; }
+.detail-sources { min-width: 0; padding: 8px 4px 0; border-top: 1px solid #e2e8f0; color: #475569; font-size: 12px; overflow-wrap: anywhere; }
+.detail-source-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; margin: 0; }
+.detail-sources a { color: #9a3412; text-decoration: underline; text-underline-offset: 3px; }
+.detail-sources tg-icon { width: 12px; height: 12px; margin-inline-start: 4px; vertical-align: -2px; }
+.detail-source-more summary { width: fit-content; padding-block: 10px; color: #334155; cursor: pointer; font-weight: 650; }
+.detail-source-more summary:focus-visible { outline: 2px solid var(--brand-text); outline-offset: 3px; }
+.detail-source-more dl { margin-top: 4px; }
+.detail-source-more ul { margin: 12px 0 0; padding-inline-start: 18px; }
+.detail-source-more li + li { margin-top: 4px; }
+
+.detail-info-list { display: grid; gap: 12px; margin: 16px 0 20px; font-size: 13px; }
+.detail-info-list > div { display: grid; grid-template-columns: 2fr 3fr; gap: 12px; }
+.detail-info-list dt { color: #475569; }
+.detail-info-list dd { margin: 0; color: #1e293b; text-align: end; font-weight: 650; overflow-wrap: anywhere; }
+.detail-info-list small { display: block; margin-top: 3px; font-weight: 400; }
+.detail-actions { display: grid; gap: 8px; }
+.detail-actions > p { margin: 0; }
+.detail-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #fff;
+  color: #334155;
+  text-align: center;
+  font-weight: 700;
+}
+.detail-action:hover { background: #f8fafc; }
+.detail-action tg-icon { width: 16px; height: 16px; flex: none; }
+.detail-directions { border-color: #0f172a; background: #0f172a; color: #fff; }
+.detail-directions:hover { background: #1e293b; }
+.detail-plan { border-color: #ffedd5; background: #ffedd5; color: #9a3412; }
+.detail-plan:hover { background: #fed7aa; }
+.detail-update { justify-self: center; min-height: 40px; }
+
+.detail-reviews > header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 8px 16px; margin-bottom: 16px; }
+.detail-reviews > header h2 { margin-bottom: 3px; }
+.detail-reviews > header p { margin: 0; font-size: 13px; }
+.detail-reviews .review-entry { border-radius: 16px; background: #f8fafc; }
+.detail-reviews .review-actions { flex-wrap: wrap; gap: 8px 16px; }
+.detail-reviews .empty-state { min-height: 0; padding: 24px 16px; }
+.detail-reviews .empty-state h3 { margin-top: 12px; }
+.detail-reviews .demo-note { margin: 14px 0 0; }
+.detail-state { margin: 16px; }
+
+@media (min-width: 768px) {
+  .detail-page { padding: 16px 24px 48px; }
+  .detail-gallery-wrap { margin-bottom: 28px; }
+  .detail-heading { margin-bottom: 32px; }
+  .detail-heading h1 { font-size: 46px; }
+  .detail-facts > span + span { padding-inline-start: 14px; border-inline-start: 1px solid #cbd5e1; }
+  .detail-panel { padding: 24px; border-radius: 28px; }
+  .detail-state { margin: 24px; }
+}
+@media (min-width: 1024px) {
+  .detail-columns { grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr); gap: 32px; }
+  .detail-main { grid-column: 1; grid-row: 1; gap: 24px; }
+  .detail-quick-info { grid-column: 2; grid-row: 1; }
+}
+@media (min-width: 1024px) and (min-height: 960px) {
+  .detail-quick-info { position: sticky; top: 96px; }
+}

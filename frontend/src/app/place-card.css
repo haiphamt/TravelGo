@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  height: 100%;
+  min-width: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card-actions { opacity: 0; }
+  .suggested-card:is(:hover, :focus-within) .card-actions { opacity: 1; }
+}

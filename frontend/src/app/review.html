@@ -1,0 +1,294 @@
+@if (store.catalogStatus() === 'loading') {
+<div class="empty-state" role="status"><h1>Đang tải địa điểm…</h1></div>
+} @else if (store.catalogStatus() === 'error') {
+<div class="empty-state" role="alert"><h1>Chưa tải được địa điểm</h1><p>{{ store.catalogError() }}</p><button class="button primary" (click)="store.loadCatalog()">Thử lại</button></div>
+} @else if (place(); as place) {
+<a class="back-link" [routerLink]="['/dia-diem', place.id]" queryParamsHandling="preserve"
+  ><tg-icon name="back" />Quay lại địa điểm</a
+>
+<div class="page-heading">
+  <div>
+    <h1>
+      {{ editing() ? 'Chỉnh sửa đánh giá' : 'Chia sẻ trải nghiệm của bạn' }}
+    </h1>
+    <p>
+      Một nhận xét hữu ích có thể giúp người sau chọn được điểm ghé phù hợp.
+    </p>
+  </div>
+</div>
+<div class="review-place">
+  @if (place.image) {
+    <img [src]="place.image" [alt]="'Ảnh từ hồ sơ nguồn của ' + place.name" />
+  } @else {
+    <span class="avatar" aria-label="Chưa có ảnh địa điểm"><tg-icon name="image" /></span>
+  }
+  <div>
+    <strong>{{ place.name }}</strong>
+    <p><tg-icon name="pin" />{{ place.area }}</p>
+  </div>
+  <span class="tag"
+    >{{ place.local ? 'Góc Địa Phương' : 'Đánh giá TravelGo' }}</span
+  >
+</div>
+<div class="review-layout">
+  <section class="review-form">
+    @if (preview()) {
+    <h2>Xem lại trước khi gửi</h2>
+    <p class="muted">Nội dung dưới đây sẽ được lưu trong bản dùng thử.</p>
+    <div class="preview-stars" [attr.aria-label]="rating() + ' trên 5 sao'">
+      @for (star of stars; track star) {
+      <tg-icon name="star" [class.filled]="star <= rating()" /> }<strong
+        >{{ rating() }}/5</strong
+      >
+    </div>
+    @if (text()) {
+    <p class="review-text">{{ text() }}</p>
+    } @else {
+    <p class="muted">Chỉ chấm sao, chưa có nhận xét.</p>
+    } @if (visitedOn()) {
+    <p class="small">Ngày ghé do bạn cung cấp: {{ visitedOn() }}</p>
+    }
+    <div class="photo-preview-grid">
+      @for (photo of photos(); track $index) {
+      <img [src]="photo" [alt]="'Ảnh sẽ gửi ' + ($index + 1)" /> }
+    </div>
+    @if (error()) {
+    <p class="message error" role="alert">{{ error() }}</p>
+    }
+    <div class="form-actions">
+      <button
+        class="button secondary"
+        (click)="preview.set(false)"
+        [disabled]="saving()"
+      >
+        Chỉnh sửa tiếp</button
+      ><button
+        class="button primary"
+        (click)="submit()"
+        [disabled]="saving() || !store.ready()"
+      >
+        <tg-icon name="check" />{{ saving() ? 'Đang lưu…' : editing() ? 'Lưu
+        thay đổi' : 'Gửi đánh giá' }}
+      </button>
+    </div>
+    } @else {
+    <form (ngSubmit)="showPreview()">
+      <fieldset class="rating-field">
+        <legend>
+          Trải nghiệm của bạn thế nào? <span class="required">*</span>
+        </legend>
+        <p id="rating-hint" class="muted small">
+          Chọn từ 1 đến 5 sao theo trải nghiệm của bạn.
+        </p>
+        <div
+          class="star-input"
+          role="radiogroup"
+          aria-label="Số sao đánh giá"
+          aria-describedby="rating-hint"
+        >
+          @for (star of stars; track star) {
+          <label [class.chosen]="star <= rating()"
+            ><input
+              type="radio"
+              name="rating"
+              [value]="star"
+              [ngModel]="rating()"
+              (ngModelChange)="rating.set($event)"
+              [attr.aria-label]="star + ' sao'" /><tg-icon name="star"
+          /></label>
+          }
+        </div>
+        <span class="rating-description">{{ ratingLabels[rating()] }}</span>
+      </fieldset>
+      <label class="field-label" for="review-text"
+        >Chia sẻ điều hữu ích
+        <span class="optional">(không bắt buộc)</span></label
+      >
+      <textarea
+        id="review-text"
+        name="text"
+        rows="4"
+        [maxlength]="maxText"
+        [(ngModel)]="text"
+        placeholder="Bạn đã thử món gì? Giá thế nào? Có điều gì người ghé sau nên biết?"
+        aria-describedby="text-hint"
+      ></textarea>
+      <div id="text-hint" class="field-helper">
+        <span>Chia sẻ điều bạn trực tiếp biết.</span
+        ><span>{{ text().length }}/{{ maxText }}</span>
+      </div>
+      <div class="review-tags">
+        @for (tag of tags; track tag) {
+        <button type="button" class="chip" (click)="addTag(tag)">
+          <tg-icon name="plus" />{{ tag }}
+        </button>
+        }
+      </div>
+      <label class="field-label" for="visit-date"
+        >Ngày bạn ghé <span class="optional">(không bắt buộc)</span></label
+      ><input
+        class="date-input"
+        id="visit-date"
+        type="date"
+        name="visitedOn"
+        [max]="today"
+        [(ngModel)]="visitedOn"
+      />
+      <div class="photo-heading">
+        <h2>Ảnh món ăn hoặc không gian</h2>
+        <span class="muted small">{{ photos().length }}/3 ảnh</span>
+      </div>
+      @if (photos().length) {
+      <div class="photo-preview-grid">
+        @for (photo of photos(); track $index) {
+        <div class="photo-preview">
+          <img [src]="photo" [alt]="'Ảnh đã chọn ' + ($index + 1)" /><button
+            type="button"
+            class="icon-button"
+            [attr.aria-label]="'Bỏ ảnh ' + ($index + 1)"
+            (click)="removePhoto($index)"
+            [disabled]="processing()"
+          >
+            <tg-icon name="close" />
+          </button>
+        </div>
+        }
+      </div>
+      }
+      <div class="photo-picker" [class.has-photos]="photos().length">
+        <tg-icon name="camera" />
+        <h3>
+          {{ photos().length ? 'Thêm góc nhìn khác' : 'Một tấm ảnh, thêm chút
+          trải nghiệm' }}
+        </h3>
+        <p>Chụp món ăn, quầy hàng hoặc không gian bạn đã ghé.</p>
+        <div class="photo-buttons">
+          <button
+            type="button"
+            class="button primary"
+            (click)="startCamera()"
+            [disabled]="processing() || photos().length >= 3"
+          >
+            <tg-icon name="camera" />Chụp ảnh</button
+          ><button
+            type="button"
+            class="button secondary"
+            (click)="photoInput.click()"
+            [disabled]="processing() || photos().length >= 3"
+          >
+            <tg-icon name="image" />Chọn ảnh
+          </button>
+        </div>
+        <input
+          #photoInput
+          class="sr-only"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          (change)="selectPhotos($event)"
+          tabindex="-1"
+          aria-label="Tệp ảnh đánh giá"
+        />
+        <p class="small">
+          {{ processing() ? 'Đang chuẩn bị ảnh…' : 'Tùy chọn · Tối đa 3 ảnh JPG,
+          PNG, WebP · 5 MB mỗi ảnh' }}
+        </p>
+      </div>
+      @if (error()) {
+      <p class="message error" role="alert">{{ error() }}</p>
+      }
+      <div class="form-actions">
+        <a class="text-button muted" [routerLink]="['/dia-diem', place.id]" queryParamsHandling="preserve"
+          >Quay lại</a
+        ><button
+          class="button primary"
+          type="submit"
+          [disabled]="processing() || !store.ready()"
+        >
+          Xem trước đánh giá<tg-icon name="arrow" />
+        </button>
+      </div>
+    </form>
+    }
+  </section>
+  <aside class="review-guide">
+    <h2>Chia sẻ vừa đủ, hữu ích hơn</h2>
+    <div>
+      <tg-icon name="utensils" />
+      <p>Kể về món đã thử, giá tham khảo và trải nghiệm thực tế.</p>
+    </div>
+    <div>
+      <tg-icon name="camera" />
+      <p>Ưu tiên ảnh món ăn hoặc quầy hàng. Hỏi trước nếu chụp rõ người bán.</p>
+    </div>
+    <div>
+      <tg-icon name="pin" />
+      <p>
+        Thấy giờ bán hoặc vị trí thay đổi? Đó là thông tin cần được kiểm tra
+        trước khi cập nhật địa điểm.
+      </p>
+    </div>
+    <hr />
+    <p class="small muted">
+      Ảnh và ngày ghé không tự xác nhận rằng bạn đã đến địa điểm. Đánh giá này
+      thuộc TravelGo, độc lập với Google Maps.
+    </p>
+    <p class="local-save-note">
+      <tg-icon name="info" /><span
+        >Bản dùng thử: ảnh chỉ được lưu trên trình duyệt sau khi bạn bấm gửi,
+        chưa đăng công khai.</span
+      >
+    </p>
+  </aside>
+</div>
+@if (cameraOpen()) {
+<dialog
+  #cameraDialog
+  class="camera-dialog"
+  aria-labelledby="camera-title"
+  (cancel)="stopCamera()"
+>
+  <div class="section-heading">
+    <h2 id="camera-title">Chụp ảnh trải nghiệm</h2>
+    <button
+      class="icon-button"
+      aria-label="Đóng camera"
+      (click)="stopCamera()"
+      autofocus
+    >
+      <tg-icon name="close" />
+    </button>
+  </div>
+  <video
+    #cameraVideo
+    autoplay
+    muted
+    playsinline
+    aria-label="Hình ảnh từ camera"
+  ></video
+  >@if (cameraPending()) {
+  <p role="status">Đang mở camera…</p>
+  }@if (cameraError()) {
+  <p class="message error" role="alert">{{ cameraError() }}</p>
+  }
+  <p class="small muted">
+    Không cần chụp rõ mặt người bán. Tránh thông tin riêng tư và người chưa đồng
+    ý xuất hiện.
+  </p>
+  <div class="form-actions">
+    <button class="button secondary" (click)="stopCamera()">Đóng</button
+    ><button
+      class="button primary"
+      [disabled]="!cameraStream() || cameraPending()"
+      (click)="capture()"
+    >
+      <tg-icon name="camera" />Chụp ảnh này
+    </button>
+  </div>
+</dialog>
+} } @else {
+<div class="empty-state">
+  <h1>Không tìm thấy địa điểm</h1>
+  <a class="button primary" routerLink="/kham-pha">Về trang khám phá</a>
+</div>
+}

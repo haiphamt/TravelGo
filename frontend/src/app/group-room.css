@@ -1,0 +1,66 @@
+:host {
+  display: block;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: 24px 16px 96px;
+}
+
+@media (min-width: 640px) {
+  :host { padding-inline: 24px; }
+}
+@media (min-width: 1024px) {
+  :host { padding-inline: 32px; }
+}
+
+.room-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+  align-items: center;
+  gap: 16px 28px;
+}
+.room-title-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.room-title-row h2 { margin: 0; }
+.room-header p { margin: 6px 0 0; }
+.room-header select {
+  width: 100%; min-width: 0; min-height: 42px; padding: 9px 12px;
+  border: 1px solid var(--control-border, #d0d5dd); border-radius: 9px;
+  background: var(--surface); color: var(--text); font: inherit; font-weight: 400;
+}
+.room-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(215px, 1fr); align-items: start; gap: 20px; }
+.room-layout > div { min-width: 0; }
+.room-vote-list { margin-top: 16px; }
+.room-vote-row, .room-stop {
+  display: flex;
+  align-items: center;
+  gap: 10px 14px;
+}
+.room-place { flex: 1; min-width: 0; }
+.room-place a { color: var(--brand-text); text-decoration: underline; text-underline-offset: 3px; font-weight: 650; }
+.room-place > span { display: block; margin-top: 3px; }
+.room-votes, .room-time { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.room-votes { color: var(--muted); font-size: 13px; }
+.room-vote[aria-pressed="true"] { border-color: #fdba74; background: var(--soft); color: var(--brand-text); }
+.room-decision { min-width: 0; margin: 20px 0 0; padding: 12px 14px 14px; border: 1px solid var(--border); border-radius: 10px; }
+.room-decision legend { padding: 0 6px; font-size: 16px; font-weight: 700; }
+.room-decision p { margin: 0 0 8px; }
+.room-decision-option { display: flex; align-items: center; min-height: 40px; padding: 5px 0; }
+.room-decision-option input { margin: 0; width: 17px; height: 17px; }
+.room-decision-option small { color: var(--muted); }
+.room-members li { display: grid; gap: 3px; }
+.room-invite { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.room-stops { margin: 14px 0 0; padding: 0; list-style: none; }
+.room-stop { flex-wrap: wrap; border-top: 1px solid var(--border); padding: 13px 0; }
+.room-stop .trip-index { margin-top: 0; }
+.room-change { flex: 0 0 100%; min-width: 0; }
+.room-stop-tools, .room-reorder { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.room-stop-tools input { width: 108px; }
+.room-stop-tools .icon-button, .room-vote-row .icon-button { width: 40px; height: 40px; }
+
+@media (max-width: 1120px) {
+  .room-layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+@media (max-width: 620px) {
+  .room-header { grid-template-columns: minmax(0, 1fr); }
+  .room-vote-row, .room-stop { flex-wrap: wrap; }
+  .room-stop-tools { flex: 0 0 100%; padding-inline-start: 42px; }
+}

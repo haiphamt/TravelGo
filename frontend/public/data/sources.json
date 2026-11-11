@@ -1,0 +1,135 @@
+{
+  "catalogSchemaVersion": 1,
+  "catalogUrl": "/data/catalog.json",
+  "counts": {
+    "osm": 7457,
+    "local": 50,
+    "images": 66,
+    "total": 7507,
+    "localImages": 0,
+    "osmImages": 66
+  },
+  "sources": [
+    {
+      "id": "osm",
+      "label": "OpenStreetMap",
+      "sourceUrl": "https://download.geofabrik.de/asia/vietnam.html",
+      "originalSourceUrl": "https://www.openstreetmap.org/",
+      "license": "ODbL-1.0",
+      "licenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+      "attribution": "© OpenStreetMap contributors",
+      "attributionUrl": "https://www.openstreetmap.org/copyright",
+      "osmDataTimestamp": "2026-11-07T21:21:36Z",
+      "extractionDate": "2026-11-08",
+      "retrievedAt": "2026-11-08T02:33:19.045741+00:00",
+      "boundaryRelation": 1973756,
+      "selectedPlaceCount": 7457,
+      "sourceFile": "hcm-osm-source-records.json",
+      "sourceFileSha256": "72edae18ceb210d16ad8ef12ac134cb6fc90c9c7d0959c24d205ca9beced475b",
+      "originalPbf": {
+        "name": "vietnam-latest.osm.pbf",
+        "bytes": 332333711,
+        "md5": "339e73adb9fc228946c805cae3237861"
+      },
+      "limitations": [
+        "Trích các nhóm POI đã chọn, không phải mọi đối tượng OSM.",
+        "Không phải xác minh tình trạng hoạt động của từng cơ sở.",
+        "Các tham chiếu ảnh OSM chưa được kiểm tra quyền/chất lượng nên không được dùng làm ảnh trong frontend."
+      ],
+      "excludedRecords": [
+        {
+          "id": "osm:way/341504305",
+          "name": "Trụ sở Ủy ban nhân dân Thành phố Hồ Chí Minh",
+          "reason": "administrative_facility",
+          "sourceUrl": "https://www.openstreetmap.org/way/341504305"
+        },
+        {
+          "id": "osm:way/1396268967",
+          "name": "Căn tin Trường Đại học Sài Gòn – cơ sở 1",
+          "reason": "restricted_access",
+          "sourceUrl": "https://www.openstreetmap.org/way/1396268967"
+        },
+        {
+          "id": "osm:way/1152451319",
+          "name": "Botanica Premier Residential Park",
+          "reason": "restricted_access",
+          "sourceUrl": "https://www.openstreetmap.org/way/1152451319"
+        },
+        {
+          "id": "osm:way/1429659961",
+          "name": "Vườn thuốc Trạm y tế",
+          "reason": "restricted_access",
+          "sourceUrl": "https://www.openstreetmap.org/way/1429659961"
+        }
+      ]
+    },
+    {
+      "id": "community-local",
+      "label": "Gánh Mưu Sinh — dữ liệu tham khảo",
+      "sourceUrls": [
+        "https://ganhmuusinh.io.vn/",
+        "https://ganhmuusinh.vn/"
+      ],
+      "directoryUrl": "https://ganhmuusinh.io.vn/api/place-directory",
+      "privacyUrl": "https://ganhmuusinh.io.vn/privacy?lang=vi",
+      "termsUrl": "https://ganhmuusinh.vn/terms.html",
+      "profileCount": 50,
+      "photoCount": 0,
+      "dataReusePermission": "unconfirmed",
+      "imageReusePermission": "unconfirmed",
+      "license": "Chưa xác nhận quyền tái sử dụng; không thuộc ODbL của bộ OSM.",
+      "sourceFile": "travelgo-local-50.json",
+      "sourceFileSha256": "4dc2045c32fa093d2b334ca8ffb150c58b1d9689bec011f978f1356105af988f",
+      "preparedAt": "2026-11-08T04:04:28.712790+00:00",
+      "fieldVisitVerified": false,
+      "vendorConsentForTravelGo": null,
+      "limitations": [
+        "Chuẩn bị cho bản thử cục bộ, chưa xác định quyền tái phát hành danh mục/tọa độ/ảnh trên TravelGo công khai.",
+        "47 trường giờ bán tham chiếu Google từ website nguồn, 3 trường giờ ở ganhmuusinh.vn; chưa được TravelGo xác nhận lại.",
+        "Giá, liên hệ, quyền quản lý và đánh giá/check-in TravelGo chưa có; không tạo dữ liệu thay thế.",
+        "Ảnh của nguồn cộng đồng đang chờ xác nhận quyền tái sử dụng."
+      ],
+      "localProfileEnrichment": {
+        "integratedAt": "2026-11-08T20:55:58.858505+00:00",
+        "sourceFile": "travelgo-local-50.json",
+        "sourceFileSha256": "4dc2045c32fa093d2b334ca8ffb150c58b1d9689bec011f978f1356105af988f",
+        "fields": [
+          "categoryLabel",
+          "productsNote",
+          "hours.summary",
+          "hours.weekdays",
+          "hours.sourceLabel",
+          "hours.sourceUrl",
+          "hours.observedAt",
+          "hours.qualityFlags",
+          "collectedAt",
+          "preparedAt",
+          "sources"
+        ],
+        "profileCount": 50,
+        "weekdayScheduleCount": 47,
+        "summaryOnlyScheduleCount": 3,
+        "knownHoursObservedAtCount": 47,
+        "unknownHoursObservedAtCount": 3,
+        "allDaySourceFlagCount": 3,
+        "overnightSourceFlagCount": 1,
+        "weekdayOrder": "Mo,Tu,We,Th,Fr,Sa,Su; chỉ giữ các ngày có trong nguồn",
+        "collectionDateField": "sources[0].retrieved_at_utc",
+        "preparedDateField": "prepared_at_utc",
+        "hoursObservedDateField": "opening_hours.source.observed_at_utc",
+        "categoryProvenance": "Phân loại đề xuất cho TravelGo từ mặt hàng.",
+        "publicSourceLinksOnly": true,
+        "fieldVisitVerified": false
+      }
+    }
+  ],
+  "images": [],
+  "catalogSha256": "ffdde52a0ee9f9772075bdccc58b2e9194569a0bd06abfad850de4db80f9c435",
+  "osmPhotos": {
+    "manifestUrl": "/data/osm-photo-sources.json",
+    "manifestSha256": "e4292bfd05314e05fe4de27100565898bd51103bcff829867746875e311941e5",
+    "count": 66,
+    "licensePerFile": true,
+    "source": "Wikimedia Commons, Flickr, Mapillary, Panoramax"
+  }
+}

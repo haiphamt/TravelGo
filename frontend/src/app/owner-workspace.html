@@ -1,0 +1,247 @@
+<header class="owner-heading">
+  <div>
+    <h1>{{ page().title }}</h1>
+    <p>{{ page().description }}</p>
+  </div>
+  @if (view() === 'places' && managed().length) {
+    <a class="button primary" routerLink="/chu-co-so" [queryParams]="{view: 'claim'}"><tg-icon name="plus" />Xin quyền quản lý</a>
+  }
+</header>
+
+@if (view() === 'history') {
+  @if (editing(); as request) {
+    @if (place() && (request.kind === 'claim' || canManage())) {
+      <tg-proposal-form actor="owner" [kind]="request.kind" [place]="place()" [editing]="request"
+        (completed)="cancelEdit()" (cancel)="cancelEdit()" />
+    } @else {
+      <section class="workflow-panel">
+        <h2>Bổ sung yêu cầu</h2>
+        <p class="message error" role="alert">{{ place() ? 'Địa điểm hiện không nằm trong phạm vi quản lý của bạn.' : 'Chưa đọc được hồ sơ địa điểm trong yêu cầu này.' }}</p>
+        <button class="button secondary" type="button" (click)="cancelEdit()">Quay lại lịch sử</button>
+      </section>
+    }
+  } @else if (store.ready()) {
+    <tg-workflow-history heading="Yêu cầu đã gửi" emptyMessage="Yêu cầu quản lý, cập nhật và báo cáo bạn gửi sẽ xuất hiện ở đây."
+      [entries]="entries()" [busy]="withdrawing()" (edit)="edit($event)" (withdraw)="withdraw($event)" />
+    @if (!entries().length) {
+      <a class="button primary" routerLink="/chu-co-so" [queryParams]="{view: 'claim'}"><tg-icon name="plus" />Xin quyền quản lý</a>
+    }
+  } @else {
+    <section class="workflow-panel"><h2>Yêu cầu đã gửi</h2><p class="muted" role="status">Đang đọc yêu cầu đã lưu…</p></section>
+  }
+} @else if (view() === 'claim') {
+  <div class="owner-columns">
+    <div class="owner-stack">
+      <section class="workflow-panel" aria-labelledby="claim-place-title">
+        <h2 id="claim-place-title">Chọn địa điểm cần quản lý</h2>
+        <tg-workflow-place-picker [selectedId]="selectedId()" (selectedIdChange)="selectForClaim($event)" />
+        @if (linkedId() && !place() && store.catalogStatus() === 'ready') {
+          <p class="message error" role="alert">Địa điểm từ liên kết hiện không có trong danh mục. Hãy chọn địa điểm khác.</p>
+        }
+      </section>
+
+      @if (place(); as target) {
+        @if (!store.ready()) {
+          <section class="workflow-panel"><h2>Kiểm tra quyền quản lý</h2><p class="muted" role="status">Đang đọc yêu cầu đã lưu…</p></section>
+        } @else if (canManage()) {
+          <section class="workflow-panel">
+            <div class="owner-card-heading">
+              <h2>Quyền quản lý địa điểm</h2><span class="workflow-status" data-status="approved">Đã cấp quyền</span>
+            </div>
+            <p class="muted">Bạn có thể đề xuất cập nhật và phản hồi đánh giá cho địa điểm này trong bản thử.</p>
+            <a class="button primary" routerLink="/chu-co-so" [queryParams]="{view: 'manage', place: target.id}">Quản lý địa điểm<tg-icon name="arrow" /></a>
+          </section>
+        } @else if (activeClaim(); as request) {
+          <section class="workflow-panel">
+            <div class="owner-card-heading">
+              <h2 #claimStatus tabindex="-1">{{ request.status === 'needs-info' ? 'Yêu cầu cần bổ sung' : 'Đã nhận yêu cầu quản lý' }}</h2>
+              <span class="workflow-status" [attr.data-status]="request.status">{{ labels.status[request.status] }}</span>
+            </div>
+            @if (request.status === 'needs-info') {
+              <p>{{ request.history.at(-1)?.reason }}</p>
+              <p class="muted">Mở lịch sử để bổ sung thông tin và gửi lại yêu cầu.</p>
+            } @else {
+              <p class="muted">Yêu cầu đang chờ Quản trị viên xem xét. Bạn có thể theo dõi hoặc rút yêu cầu trong lịch sử.</p>
+            }
+            <a class="button secondary" routerLink="/chu-co-so" [queryParams]="{view: 'history'}">Xem lịch sử yêu cầu<tg-icon name="arrow" /></a>
+          </section>
+        } @else {
+          @if (selectedClaim(); as request) {
+            <section class="workflow-panel">
+              <div class="owner-card-heading">
+                <h2>Kết quả yêu cầu trước</h2><span class="workflow-status" [attr.data-status]="request.status">{{ labels.status[request.status] }}</span>
+              </div>
+              @if (request.history.at(-1); as event) { <p>{{ event.reason }}</p> }
+            </section>
+          }
+          <tg-proposal-form actor="owner" kind="claim" [place]="target" (completed)="showClaimResult()" />
+        }
+
+        @if (selectedClaim(); as request) {
+          <details class="owner-panel owner-claim-file">
+            <summary>Hồ sơ yêu cầu đã gửi</summary>
+            <dl>
+              <div><dt>Ngày gửi</dt><dd>{{ request.createdAt | date:'dd/MM/yyyy HH:mm':'+0700' }}</dd></div>
+              @if (request.relationship) {
+                <div><dt>Mối quan hệ với địa điểm</dt><dd>{{ request.relationship === 'representative' ? 'Người đại diện của Chủ cơ sở' : 'Chủ cơ sở' }}</dd></div>
+              }
+              @if (request.evidence) { <div><dt>Thông tin đối chiếu</dt><dd>{{ request.evidence }}</dd></div> }
+              <div><dt>Lý do gửi yêu cầu</dt><dd>{{ request.reason }}</dd></div>
+              @if (request.agreement) { <div><dt>Sự đồng ý</dt><dd>Đã xác nhận khi gửi yêu cầu</dd></div> }
+            </dl>
+          </details>
+        }
+      }
+    </div>
+
+    <aside class="owner-panel owner-guide" aria-labelledby="claim-guide-title">
+      <h2 id="claim-guide-title">Quy trình xác minh</h2>
+      <ol class="owner-steps">
+        <li><strong>Chọn địa điểm</strong><p>Tìm đúng tên và địa chỉ trong danh mục TravelGo.</p></li>
+        <li><strong>Gửi thông tin đối chiếu</strong><p>Cho biết vai trò của bạn tại địa điểm và xác nhận sự đồng ý.</p></li>
+        <li><strong>Theo dõi kết quả</strong><p>Quyền quản lý có hiệu lực sau khi yêu cầu được duyệt trong bản thử.</p></li>
+      </ol>
+      <a class="text-button" routerLink="/chu-co-so" [queryParams]="{view: 'history'}">Xem lịch sử yêu cầu<tg-icon name="arrow" /></a>
+    </aside>
+  </div>
+} @else if (!store.ready() || store.catalogStatus() === 'loading') {
+  <section class="workflow-panel"><h2>Địa điểm được cấp quyền</h2><p class="muted" role="status">Đang tải danh mục và quyền quản lý thử nghiệm…</p></section>
+} @else if (store.catalogStatus() === 'error') {
+  <section class="workflow-panel">
+    <h2>Địa điểm được cấp quyền</h2>
+    <p class="message error" role="alert">{{ store.catalogError() }}</p>
+    <button class="button secondary" type="button" (click)="store.loadCatalog()">Tải lại danh mục</button>
+  </section>
+} @else {
+  @if (linkedId() && !canManage()) {
+    <section class="workflow-panel owner-unavailable" aria-labelledby="owner-unavailable-title">
+      <div class="owner-card-heading">
+        <h2 id="owner-unavailable-title">{{ place()?.name || 'Địa điểm không còn trong danh mục' }}</h2>
+        @if (selectedClaim(); as request) {
+          <span class="workflow-status" [attr.data-status]="request.status">{{ labels.status[request.status] }}</span>
+        }
+      </div>
+      @if (place()) {
+        @if (selectedClaim()?.status === 'revoked') {
+          <p class="muted">Quyền quản lý địa điểm này đã bị thu hồi trong bản thử.</p>
+        } @else {
+          <p class="muted">Bạn chưa có quyền quản lý địa điểm này trong bản thử.</p>
+        }
+        <a class="button secondary" routerLink="/chu-co-so" [queryParams]="{view: 'claim', place: linkedId()}">
+          {{ activeClaim() ? 'Xem yêu cầu quản lý' : 'Xin quyền quản lý địa điểm' }}<tg-icon name="arrow" />
+        </a>
+      } @else {
+        <p class="muted">Hãy chọn một địa điểm khác trong danh mục TravelGo.</p>
+        <a class="button secondary" routerLink="/chu-co-so" [queryParams]="{view: 'claim'}">Tìm địa điểm</a>
+      }
+    </section>
+  }
+
+  @if (managed().length) {
+    <div class="owner-columns owner-columns-manage">
+      <section class="owner-panel owner-place-list" aria-labelledby="managed-places-title">
+        <div class="owner-card-heading">
+          <h2 id="managed-places-title">Được cấp quyền</h2><span class="owner-count">{{ managed().length }} địa điểm</span>
+        </div>
+        <ul>
+          @for (item of managed(); track item.id) {
+            <li>
+              <a routerLink="/chu-co-so" [queryParams]="{view: 'manage', place: item.id}"
+                [attr.aria-current]="selectedId() === item.id ? 'true' : null">
+                <tg-icon name="store" />
+                <span><strong>{{ item.name }}</strong><small>{{ item.area }}</small></span>
+                <tg-icon name="arrow" />
+              </a>
+            </li>
+          }
+        </ul>
+      </section>
+
+      @if (canManage() && place(); as target) {
+        <div class="owner-stack">
+          <section class="owner-panel" aria-labelledby="managed-place-title">
+            <div class="owner-card-heading">
+              <h2 id="managed-place-title">{{ target.name }}</h2><span class="workflow-status" data-status="approved">Đã cấp quyền</span>
+            </div>
+            <p class="owner-place-address muted"><tg-icon name="pin" />{{ target.area }}</p>
+            <div class="workflow-actions">
+              <button class="button primary" type="button" [attr.aria-expanded]="action() === 'update'"
+                (click)="action() === 'update' ? clearAction() : showAction('update')">
+                <tg-icon [name]="action() === 'update' ? 'close' : 'plus'" />{{ action() === 'update' ? 'Đóng biểu mẫu cập nhật' : 'Đề xuất cập nhật' }}
+              </button>
+              <a class="button secondary" [routerLink]="['/dia-diem', target.id]">Xem hồ sơ địa điểm<tg-icon name="external" /></a>
+            </div>
+          </section>
+
+          @if (action() === 'update') {
+            <tg-proposal-form actor="owner" kind="update" [place]="target" [focusOnOpen]="true" (completed)="openHistory()" />
+          }
+
+          <section class="owner-panel owner-review" aria-labelledby="owner-review-title">
+            <h2 id="owner-review-title">Đánh giá thử hiện hành</h2>
+            @if (review(); as current) {
+              <p class="owner-review-meta muted small"><tg-icon name="star" /><strong>{{ current.rating }}/5</strong><span>{{ current.updatedAt | date:'dd/MM/yyyy HH:mm':'+0700' }}</span></p>
+              @if (current.text) { <p class="owner-review-text">{{ current.text }}</p> }
+              @if (reply(); as response) {
+                <div class="owner-reply">
+                  <strong><tg-icon name="store" />Phản hồi của Chủ cơ sở</strong>
+                  <p class="owner-review-text">{{ response.text }}</p>
+                </div>
+              }
+              @if (replyEditing()) {
+                <form (ngSubmit)="saveReply()">
+                  <div class="workflow-fields">
+                    <label class="workflow-wide"><span>Nội dung phản hồi</span><textarea #replyField name="reply" rows="3" maxlength="500"
+                      [ngModel]="replyText()" (ngModelChange)="replyText.set($event)"></textarea></label>
+                  </div>
+                  <div class="workflow-actions">
+                    <button class="button primary" type="submit" [disabled]="replySaving()">{{ replySaving() ? 'Đang lưu…' : 'Lưu phản hồi' }}</button>
+                    <button class="button secondary" type="button" [disabled]="replySaving()" (click)="cancelReply(true)">Hủy</button>
+                  </div>
+                </form>
+              } @else {
+                <div class="workflow-actions">
+                  <button #replyButton class="button secondary" type="button" [disabled]="replySaving()" (click)="startReply()">{{ reply() ? 'Sửa phản hồi' : 'Viết phản hồi' }}</button>
+                  @if (reply()) { <button class="text-button" type="button" [disabled]="replySaving()" (click)="saveReply(true)">Gỡ phản hồi</button> }
+                  <button class="text-button" type="button" [attr.aria-expanded]="action() === 'report'"
+                    (click)="action() === 'report' ? clearAction() : showAction('report')">
+                    {{ action() === 'report' ? 'Đóng biểu mẫu báo cáo' : 'Báo cáo đánh giá hoặc ảnh' }}
+                  </button>
+                </div>
+              }
+              @if (replyError()) { <p class="message error" role="alert">{{ replyError() }}</p> }
+            } @else {
+              <p class="muted">Chưa có đánh giá thử hiện hành để phản hồi hoặc báo cáo.</p>
+            }
+          </section>
+
+          @if (action() === 'report') {
+            <tg-proposal-form actor="owner" kind="report" [place]="target" [focusOnOpen]="true" (completed)="openHistory()" />
+          }
+        </div>
+      }
+    </div>
+  } @else if (!linkedId()) {
+    <div class="owner-columns">
+      <section class="owner-panel owner-empty" aria-labelledby="owner-empty-title">
+        <span class="owner-empty-icon"><tg-icon name="store" /></span>
+        <h2 id="owner-empty-title">Chưa có địa điểm được cấp quyền</h2>
+        <p class="muted">Gửi yêu cầu quản lý một địa điểm trong danh mục để bắt đầu. Khi được duyệt, địa điểm sẽ xuất hiện ở đây.</p>
+        <a class="button primary" routerLink="/chu-co-so" [queryParams]="{view: 'claim'}"><tg-icon name="plus" />Xin quyền quản lý</a>
+      </section>
+      <section class="owner-panel owner-guide" aria-labelledby="owner-verification-title">
+        <h2 id="owner-verification-title">Theo dõi xác minh</h2>
+        @if (claims()[0]; as request) {
+          <div class="owner-verification">
+            <a class="owner-claim-link" routerLink="/chu-co-so" [queryParams]="{view: 'claim', place: request.placeId}">{{ request.before?.name || 'Địa điểm trong yêu cầu' }}</a>
+            <span class="workflow-status" [attr.data-status]="request.status">{{ labels.status[request.status] }}</span>
+            <p class="muted small">Cập nhật {{ request.updatedAt | date:'dd/MM/yyyy HH:mm':'+0700' }}</p>
+          </div>
+        } @else {
+          <p class="muted">Khi gửi yêu cầu, bạn có thể xem tiến độ, kết quả và thông tin cần bổ sung tại đây.</p>
+        }
+        <a class="text-button" routerLink="/chu-co-so" [queryParams]="{view: 'history'}">Xem lịch sử yêu cầu<tg-icon name="arrow" /></a>
+      </section>
+    </div>
+  }
+}

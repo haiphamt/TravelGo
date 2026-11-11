@@ -1,0 +1,85 @@
+<!-- Didaune place-grid-card, with independent detail, favorite, map and trip targets. -->
+<article class="suggested-card group relative isolate flex h-full min-w-0 flex-col gap-3 rounded-[1.35rem] border border-transparent bg-white p-3 shadow-sm transition hover:border-slate-100 hover:shadow-lg sm:gap-4 sm:rounded-3xl sm:p-4">
+  <button
+    type="button"
+    (click)="store.toggleFavorite(place().id)"
+    [disabled]="!store.ready()"
+    [attr.aria-label]="(isFavorite() ? 'Bỏ yêu thích ' : 'Yêu thích ') + place().name"
+    [attr.aria-pressed]="isFavorite()"
+    class="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full text-sm backdrop-blur-sm transition hover:bg-white/90 sm:right-6 sm:top-6 sm:h-9 sm:w-9"
+    [class]="isFavorite() ? 'bg-white/90 text-rose-700' : 'bg-white/[.55] text-slate-800 hover:text-rose-700'">
+    <i class="fa-solid fa-heart" aria-hidden="true"></i>
+  </button>
+
+  @let image = place().image;
+  @if (image && image !== failedPhoto()) {
+    <img [src]="image" [alt]="place().name" loading="lazy" (error)="failedPhoto.set(image)"
+      class="h-28 w-full rounded-[1rem] object-cover sm:h-52 sm:rounded-2xl" />
+  } @else {
+    <div class="flex h-28 w-full shrink-0 flex-col items-center justify-center gap-1.5 rounded-[1rem] bg-slate-100 px-2 text-center text-xs text-slate-600 sm:h-52 sm:rounded-2xl">
+      <i class="fa-regular fa-image text-lg" aria-hidden="true"></i>
+      <span>{{ image ? 'Ảnh chưa tải được' : 'Chưa có ảnh từ nguồn' }}</span>
+    </div>
+  }
+
+  @if (review(); as rating) {
+    <div class="pointer-events-none absolute left-4 top-4 z-10 sm:left-6 sm:top-6">
+      <span [attr.aria-label]="'Điểm TravelGo ' + rating.rating + ' trên 5'"
+        class="flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 text-[11px] font-semibold text-orange-800 backdrop-blur sm:rounded-lg sm:px-2.5 sm:text-sm">
+        <i class="fa-solid fa-star text-[10px] sm:text-xs" aria-hidden="true"></i>
+        {{ rating.rating }}/5
+      </span>
+    </div>
+  }
+
+  <div class="flex flex-1 flex-col">
+    <h3 class="mb-1 mt-0.5 line-clamp-2 break-words text-[0.95rem] font-bold leading-snug text-slate-800 transition group-hover:text-primary sm:mt-1 sm:text-lg sm:leading-tight">
+      <a [routerLink]="['/dia-diem', place().id]" [queryParams]="context()"
+        class="after:absolute after:inset-0 after:z-10 after:rounded-[1.35rem] after:content-[''] focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-orange-700 sm:after:rounded-3xl">
+        {{ place().name }}
+      </a>
+    </h3>
+
+    <p class="mb-2 line-clamp-2 break-words text-xs text-slate-500 sm:mb-3 sm:line-clamp-1 sm:text-sm" [title]="place().area">
+      <i class="fa-solid fa-location-dot mr-1 text-slate-400" aria-hidden="true"></i>
+      {{ place().area }}
+    </p>
+
+    <p class="mb-2 line-clamp-1 text-xs text-slate-500 sm:mb-3 sm:text-sm" [title]="suggestedHours()">
+      <i class="fa-regular fa-clock mr-1 text-slate-400" aria-hidden="true"></i>
+      {{ suggestedHours() || 'Chưa có giờ từ nguồn' }}
+    </p>
+
+    @if (place().local && place().products.length) {
+      <p class="mb-2 line-clamp-2 break-words text-xs text-slate-600 sm:mb-3 sm:text-sm">
+        <i class="fa-solid fa-utensils mr-1 text-slate-500" aria-hidden="true"></i>
+        Món chính: {{ place().products.join(', ') }}
+      </p>
+    }
+
+    @if (place().price !== null) {
+      <p class="mb-2 text-xs text-slate-600">{{ money(place().price) }}</p>
+    }
+
+    <div class="mt-auto flex flex-wrap items-center gap-1.5 sm:gap-2">
+      @if (categoryLabel(); as label) {
+        <span class="rounded-full bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-600 sm:rounded-lg sm:px-2.5 sm:text-xs">{{ label }}</span>
+      }
+      @if (place().local) {
+        <span class="rounded-full bg-orange-50 px-2 py-1 text-[11px] font-medium text-orange-800 sm:rounded-lg sm:px-2.5 sm:text-xs">Góc Địa Phương</span>
+      }
+      <div class="card-actions relative z-20 ml-auto flex shrink-0 gap-1 text-xs text-slate-600">
+        <a class="inline-flex h-6 w-6 items-center justify-center rounded-lg hover:bg-slate-100 hover:text-orange-800"
+          routerLink="/ban-do" [queryParams]="mapParams()" title="Xem trên bản đồ"
+          [attr.aria-label]="'Xem ' + place().name + ' trên bản đồ'">
+          <i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
+        </a>
+        <button type="button" class="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-transparent hover:bg-slate-100 hover:text-orange-800"
+          [disabled]="!store.ready()" (click)="store.addTrip(place().id)" title="Thêm vào lịch trình"
+          [attr.aria-label]="'Thêm ' + place().name + ' vào lịch trình'">
+          <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</article>

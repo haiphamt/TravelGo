@@ -1,0 +1,93 @@
+<!-- Adapted from Didaune planner/shared/planner-trip-form at 04597f66b7263c8cc8e7bcf51115ad8622d1dfad. -->
+<section class="custom-shadow rounded-[32px] border border-white bg-white p-4 md:p-8" [attr.aria-label]="heading()">
+  <div class="mb-6">
+    <h2 class="text-xl font-black text-slate-800 md:text-2xl">{{ heading() }}</h2>
+    <p class="mt-2 max-w-2xl text-sm text-slate-500">
+      {{ descriptionHint() }}
+    </p>
+  </div>
+
+  <div
+    class="planner-cover group relative h-48 w-full cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed border-slate-200 bg-slate-100 transition hover:border-primary md:h-72 md:rounded-[24px]">
+    @if (coverPreviewUrl()) {
+      <img [src]="coverPreviewUrl()" alt="" class="absolute inset-0 h-full w-full object-cover" />
+    } @else {
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-600">
+        <i class="fa-solid fa-image mb-2 text-2xl" aria-hidden="true"></i>
+        <span class="text-xs font-medium md:text-sm">Chọn ảnh bìa cho chuyến đi</span>
+      </div>
+    }
+    <input type="file" class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+      [attr.aria-label]="coverPreviewUrl() ? 'Đổi ảnh bìa chuyến đi' : 'Chọn ảnh bìa chuyến đi'"
+      accept="image/jpeg,image/png,image/webp" [disabled]="coverReading()" (change)="onCoverSelected($event)" />
+  </div>
+  <div class="mb-6 mt-2 flex flex-wrap items-center gap-x-3 text-xs text-slate-600">
+    <span>JPG, PNG hoặc WebP, tối đa 1 MB.</span>
+    @if (coverPreviewUrl()) {
+      <button type="button" class="text-button" [disabled]="coverReading()" (click)="removeCover()">Bỏ ảnh bìa</button>
+    }
+    @if (coverReading()) { <span role="status">Đang đọc ảnh…</span> }
+    @if (coverError()) { <p class="m-0 text-red-700" role="alert">{{ coverError() }}</p> }
+  </div>
+
+  <div class="space-y-4">
+    <input type="text" aria-label="Tên chuyến đi" maxlength="80" required
+      [attr.aria-invalid]="showTitleWarning() ? 'true' : null"
+      [ngModelOptions]="{standalone: true}" [ngModel]="title()" (ngModelChange)="titleChange.emit($event)"
+      placeholder="Tên chuyến đi của bạn..."
+      class="planner-title w-full border-0 bg-transparent text-xl font-black text-slate-800 outline-none placeholder:text-slate-500 md:text-2xl"
+      [class.ring-2]="showTitleWarning()" [class.ring-red-400]="showTitleWarning()"
+      [class.rounded-lg]="showTitleWarning()" />
+    <textarea aria-label="Mô tả chuyến đi" maxlength="500"
+      [ngModelOptions]="{standalone: true}" [ngModel]="description()" (ngModelChange)="descriptionChange.emit($event)"
+      placeholder="Viết mô tả ngắn gọn về chuyến đi này"
+      class="planner-description min-h-[60px] w-full resize-y border-0 bg-transparent text-sm text-slate-600 outline-none md:text-lg"
+      rows="2"></textarea>
+
+    <div class="flex flex-col gap-3 sm:flex-row">
+      <button type="button" (click)="dateOpen.set(!dateOpen())" [attr.aria-expanded]="dateOpen()"
+        class="planner-date-trigger flex flex-1 items-center gap-3 rounded-2xl bg-slate-50 p-3 text-left transition hover:bg-slate-100">
+        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <i class="fa-regular fa-calendar-days text-sm" aria-hidden="true"></i>
+        </span>
+        <div class="min-w-0 flex-1">
+          <span class="ai-label block text-[10px] font-bold text-slate-400">
+            Ngày đi
+          </span>
+          <span class="block truncate text-sm font-medium text-slate-700">{{ dateRangeLabel() }}</span>
+        </div>
+        <i class="fa-solid fa-chevron-down text-xs text-slate-400" aria-hidden="true"></i>
+      </button>
+
+      @if (tripDays() > 0) {
+        <div class="flex items-center justify-center gap-2 rounded-2xl bg-primary/10 px-4 py-3">
+          <i class="fa-solid fa-moon text-sm text-primary" aria-hidden="true"></i>
+          <span class="text-sm font-black text-primary">{{ tripDays() }} ngày</span>
+        </div>
+      }
+    </div>
+
+    @if (dateOpen()) {
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <label class="flex min-w-0 flex-1 items-center gap-3 rounded-xl bg-slate-50 p-3">
+          <i class="fa-regular fa-calendar text-sm text-primary" aria-hidden="true"></i>
+          <span class="min-w-0 flex-1">
+            <span class="ai-label">Ngày bắt đầu</span>
+            <input type="date" [ngModelOptions]="{standalone: true}" [ngModel]="startDate()" (ngModelChange)="startDateChange.emit($event)"
+              [attr.aria-invalid]="showDateWarning() ? 'true' : null"
+              class="planner-date-input w-full border-0 bg-transparent text-sm font-bold" />
+          </span>
+        </label>
+        <label class="flex min-w-0 flex-1 items-center gap-3 rounded-xl bg-slate-50 p-3">
+          <i class="fa-regular fa-calendar-check text-sm text-primary" aria-hidden="true"></i>
+          <span class="min-w-0 flex-1">
+            <span class="ai-label">Ngày kết thúc</span>
+            <input type="date" [min]="startDate()" [ngModelOptions]="{standalone: true}" [ngModel]="endDate()" (ngModelChange)="endDateChange.emit($event)"
+              [attr.aria-invalid]="showDateWarning() ? 'true' : null"
+              class="planner-date-input w-full border-0 bg-transparent text-sm font-bold" />
+          </span>
+        </label>
+      </div>
+    }
+  </div>
+</section>

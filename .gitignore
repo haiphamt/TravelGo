@@ -8,3 +8,7 @@
 *.log
 .DS_Store
 Thumbs.db
+**/node_modules/
+**/dist/
+**/.angular/
+.impeccable/review/

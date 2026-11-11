@@ -1,0 +1,197 @@
+<!-- Adapted from Didaune planner-create-ai at 04597f66b7263c8cc8e7bcf51115ad8622d1dfad. -->
+@let draft = form();
+<div class="mx-auto max-w-7xl p-4 pb-24 md:pb-10 lg:p-8">
+  <!-- ── Header ── -->
+  <section class="mb-6">
+    <a class="back-link" routerLink="/lich-trinh"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Lịch trình của tôi</a>
+    <h1 class="text-2xl font-black text-slate-800 md:text-3xl">Tạo lịch trình
+      bằng AI</h1>
+    <p class="mt-2 text-sm text-slate-600">Bản thử tìm điểm ghé từ danh mục TP.HCM bằng từ khóa ngay trên trình duyệt.</p>
+  </section>
+
+  <form (ngSubmit)="generateTrip()" [attr.aria-busy]="generating()">
+  <fieldset class="m-0 min-w-0 border-0 p-0" [disabled]="saving() || committed()">
+  <legend class="sr-only">Thông tin tạo lịch trình</legend>
+  <!-- ── Main grid ── -->
+  <div class="planner-grid grid gap-5">
+    <app-planner-trip-form heading="Thông tin chuyến đi"
+      descriptionHint="Đặt tên và chọn ngày đi. Bạn có thể thêm mô tả và ảnh bìa cho lịch trình."
+      [title]="draft.tripTitle" [description]="draft.tripDescription"
+      [coverPreviewUrl]="draft.coverPreviewUrl"
+      [startDate]="draft.startDate" [endDate]="draft.endDate"
+      [showTitleWarning]="showTitleWarning()" [showDateWarning]="showDateWarning()"
+      (titleChange)="set('tripTitle', $event)"
+      (descriptionChange)="set('tripDescription', $event)"
+      (coverChange)="set('coverPreviewUrl', $event)"
+      (coverReadingChange)="coverReading.set($event)"
+      (startDateChange)="set('startDate', $event)"
+      (endDateChange)="set('endDate', $event)">
+    </app-planner-trip-form>
+
+    <!-- ── Sidebar ── -->
+    <aside>
+      <section
+        class="custom-shadow rounded-3xl border border-white/80 bg-white p-5">
+        <div class="mb-4 flex items-center gap-2">
+          <div
+            class="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-sm">
+            <i class="fa-solid fa-sliders text-[10px]" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h2 class="text-sm font-black text-slate-800">Thông tin cho AI</h2>
+            <p class="m-0 text-xs text-slate-600">Gợi ý dựa vào khu vực, điểm muốn ghé và sở thích.</p>
+          </div>
+        </div>
+
+        <div class="space-y-3.5">
+          <!-- Row: Số người + Chi phí -->
+          <div class="grid grid-cols-2 gap-3">
+            <label class="block">
+              <span class="ai-label">Số người</span>
+              <input type="number" name="people" min="1" step="1" required [ngModel]="draft.peopleCount"
+                (ngModelChange)="set('peopleCount', $event)"
+                class="ai-input" />
+            </label>
+            <label class="block">
+              <span class="ai-label">Tổng ngân sách (đồng)</span>
+              <input type="number" name="budget" min="0" step="1" [ngModel]="draft.estimatedBudget"
+                (ngModelChange)="set('estimatedBudget', $event)"
+                placeholder="Ví dụ 300000"
+                class="ai-input" />
+            </label>
+          </div>
+
+          <!-- Địa điểm -->
+          <label class="block">
+            <span class="ai-label">Địa điểm muốn tới</span>
+            <input type="text" name="destination" maxlength="80" required [ngModel]="draft.destinationCity"
+              (ngModelChange)="set('destinationCity', $event)"
+              placeholder="TP.HCM hoặc một khu vực như Chánh Hưng" class="ai-input" />
+          </label>
+
+          <!-- Các điểm muốn ghé -->
+          <label class="block">
+            <span class="ai-label">Điểm muốn ghé</span>
+            <textarea name="desired" maxlength="240" [ngModel]="draft.desiredPlaces"
+              (ngModelChange)="set('desiredPlaces', $event)" rows="2"
+              placeholder="Bưu điện Trung tâm, công viên…" aria-describedby="planner-ai-desired-hint"
+              class="ai-input resize-y"></textarea>
+            <small id="planner-ai-desired-hint" class="text-xs text-slate-600">Phân cách bằng dấu phẩy. Gợi ý xét tối đa 5 mục đầu.</small>
+          </label>
+
+          <!-- Sở thích -->
+          <label class="block">
+            <span class="ai-label">Sở thích</span>
+            <input type="text" name="preferences" maxlength="240" [ngModel]="draft.preferencesInput"
+              (ngModelChange)="set('preferencesInput', $event)"
+              placeholder="Cà phê, ăn uống, công viên…" class="ai-input" />
+          </label>
+
+          <!-- Row: Kiểu chuyến đi + Nhịp độ -->
+          <div class="grid grid-cols-2 gap-3">
+            <label class="block">
+              <span class="ai-label">Kiểu chuyến đi</span>
+              <select name="style" [ngModel]="draft.tripStyle"
+                (ngModelChange)="set('tripStyle', $event)" class="ai-input">
+                @for (option of tripStyles; track option[0]) { <option [value]="option[0]">{{ option[1] }}</option> }
+              </select>
+            </label>
+            <label class="block">
+              <span class="ai-label">Nhịp độ</span>
+              <select name="pace" [ngModel]="draft.energyLevel"
+                (ngModelChange)="set('energyLevel', $event)" class="ai-input">
+                @for (option of energyLevels; track option[0]) { <option [value]="option[0]">{{ option[1] }}</option> }
+              </select>
+            </label>
+          </div>
+
+          <!-- Row: Đi cùng ai + Phương tiện -->
+          <div class="grid grid-cols-2 gap-3">
+            <label class="block">
+              <span class="ai-label">Đi cùng ai</span>
+              <select name="companion" [ngModel]="draft.companionType"
+                (ngModelChange)="set('companionType', $event)" class="ai-input">
+                @for (option of companionTypes; track option[0]) { <option [value]="option[0]">{{ option[1] }}</option> }
+              </select>
+            </label>
+            <label class="block">
+              <span class="ai-label">Phương tiện</span>
+              <select name="transport" [ngModel]="draft.travelMode"
+                (ngModelChange)="set('travelMode', $event)" class="ai-input">
+                @for (option of travelModes; track option[0]) { <option [value]="option[0]">{{ option[1] }}</option> }
+              </select>
+            </label>
+          </div>
+
+          <!-- Yêu cầu thêm -->
+          <label class="block">
+            <span class="ai-label">Yêu cầu thêm</span>
+            <textarea name="notes" maxlength="500" [ngModel]="draft.extraNotes"
+              (ngModelChange)="set('extraNotes', $event)" rows="2"
+              placeholder="Ưu tiên điểm gần nhau, có chỗ đậu xe…"
+              class="ai-input resize-y"></textarea>
+          </label>
+          <p class="text-xs text-slate-600">Kiểu chuyến đi, nhịp độ, người đồng hành, phương tiện và yêu cầu thêm sẽ lưu trong ghi chú. Bản thử chưa tính đường đi, giờ mở cửa hay chi phí tại điểm ghé.</p>
+
+          <label class="block">
+            <span class="ai-label">Số điểm mong muốn</span>
+            <select name="count" [ngModel]="draft.count" (ngModelChange)="set('count', $event)" class="ai-input">
+              @for (count of [1, 2, 3, 4, 5]; track count) { <option [ngValue]="count">{{ count }} điểm</option> }
+            </select>
+          </label>
+          <label class="ai-local text-sm text-slate-700">
+            <input type="checkbox" name="local" [ngModel]="draft.includeLocal" (ngModelChange)="set('includeLocal', $event)" />
+            <span>Thêm tối đa một điểm Góc Địa Phương nếu phù hợp</span>
+          </label>
+        </div>
+      </section>
+    </aside>
+  </div>
+  </fieldset>
+
+  <!-- ── CTA bottom ── -->
+  @if (draftStorageFailed()) { <p class="mt-4 text-sm text-slate-700" role="status">Trình duyệt không giữ được biểu mẫu khi bạn rời trang.</p> }
+  @if (store.catalogStatus() === 'loading') { <p class="mt-4 text-sm text-slate-700" role="status">Đang tải danh mục địa điểm…</p> }
+  @if (store.catalogStatus() === 'error') { <p class="mt-4 text-sm text-red-700" role="alert">{{ store.catalogError() }}</p> }
+  @if (error() && !preview()) { <p class="mt-4 text-sm text-red-700" role="alert">{{ error() }}</p> }
+  <div class="mt-6 flex flex-wrap justify-end gap-3">
+    @if (store.catalogStatus() === 'error') { <button class="button secondary" type="button" (click)="store.loadCatalog()">Tải lại danh mục</button> }
+    <button type="submit" [disabled]="generating() || saving() || committed() || coverReading() || store.catalogStatus() !== 'ready'"
+      class="ai-cta group relative w-full overflow-hidden rounded-xl bg-slate-900 px-6 py-3 text-sm font-bold text-white transition-all duration-300 hover:shadow-md hover:shadow-slate-900/30 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed sm:w-auto md:px-10 md:py-3">
+      <span class="relative z-10 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-wand-magic-sparkles text-xs opacity-80" aria-hidden="true"></i>
+        {{ generating() ? 'Đang tìm điểm ghé…' : 'Tạo gợi ý lịch trình' }}
+      </span>
+    </button>
+  </div>
+  </form>
+
+  @if (committed()) {
+    <p class="mt-6" role="status">Đã lưu lịch trình. <a class="text-button" routerLink="/lich-trinh/chinh-sua">Mở trình chỉnh sửa</a></p>
+  }
+  @if (!committed() && preview(); as result) {
+    <section class="custom-shadow mt-6 rounded-3xl border border-white bg-white p-5" aria-labelledby="planner-ai-preview">
+      <h2 #previewHeading id="planner-ai-preview" tabindex="-1" class="text-xl font-black text-slate-800">Xem trước lịch trình</h2>
+      <p class="mt-2 text-sm text-slate-600">{{ result.places.length }}/{{ result.form.count }} điểm phù hợp. Giờ ghé là mốc dự kiến để bạn chỉnh sửa.</p>
+      <ol class="ai-stop-list my-4 text-sm text-slate-700">
+        @for (place of result.places; track place.id; let index = $index) {
+          <li>
+            <strong>{{ place.name }}</strong>
+            <p class="m-0 text-slate-600">{{ place.area }} @if (place.local) { · Góc Địa Phương }</p>
+            <span>{{ dateLabel(result.points[index].date || result.form.startDate) }} · {{ result.points[index].time }}</span>
+          </li>
+        }
+      </ol>
+      @if (result.unmatched.length) { <p class="text-sm text-slate-600">Chưa tìm được điểm phù hợp cho {{ result.unmatched.join(', ') }}.</p> }
+      @if (result.budget !== null) {
+        <p class="text-sm text-slate-700">Ngân sách nhập cho cả nhóm quy đổi thành <strong>{{ amountLabel(result.budget) }} đồng/người</strong>, làm tròn xuống đến đồng.</p>
+      }
+      <p class="text-sm text-slate-600">Lưu để mở trình chỉnh sửa ngày giờ, thứ tự và ghi chú.</p>
+      @if (catalogChanged()) { <p class="text-sm text-red-700" role="alert">Một điểm ghé đã thay đổi. Hãy tạo lại gợi ý.</p> }
+      @if (error()) { <p class="text-sm text-red-700" role="alert">{{ error() }}</p> }
+      <button class="button primary" type="button" (click)="savePreview()" [disabled]="!store.ready() || saving() || coverReading() || catalogChanged() || store.catalogStatus() !== 'ready'">
+        {{ saving() ? 'Đang lưu…' : 'Lưu lịch trình và chỉnh sửa' }}
+      </button>
+    </section>
+  }
+</div>

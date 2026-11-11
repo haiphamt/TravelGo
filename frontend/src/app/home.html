@@ -1,0 +1,298 @@
+<div class="p-4 lg:p-8 pb-24 md:pb-10 max-w-7xl mx-auto">
+  @if (store.catalogStatus() === 'error') {
+    <section class="mb-6 rounded-[28px] border border-red-200 bg-red-50 px-5 py-4 text-red-700 shadow-sm"
+      role="alert">
+      <div class="flex items-start gap-3">
+        <i class="fa-solid fa-triangle-exclamation mt-1" aria-hidden="true"></i>
+        <div>
+          <h2 class="text-base font-bold">Chưa tải được danh mục</h2>
+          <p class="mt-1 text-sm">{{ store.catalogError() }}</p>
+          <button class="button secondary mt-3" type="button" (click)="store.loadCatalog()">Thử lại</button>
+        </div>
+      </div>
+    </section>
+  }
+
+  <ul id="top-menu-right" [class.expanded]="quickMenuExpanded()"
+    aria-label="Chọn danh mục gợi ý"
+    (keydown.escape)="quickMenuExpanded.set(false); quickMenuButton.focus()">
+    <li>
+      <button type="button" id="toggle-menu-button" #quickMenuButton
+        (click)="quickMenuExpanded.set(!quickMenuExpanded())"
+        [attr.aria-expanded]="quickMenuExpanded()"
+        [attr.aria-label]="'Đổi danh mục gợi ý. Hiện tại: ' + activeHomeCategory().name">
+        <i [class]="'fa-solid ' + activeHomeCategory().icon" aria-hidden="true"></i>
+        <span aria-hidden="true">{{ activeHomeCategory().name }}</span>
+      </button>
+    </li>
+    @for (category of homeCategoryOptions; track category.id) {
+      @if (category.id !== selectedHomeCategory()) {
+        <li>
+          <button type="button" [attr.aria-label]="'Gợi ý ' + category.name"
+            (click)="selectedHomeCategory.set(category.id); quickMenuExpanded.set(false); quickMenuButton.focus()">
+            <i [class]="'fa-solid ' + category.icon" aria-hidden="true"></i>
+            <span aria-hidden="true">{{ category.name }}</span>
+          </button>
+        </li>
+      }
+    }
+  </ul>
+
+  <section class="mb-12">
+    <div class="flex items-end justify-between gap-4 mb-5">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold text-slate-800">
+          Khám phá theo nhu cầu
+        </h1>
+        <p class="text-sm text-slate-500 mt-1">Lựa chọn của bạn là gì?</p>
+      </div>
+      <a routerLink="/ho-so-uu-tien" class="inline-flex min-h-11 shrink-0 items-center gap-2 text-sm font-semibold text-orange-800 hover:underline">
+        250 cơ sở ưu tiên<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </a>
+    </div>
+    <div class="flex gap-6 overflow-x-auto hide-scrollbar pb-2">
+      @for (category of demandCategories(); track category.id) {
+        <a routerLink="/kham-pha" [queryParams]="categoryContext(category)"
+          class="group flex min-w-[88px] flex-col items-center gap-3">
+          <div class="w-16 h-16 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-2xl shadow-sm transition group-hover:-translate-y-1 group-hover:shadow-md"
+            [class]="category.color">
+            <i [class]="'fa-solid ' + category.icon" aria-hidden="true"></i>
+          </div>
+          <span class="text-center text-sm font-medium text-slate-800 transition group-hover:text-primary">
+            {{ category.name }}
+          </span>
+          @if (store.catalogStatus() === 'ready') {
+            <span class="text-xs text-slate-500">{{ category.count }} địa điểm</span>
+          }
+        </a>
+      }
+    </div>
+  </section>
+
+  <section class="mb-14">
+    <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h2 class="max-w-2xl text-xl font-bold leading-tight text-slate-800 md:text-2xl" aria-live="polite">
+          Gợi ý {{ activeHomeCategory().heading || activeHomeCategory().name }} tại
+          <span class="text-primary">Thành phố Hồ Chí Minh</span>
+        </h2>
+      </div>
+      <a routerLink="/kham-pha" [queryParams]="suggestionContext()"
+        class="inline-flex items-center gap-1 self-start text-sm font-semibold text-primary hover:underline">
+        Xem tất cả
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </a>
+    </div>
+
+    @if (store.catalogStatus() === 'loading') {
+      <p class="mb-4 text-sm text-slate-500" role="status">Đang tải danh mục địa điểm TP.HCM…</p>
+      <div class="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6" aria-hidden="true">
+        @for (item of [1, 2, 3, 4]; track item) {
+          <div class="loading-card"></div>
+        }
+      </div>
+    } @else if (store.catalogStatus() === 'ready') {
+      @if (suggestedPlaces().length) {
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
+          @for (place of suggestedPlaces(); track place.id) {
+            <tg-place-card [place]="place" [context]="suggestionContext()" />
+          }
+        </div>
+      } @else {
+        <div class="rounded-3xl border border-dashed border-slate-300 bg-white/70 px-6 py-8 text-center">
+          <i class="fa-solid fa-map-location-dot text-2xl text-primary" aria-hidden="true"></i>
+          <p class="mt-4 text-sm text-slate-500">
+            Đang bổ sung ảnh cho danh mục {{ activeHomeCategory().name }}. Bạn có thể xem địa điểm qua “Xem tất cả”.
+          </p>
+        </div>
+      }
+    }
+  </section>
+
+  @if (store.catalogStatus() === 'ready') {
+    <section class="mb-14" aria-labelledby="home-recent-title">
+      <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <h2 id="home-recent-title" class="text-xl md:text-2xl font-bold text-slate-800">Bạn đã xem gần đây</h2>
+        @if (recentPlaces.ids().length) {
+          <button type="button" class="text-sm font-semibold text-primary hover:underline"
+            (click)="recentPlaces.clear()">Xóa lịch sử</button>
+        }
+      </div>
+      @if (recentlyViewed().length) {
+        <div class="recent-places-grid">
+          @for (place of recentlyViewed(); track place.id) {
+            <tg-place-card [place]="place" />
+          }
+        </div>
+      } @else {
+        <p class="rounded-3xl border border-dashed border-slate-300 bg-white/70 px-6 py-5 text-sm text-slate-500">
+          Địa điểm bạn mở sẽ xuất hiện ở đây trên trình duyệt này.
+        </p>
+      }
+    </section>
+  }
+
+  @if (localPlaces().length) {
+    <section class="mb-14">
+      <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 class="text-xl md:text-2xl font-bold text-slate-800">Ghé một Góc Địa Phương</h2>
+          <p class="text-sm text-slate-500 mt-1">Những gánh hàng nhỏ cho chuyến đi quanh TP.HCM.</p>
+        </div>
+        <a routerLink="/goc-dia-phuong"
+          class="inline-flex items-center gap-1 self-start text-sm font-semibold text-primary hover:underline">
+          Xem {{ localPlaces().length }} hồ sơ
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="trending-grid flex gap-3 overflow-x-auto hide-scrollbar pb-4 lg:grid lg:grid-cols-2 lg:gap-5 lg:overflow-visible lg:pb-0">
+        @for (place of localPlaces().slice(0, 2); track place.id) {
+          <a [routerLink]="['/dia-diem', place.id]" [queryParams]="{ from: '/goc-dia-phuong' }"
+            class="trending-card group min-w-[60vw] max-w-[80vw] rounded-[1.75rem] border border-slate-200 bg-white p-3 shadow-sm transition hover:border-slate-100 hover:shadow-lg sm:min-w-[340px] sm:max-w-[340px] lg:min-w-0 lg:max-w-none lg:p-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:gap-4">
+              <div class="relative shrink-0">
+                @if (place.image) {
+                  <img [src]="place.image" alt="" loading="lazy"
+                    class="aspect-[16/9] w-full rounded-[1rem] bg-slate-100 object-cover sm:h-28 sm:w-28 sm:aspect-square sm:rounded-2xl lg:h-32 lg:w-32" />
+                }
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div class="min-w-0">
+                    <h3 class="line-clamp-1 text-[0.98rem] font-bold leading-snug text-slate-900 transition group-hover:text-primary sm:line-clamp-2 sm:text-lg">
+                      {{ place.name }}
+                    </h3>
+                    <p class="mt-1 text-xs text-slate-500 sm:text-sm">{{ place.area }}</p>
+                  </div>
+                </div>
+                @if (place.localProfile; as profile) {
+                  <div class="mt-3 hidden flex-wrap gap-2 sm:flex">
+                    <span class="rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                      {{ profile.categoryLabel }}
+                    </span>
+                  </div>
+                }
+                <div class="mt-3 flex items-center justify-between gap-3">
+                  <span class="inline-flex items-center gap-1 text-xs font-semibold text-primary sm:text-sm">
+                    Xem hồ sơ
+                    <i class="fa-solid fa-arrow-right text-[10px]" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+      <p class="mt-4 text-xs text-slate-500">Hồ sơ và ảnh tham khảo từ nguồn cộng đồng. TravelGo chưa xác minh thực địa.</p>
+    </section>
+  }
+
+  <section class="mb-14" aria-labelledby="home-voucher-title">
+    <div class="mb-5">
+      <h2 id="home-voucher-title" class="text-xl md:text-2xl font-bold text-slate-800">
+        <span class="text-primary">TravelGo</span> - Vouchers
+      </h2>
+      <p class="mt-1 text-sm text-slate-500">Thiết kế minh họa cho TravelGo. Các ưu đãi mẫu chưa áp dụng.</p>
+    </div>
+    <ul class="voucher-grid">
+      @for (voucher of voucherPreviews; track voucher.color) {
+        <li class="voucher-preview" [class]="'voucher-' + voucher.color">
+          <img [src]="voucher.image" alt="" loading="lazy" width="900" height="600" />
+          <b class="voucher-brand" aria-hidden="true">TravelGo<span>.</span></b>
+          <span>Mẫu voucher</span>
+          <strong>{{ voucher.title }}</strong>
+          <b class="voucher-offer">{{ voucher.offer }}</b>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="mb-14" aria-labelledby="home-interest-title">
+    <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h2 id="home-interest-title" class="text-xl md:text-2xl font-bold text-slate-800">Đang được quan tâm</h2>
+        <p class="mt-1 text-sm text-slate-500">Địa điểm trong mục {{ activeHomeCategory().name }} bạn đã lưu trên trình duyệt này.</p>
+      </div>
+      <a routerLink="/yeu-thich" aria-label="Xem tất cả địa điểm yêu thích"
+        class="inline-flex items-center gap-1 self-start text-sm font-semibold text-primary hover:underline">
+        Xem tất cả <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </a>
+    </div>
+    @if (store.catalogStatus() === 'ready' && store.ready()) {
+      @if (interestedPlaces().length) {
+        <div class="interest-grid">
+          @for (place of interestedPlaces(); track place.id) {
+            <a [routerLink]="['/dia-diem', place.id]" [queryParams]="{ from: '/yeu-thich' }"
+              class="interest-card group">
+              <span class="interest-photo" aria-hidden="true">
+                <i class="fa-solid fa-map-location-dot"></i>
+                @if (place.image) {
+                  <img #interestImage [src]="place.image" alt="" loading="lazy"
+                    (load)="interestImage.hidden = false" (error)="interestImage.hidden = true" />
+                }
+              </span>
+              <div class="min-w-0">
+                <h3 class="line-clamp-2 text-base font-bold text-slate-900 group-hover:text-primary">{{ place.name }}</h3>
+                <p class="mt-1 line-clamp-2 text-xs text-slate-500">{{ place.area }}</p>
+                <span class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-primary">
+                  Chi tiết <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </span>
+              </div>
+            </a>
+          }
+        </div>
+      } @else {
+        <p class="text-sm text-slate-500">Bạn chưa lưu địa điểm nào trong danh mục này.</p>
+      }
+    }
+  </section>
+
+  <section class="mb-16" aria-labelledby="home-areas-title">
+    <div class="mb-5">
+      <h2 id="home-areas-title" class="text-xl md:text-2xl font-bold text-slate-800">Khu vực nổi bật</h2>
+      <p class="mt-1 text-sm text-slate-500">Khám phá theo khu vực ghi trong địa chỉ nguồn.</p>
+    </div>
+    @if (store.catalogStatus() === 'ready') {
+      @if (featuredAreas().length) {
+        <div class="area-grid">
+          @for (area of featuredAreas(); track area.name) {
+            <a routerLink="/kham-pha" [queryParams]="{ district: area.name }" class="area-card group">
+              <span class="text-sm font-semibold text-slate-900 group-hover:text-primary">{{ area.name }}</span>
+              <span class="mt-1 text-xs text-slate-500">{{ numberFormat.format(area.count) }} địa điểm</span>
+            </a>
+          }
+        </div>
+      } @else {
+        <p class="text-sm text-slate-500">Chưa có thông tin khu vực để hiển thị.</p>
+      }
+    }
+  </section>
+
+  <section class="owner-invite-panel" aria-labelledby="home-owner-title">
+    <div class="absolute inset-0 opacity-20" aria-hidden="true">
+      <div class="absolute -left-12 top-10 flex h-36 w-36 items-center justify-center rounded-full border border-white/15 bg-white/5">
+        <i class="fa-solid fa-mug-hot text-5xl text-orange-200/70"></i>
+      </div>
+      <div class="absolute right-24 top-8 flex h-24 w-24 rotate-12 items-center justify-center rounded-3xl border border-white/10 bg-white/5">
+        <i class="fa-solid fa-location-dot text-4xl text-cyan-200/70"></i>
+      </div>
+      <div class="absolute right-10 bottom-12 flex h-28 w-28 items-center justify-center rounded-full border border-white/10 bg-white/5">
+        <i class="fa-solid fa-camera-retro text-4xl text-emerald-200/60"></i>
+      </div>
+    </div>
+    <div class="absolute right-0 top-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" aria-hidden="true"></div>
+    <div class="absolute left-1/3 bottom-0 h-40 w-40 rounded-full bg-sky-400/10 blur-3xl" aria-hidden="true"></div>
+    <div class="relative max-w-lg">
+      <h2 id="home-owner-title" class="mb-3 text-2xl md:text-3xl font-extrabold text-white">Bạn là Chủ cơ sở?</h2>
+      <p class="text-sm md:text-base leading-relaxed text-slate-300">
+        Gửi yêu cầu quản lý địa điểm và cập nhật thông tin cho người ghé sau khi được duyệt.
+      </p>
+    </div>
+    <a routerLink="/chu-co-so"
+      class="relative inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-4 font-bold text-[#431407] transition hover:bg-orange-400 sm:px-8">
+      <i class="fa-solid fa-store" aria-hidden="true"></i>
+      Khu vực Chủ cơ sở
+    </a>
+  </section>
+</div>

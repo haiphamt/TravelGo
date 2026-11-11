@@ -1,0 +1,57 @@
+.trip-heading-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.saved-trip-bar {
+  display: grid;
+  gap: 6px;
+  max-width: 440px;
+  margin: 0 0 20px;
+}
+.saved-trip-bar label,
+.trip-point-fields label {
+  font-size: 13px;
+  font-weight: 600;
+}
+.saved-trip-bar select,
+.trip-point-fields input,
+.trip-note-field textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #d0d5dd;
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 9px 12px;
+  font: inherit;
+  min-height: 42px;
+}
+.trip-fields { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.trip-fields label:first-child,
+.trip-note-field { grid-column: 1 / -1; }
+.trip-note-field textarea { display: block; margin-top: 5px; resize: vertical; }
+.trip-list > .trip-with-day { flex-wrap: wrap; }
+.trip-day-label { flex: 0 0 100%; margin: 10px 0 0; font-size: 15px; }
+.trip-point-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding: 10px 12px;
+}
+.trip-point-fields label { min-width: 0; }
+.trip-point-fields label:last-child { flex: 1 1 170px; }
+.trip-point-fields input { display: block; margin-top: 4px; }
+.trip-summary > div strong { font-size: 16px; overflow-wrap: anywhere; }
+.trip-add-panel { margin-bottom: 14px; }
+.trip-add-panel tg-workflow-place-picker { display: block; margin: 12px 0; }
+@media (max-width: 620px) {
+  .trip-fields { grid-template-columns: minmax(0, 1fr); }
+  .trip-heading-actions { width: 100%; }
+  .trip-heading-actions .button { flex: 1 1 130px; }
+  .trip-point-fields { padding-inline: 0; }
+}
+@media (max-width: 360px) {
+  .trip-heading-actions .button { flex-basis: 100%; }
+}
