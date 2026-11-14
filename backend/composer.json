@@ -1,0 +1,44 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "travelgo/backend",
+    "type": "project",
+    "description": "Laravel API foundation for TravelGo.",
+    "require": {
+        "php": "^8.3",
+        "ext-pdo_mysql": "*",
+        "laravel/framework": "^13.17"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.23",
+        "laravel/pint": "^1.27",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.6",
+        "phpunit/phpunit": "^12.5.12"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.3.0"
+        },
+        "preferred-install": "dist",
+        "sort-packages": true
+    }
+}
