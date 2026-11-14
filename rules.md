@@ -22,15 +22,18 @@
 4. Push nhánh và mở **một PR cho một task hoặc một nhóm thay đổi liên quan trực tiếp**. Dùng Draft PR khi cần góp ý sớm. Dùng [mẫu PR hiện có](.github/pull_request_template.md) và điền mã task của backlog TravelGo.
 5. Mời ít nhất một thành viên khác review. Nếu chạm `frontend/`, mời người phụ trách frontend xem phần tích hợp. Chỉ hợp nhất sau khi đã xử lý các góp ý cần sửa, giải quyết xung đột và chạy kiểm tra trên bản cuối. Đưa thay đổi vào `main` qua PR đã được review.
 
-### Nhánh đề xuất cho 5 phần việc
+### Phân công triển khai và nhánh bắt đầu
 
-| Phần việc | Nhánh bắt đầu |
-| --- | --- |
-| Khung Laravel, MySQL và dữ liệu | `feat/backend-foundation` |
-| Tài khoản và phân quyền | `feat/auth-roles` |
-| Địa điểm, Góc Địa Phương, yêu thích và đánh giá | `feat/places-reviews` |
-| Lịch trình và phòng cùng đi | `feat/trips-rooms` |
-| Đóng góp, quyền quản lý và xét duyệt | `feat/owner-moderation` |
+| Phụ trách | Nhánh bắt đầu | Phần việc |
+| --- | --- | --- |
+| Phạm Tuấn Hải | `feat/auth-roles` | Hộp thoại Angular, đăng ký và đăng nhập bằng email, đăng nhập Google, đăng xuất, phiên đăng nhập và vai trò tài khoản. |
+| Chung Minh Hiếu | `feat/backend-foundation` | Khung Laravel/MySQL, migration, dữ liệu thử và quy trình nhập dữ liệu địa điểm. [Hướng dẫn triển khai](docs/BACKEND_FOUNDATION_TASK.md) |
+| Bạn 2 | `feat/places-reviews` | API địa điểm, Khám phá, Góc Địa Phương, yêu thích và đánh giá. |
+| Bạn 3 | `feat/itineraries` | Tạo lịch trình thủ công và bằng AI, lưu và chỉnh sửa lịch trình. |
+| Bạn 4 | `feat/trip-rooms` | Tạo phòng, tham gia bằng mã mời, đề xuất điểm ghé và bình chọn. |
+| Bạn 5 | `feat/owner-moderation` | API cho Chủ cơ sở và Quản trị viên, quyền quản lý địa điểm, xử lý đóng góp và xét duyệt. |
+
+Nhóm gán tên cho Bạn 2–5 trong backlog. Tài khoản tự đăng ký bằng email hoặc đăng nhập lần đầu bằng Google có vai trò **Người dùng**. Người phụ trách xét duyệt triển khai luồng cấp quyền quản lý cho **Chủ cơ sở**. Mỗi người phụ trách API kiểm tra quyền trên tài nguyên thuộc phần mình và đưa kiểm thử vào cùng PR.
 
 Người phụ trách khung backend mở PR đầu tiên để nhóm dùng chung cấu hình Laravel, MySQL và dữ liệu thử. Những người làm API có thể thống nhất hợp đồng API trong lúc chờ review. Tách nhánh triển khai từ nhánh tích hợp sau khi PR khung backend đã được hợp nhất. Tách nhánh mới khi nhận task độc lập tiếp theo.
 
