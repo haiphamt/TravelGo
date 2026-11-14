@@ -34,11 +34,11 @@ Ghi quyết định ngắn vào task hoặc PR để các bạn có thể triể
 
 | Trao đổi với | Điểm cần thống nhất |
 | --- | --- |
-| Tuấn Hải phụ trách đăng nhập | Kiểu `users.id`, bảng tài khoản dùng chung và nơi lưu vai trò. Frontend demo hiện dùng `user`, `owner`, `admin`. Chốt cách ánh xạ rồi dùng trên API và trong fixture. Tuấn Hải phụ trách luồng đăng nhập và dữ liệu liên kết tài khoản Google. |
+| Tuấn Hải phụ trách đăng nhập | `users.id` đã chốt là `BIGINT UNSIGNED` tự tăng trên MySQL. Cả tài khoản email và Google dùng ID nội bộ này. Tuấn Hải lưu mã định danh Google riêng để liên kết đăng nhập. Cần thống nhất nơi lưu vai trò và cách ánh xạ với `user`, `owner`, `admin` đang dùng ở frontend demo. |
 | Bạn 2 phụ trách API địa điểm | Bảng địa điểm, ID nội bộ nếu cần, mã địa điểm công khai và quan hệ với mã nguồn. Ví dụ, giữ nguyên `osm:node/5922616527` khi gắn một bản ghi OSM với địa điểm frontend. Chốt cách phân biệt các nguồn, ràng buộc chống trùng và các trường có thể `null`. |
 | Bạn 3–5 phụ trách lịch trình, phòng và xét duyệt | Chia sẻ kiểu ID tài khoản, mã địa điểm và quy ước khóa ngoại. Người phụ trách từng nghiệp vụ viết migration cho bảng thuộc phần mình. |
 
-Ưu tiên migration Laravel có sẵn cho bảng người dùng. Nếu cần bổ sung cột dùng chung, mỗi thay đổi có một người phụ trách. Phần chưa thống nhất có thể làm tiếp sau khi khung Laravel đã chạy được.
+Dùng `$table->id()` trong migration bảng `users`. Các cột khóa ngoại tham chiếu `users.id` dùng kiểu tương ứng, ví dụ `$table->foreignId('user_id')->constrained('users')`. Nếu cần bổ sung cột dùng chung, mỗi thay đổi có một người phụ trách. Phần chưa thống nhất có thể làm tiếp sau khi khung Laravel đã chạy được.
 
 ## 3. PR đầu tiên — Khung Laravel có thể chạy và kiểm thử
 
