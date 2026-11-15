@@ -57,9 +57,22 @@ PR cần cho người review biết:
 ## 4. Thống nhất API trước khi nối frontend
 
 - Với API mới hoặc thay đổi, chốt với người tích hợp phương thức, đường dẫn, tham số, ví dụ request/response, điều kiện truy cập và cách báo lỗi. Ghi hợp đồng ngắn gọn trong task hoặc PR để hai bên có thể triển khai song song.
-- Giữ mã địa điểm ổn định giữa danh mục, bản đồ, yêu thích, đánh giá và lịch trình. Nếu backend dùng khóa nội bộ, thống nhất cách ánh xạ với mã nguồn OSM và Góc Địa Phương.
+- Dùng [quy ước mã địa điểm chung](#mã-địa-điểm-dùng-chung) cho danh mục, bản đồ, yêu thích, đánh giá, lịch trình, Phòng cùng đi và xét duyệt.
 - Backend kiểm tra dữ liệu và quyền cho từng thao tác, kể cả khi giao diện đã ẩn nút. Kiểm tra quyền theo đúng tài khoản, địa điểm hoặc phòng. Ví dụ, Chủ cơ sở chỉ sửa địa điểm được cấp quyền và chỉ chủ phòng mới chốt bình chọn.
 - Thống nhất dữ liệu thiếu, danh sách rỗng, phân trang và lỗi quyền truy cập. Giữ `null` cho giá hoặc tọa độ chưa biết, tránh trả giá, điểm đánh giá hoặc trạng thái mở cửa tự điền. Xử lý trường hợp API lỗi hoặc tải chậm trong các trạng thái giao diện đang có.
+
+### Mã địa điểm dùng chung
+
+| Dữ liệu | Mã công khai |
+| --- | --- |
+| Địa điểm từ OpenStreetMap | Giữ nguyên `osm:node/<id>`, `osm:way/<id>` hoặc `osm:relation/<id>`, ví dụ `osm:node/5922616527`. Loại đối tượng là một phần của mã. |
+| Hồ sơ Góc Địa Phương đã có | Giữ nguyên `tg-local-<uuid>` trong danh mục, ví dụ `tg-local-37d7c541-b4e5-8d01-8bf7-e5dbc0466e1f`. |
+| Địa điểm mới do TravelGo tạo | Backend cấp một lần `tg-place-<uuid>` viết thường. Với đóng góp mới, có thể giữ mã trong hồ sơ chờ và dùng lại khi duyệt. Tiền tố `tg-demo-` dành cho dữ liệu dùng thử hiện có. |
+
+- MySQL dùng `places.id` là `BIGINT UNSIGNED` tự tăng và `places.public_id` là chuỗi bắt buộc, duy nhất. Các bảng nghiệp vụ tham chiếu `places.id` qua khóa ngoại cùng kiểu. Backend ánh xạ mã công khai từ API sang khóa nội bộ khi ghi dữ liệu.
+- API trả mã công khai dạng chuỗi ở `id` của địa điểm. Các payload tham chiếu địa điểm dùng cùng chuỗi đó, ví dụ `placeId: "osm:node/5922616527"`. Xác định hồ sơ Góc Địa Phương qua trường phân loại `local`. Hữu Hiếu thống nhất đường dẫn API và kiểm thử mã OSM chứa `/` qua API và liên kết chi tiết. Có thể truyền toàn bộ mã qua tham số truy vấn hoặc JSON để giữ nguyên chuỗi.
+- Giữ mã công khai khi đổi tên, giờ bán hoặc vị trí của cùng một địa điểm. Khi nhập lại, đối chiếu theo cặp nguồn và mã nguồn ổn định, cập nhật bản ghi cũ và giữ `public_id`. Với OSM, mã nguồn gồm cả loại đối tượng và số, ví dụ `node/5922616527`. Với danh mục Góc Địa Phương hiện có, dùng mã hồ sơ đã lưu để đối chiếu khi chưa có mã nguồn riêng ổn định. Tên và tọa độ không đủ để tự gộp hồ sơ.
+- Chung Minh Hiếu và Lê Nguyễn Hữu Hiếu thống nhất người viết migration bảng `places`, dùng chung bảng đó cho importer và API. Khi nối backend, kiểm tra `tg-place-<uuid>` trong bộ kiểm tra ID dùng chung của Angular và thử mở chi tiết, lưu yêu thích hoặc lịch trình bằng mã mới.
 
 ## 5. Quy tắc cho người phụ trách dữ liệu
 

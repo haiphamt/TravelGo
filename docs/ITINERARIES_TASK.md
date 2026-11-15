@@ -14,7 +14,7 @@
 ## 2. Hợp đồng dùng chung
 
 - Lấy người sở hữu từ tài khoản đã xác thực của Tuấn Hải. Khóa ngoại tài khoản dùng kiểu của `users.id`. Dùng fixture trong test để phát triển trước khi nối phiên đăng nhập thật.
-- Dùng mã địa điểm và API tra cứu đã chốt với Hữu Hiếu. Với cảnh báo địa điểm đổi giờ, giá hoặc vị trí, thống nhất phiên bản dữ liệu được duyệt với Hữu Hiếu và Quang Huy. Giữ điểm ghé đã lưu và hành vi xem xét thay đổi như bản frontend hiện có.
+- Dùng [mã địa điểm chung](../rules.md#mã-địa-điểm-dùng-chung) và API tra cứu của Hữu Hiếu. Với cảnh báo địa điểm đổi giờ, giá hoặc vị trí, thống nhất phiên bản dữ liệu được duyệt với Hữu Hiếu và Quang Huy. Giữ điểm ghé đã lưu và hành vi xem xét thay đổi như bản frontend hiện có.
 - Nếu Phòng cùng đi xuất kết quả thành lịch trình, chốt với Công Định payload điểm ghé và quyền sao chép. Công Định quản lý kết quả phòng. Quỳnh Hân quản lý phần lưu lịch trình. Lịch trình thủ công và AI có thể làm trước khi phần sao chép được nối.
 
 ## 3. Thứ tự triển khai

@@ -35,8 +35,8 @@ Ghi quyết định ngắn vào task hoặc PR để các bạn có thể triể
 | Trao đổi với | Điểm cần thống nhất |
 | --- | --- |
 | Tuấn Hải phụ trách đăng nhập | `users.id` đã chốt là `BIGINT UNSIGNED` tự tăng trên MySQL. Cả tài khoản email và Google dùng ID nội bộ này. Tuấn Hải lưu mã định danh Google riêng để liên kết đăng nhập. Cần thống nhất nơi lưu vai trò và cách ánh xạ với `user`, `owner`, `admin` đang dùng ở frontend demo. |
-| Bạn 2 phụ trách API địa điểm | Bảng địa điểm, ID nội bộ nếu cần, mã địa điểm công khai và quan hệ với mã nguồn. Ví dụ, giữ nguyên `osm:node/5922616527` khi gắn một bản ghi OSM với địa điểm frontend. Chốt cách phân biệt các nguồn, ràng buộc chống trùng và các trường có thể `null`. |
-| Bạn 3–5 phụ trách lịch trình, phòng và xét duyệt | Chia sẻ kiểu ID tài khoản, mã địa điểm và quy ước khóa ngoại. Người phụ trách từng nghiệp vụ viết migration cho bảng thuộc phần mình. |
+| Lê Nguyễn Hữu Hiếu phụ trách API địa điểm | Dùng `places.id`, `places.public_id` và cặp nguồn/mã nguồn theo [quy ước mã địa điểm](../rules.md#mã-địa-điểm-dùng-chung). Chốt người viết migration bảng `places`, các cột nghiệp vụ và trường có thể `null`. |
+| Quỳnh Hân, Công Định và Quang Huy phụ trách lịch trình, phòng và xét duyệt | Chia sẻ kiểu ID tài khoản và [quy ước mã địa điểm](../rules.md#mã-địa-điểm-dùng-chung). Người phụ trách từng nghiệp vụ viết migration cho bảng thuộc phần mình. |
 
 Dùng `$table->id()` trong migration bảng `users`. Các cột khóa ngoại tham chiếu `users.id` dùng kiểu tương ứng, ví dụ `$table->foreignId('user_id')->constrained('users')`. Nếu cần bổ sung cột dùng chung, mỗi thay đổi có một người phụ trách. Phần chưa thống nhất có thể làm tiếp sau khi khung Laravel đã chạy được.
 
@@ -77,7 +77,7 @@ php artisan serve
 Sau khi PR khung được merge vào nhánh tích hợp, cập nhật nhánh đó rồi tạo `feat/place-data-import` cho phần nhập dữ liệu. Có thể khảo sát dữ liệu và chuẩn bị test đầu vào trong lúc chờ PR đầu.
 
 - Đọc `frontend/public/data/catalog.json`, `frontend/public/data/sources.json` và `frontend/src/app/catalog.ts` để đối chiếu định dạng, mã địa điểm, các trường thiếu và thông tin nguồn. Đọc `frontend/public/data/osm-photo-sources.json` nếu cần chuyển thông tin ảnh đã có nguồn rõ ràng.
-- Thống nhất các trường cần nhập với Bạn 2. Tạo một lệnh Artisan hoặc seeder có đầu vào rõ ràng, kiểm tra dữ liệu rồi cập nhật theo cặp nguồn và mã nguồn có ràng buộc duy nhất trong MySQL. Giữ mã công khai ổn định khi nhập lại. Với trường chưa biết, giữ `null` hoặc áp dụng cách biểu diễn đã chốt, không suy ra giá/giờ từ văn bản mẫu.
+- Thống nhất các trường cần nhập với Hữu Hiếu. Tạo một lệnh Artisan hoặc seeder có đầu vào rõ ràng, kiểm tra dữ liệu rồi cập nhật theo cặp nguồn và mã nguồn có ràng buộc duy nhất trong MySQL. Giữ mã công khai ổn định khi nhập lại. Với trường chưa biết, giữ `null` hoặc áp dụng cách biểu diễn đã chốt, không suy ra giá/giờ từ văn bản mẫu.
 - Giữ liên kết, ghi công và giấy phép theo `sources.json`. Hồ sơ Góc Địa Phương lấy từ nguồn cộng đồng đang có cờ tham khảo và trạng thái quyền tái sử dụng chưa xác nhận. Dùng fixture tự tạo cho luồng test Local. Khi nhóm đưa dữ liệu tham khảo vào môi trường triển khai, giữ nguyên thông tin nguồn, trạng thái và phạm vi sử dụng đã thống nhất. Ảnh thiếu nguồn không được tự ghép vào hồ sơ.
 - Có test cho bản ghi hợp lệ, thiếu trường bắt buộc, tọa độ sai, mã trùng và nhập lại không nhân đôi. Lệnh nhập báo số thêm, cập nhật và bỏ qua. Ghi rõ quy tắc xử lý dòng lỗi để người chạy biết dữ liệu nào đã được ghi.
 - Chạy thử lệnh hai lần trên MySQL phát triển hoặc database test riêng. Ghi lệnh, tập dữ liệu, số bản ghi và các lý do bỏ qua vào PR. Tập lớn có thể nhập sau khi PR khung đã mở đường cho các bạn khác.

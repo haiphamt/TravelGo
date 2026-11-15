@@ -13,7 +13,7 @@
 ## 2. Hợp đồng dùng chung
 
 - **Tuấn Hải** quản lý xác thực và vai trò tài khoản. Thống nhất với Hải điều kiện cấp/thu hồi quyền quản lý và quan hệ giữa vai trò Chủ cơ sở với quyền trên từng địa điểm. Khóa ngoại tham chiếu tài khoản cùng kiểu với `users.id`. Trong test, tạo fixture riêng cho Người dùng, Chủ cơ sở và Quản trị viên. Backend suy ra danh tính từ phiên xác thực và kiểm tra quyền trên từng tài nguyên.
-- **Lê Nguyễn Hữu Hiếu** quản lý API địa điểm và đánh giá. Dùng cùng ID địa điểm, đánh giá và ảnh. Thống nhất cách bản chỉnh sửa đã duyệt cập nhật địa điểm, cách đánh dấu nội dung bị ẩn và cách trả phản hồi chủ cơ sở. Giữ phiên bản địa điểm/đánh giá làm căn cứ xử lý đề xuất hoặc báo cáo cũ. Khi cần báo lịch trình về thay đổi đã duyệt, thống nhất payload phiên bản hoặc trạng thái với Quỳnh Hân.
+- **Lê Nguyễn Hữu Hiếu** quản lý API địa điểm và đánh giá. Dùng [mã địa điểm chung](../rules.md#mã-địa-điểm-dùng-chung) và thống nhất cách tham chiếu đánh giá, ảnh. Với đóng góp tạo địa điểm mới, giữ mã `tg-place-<uuid>` đã cấp khi duyệt. Thống nhất cách bản chỉnh sửa đã duyệt cập nhật địa điểm, cách đánh dấu nội dung bị ẩn và cách trả phản hồi chủ cơ sở. Giữ phiên bản địa điểm/đánh giá làm căn cứ xử lý đề xuất hoặc báo cáo cũ. Khi cần báo lịch trình về thay đổi đã duyệt, thống nhất payload phiên bản hoặc trạng thái với Quỳnh Hân.
 
 ## 3. Thứ tự triển khai
 

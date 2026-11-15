@@ -13,7 +13,7 @@
 
 ## 2. Hợp đồng dùng chung
 
-- **Chung Minh Hiếu** nhập danh mục. Hữu Hiếu và Minh Hiếu thống nhất một schema địa điểm, người viết migration và cách ánh xạ cặp nguồn/mã nguồn tới ID công khai. Giữ ID hiện dùng, ví dụ `osm:node/5922616527` hoặc `tg-local-…`. Nếu URL chi tiết dùng mã OSM có `/`, xác định cách truyền ID qua API và kiểm tra deep link thực tế. Chia sẻ cách tra địa điểm cho Hân, Định và Huy ngay khi chốt.
+- **Chung Minh Hiếu** nhập danh mục. Cả hai dùng [quy ước mã địa điểm](../rules.md#mã-địa-điểm-dùng-chung) và thống nhất người viết migration bảng `places`, các cột nghiệp vụ và cách xử lý dữ liệu thiếu. Kiểm tra việc tra mã OSM có `/` qua API và liên kết chi tiết. Chia sẻ hợp đồng tra địa điểm cho Hân, Định và Huy.
 - **Tuấn Hải** phụ trách phiên đăng nhập. Lấy tài khoản từ phiên đã xác thực. `users.id` là `BIGINT UNSIGNED` tự tăng. Có thể dùng fixture tài khoản trên MySQL test để làm trước phần yêu thích và đánh giá.
 - **Triệu Quang Huy** phụ trách xét duyệt. Thống nhất cách API địa điểm nhận bản cập nhật đã duyệt, cách hiển thị phản hồi chủ cơ sở và cách lọc đánh giá hoặc ảnh bị ẩn. Dùng ID đánh giá/ảnh ổn định cho luồng báo cáo. Hữu Hiếu sở hữu bản ghi đánh giá và API viết/sửa của tác giả.
 
@@ -40,7 +40,7 @@ Viết Laravel Feature Test trong `backend/tests/Feature/` và unit test cho log
 ```text
 Tôi là Lê Nguyễn Hữu Hiếu, phụ trách Task 2 của haiphamt/TravelGo trên feat/places-reviews. Trước khi sửa, đọc rules.md, .github/pull_request_template.md, backend/README.md và docs/PLACES_REVIEWS_TASK.md. Nếu hướng dẫn chưa có trên nhánh, chạy git fetch origin rồi đọc bằng git show origin/docs/update-team-assignments:docs/PLACES_REVIEWS_TASK.md. Kiểm tra git status, nhánh tích hợp, backend đã merge và các màn Angular được liệt kê.
 
-Làm hợp đồng và API danh sách/chi tiết địa điểm trước, sau đó yêu thích và đánh giá theo nhiệm vụ trong file. Dùng schema đã chốt với Chung Minh Hiếu và ID công khai hiện có. Đọc phiên tài khoản do Tuấn Hải làm. Phối hợp với Triệu Quang Huy về bản cập nhật, phản hồi và nội dung bị ẩn. Nếu phụ thuộc chưa tích hợp, dùng fixture trong test và ghi phần còn chờ. Bám giao diện Didaune/TravelGo đã bàn giao, giữ bố cục và CSS.
+Làm hợp đồng và API danh sách/chi tiết địa điểm trước, sau đó yêu thích và đánh giá theo nhiệm vụ trong file. Dùng quy ước mã địa điểm trong rules.md và schema thống nhất với Chung Minh Hiếu. Đọc phiên tài khoản do Tuấn Hải làm. Phối hợp với Triệu Quang Huy về bản cập nhật, phản hồi và nội dung bị ẩn. Nếu phụ thuộc chưa tích hợp, dùng fixture trong test và ghi phần còn chờ. Bám giao diện Didaune/TravelGo đã bàn giao, giữ bố cục và CSS.
 
 Viết và chạy test theo checklist. Rà diff, ghi lệnh, số test, kết quả thực tế và phần chưa xác minh. Soạn PR theo mẫu repo để tôi đọc diff, chạy lại các bước chính, rồi commit, push và mở PR.
 ```

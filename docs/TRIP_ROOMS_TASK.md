@@ -13,7 +13,7 @@
 ## 2. Hợp đồng dùng chung
 
 - Dùng tài khoản đã xác thực do Tuấn Hải phụ trách và khóa ngoại cùng kiểu với `users.id`. Vai trò **chủ phòng** được xác định theo từng phòng. Quyền Chủ cơ sở hoặc Quản trị viên của toàn hệ thống là phần của task khác.
-- Dùng API tra cứu và mã địa điểm công khai của Hữu Hiếu. Giữ cách hiển thị địa điểm không còn hợp lệ. Có thể dùng fixture cho địa điểm và các thành viên trong test khi phần của đồng đội chưa sẵn sàng.
+- Dùng [mã địa điểm chung](../rules.md#mã-địa-điểm-dùng-chung) và API tra cứu của Hữu Hiếu. Giữ cách hiển thị địa điểm không còn hợp lệ. Có thể dùng fixture cho địa điểm và các thành viên trong test khi phần của đồng đội chưa sẵn sàng.
 - Chốt với Quỳnh Hân cách sao chép kết quả sang lịch trình cá nhân, gồm thứ tự, giờ ghé, mã địa điểm và tài khoản lưu. Lõi Phòng cùng đi có thể triển khai trước. Dùng API lịch trình chung khi nối bước sao chép.
 
 ## 3. Thứ tự triển khai
