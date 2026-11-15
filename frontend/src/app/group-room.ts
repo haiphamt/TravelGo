@@ -108,7 +108,8 @@ export class GroupRoom {
         ? [[stop.placeId, tripSnapshot(place)] as const] : [];
     }));
   });
-  readonly canCopy = computed(() => !this.roomGateway.enabled && this.store.catalogStatus() === "ready" && this.itinerary().length > 0 &&
+  readonly canCopy = computed(() => (!this.roomGateway.enabled || this.store.itineraryStorage() === "api") &&
+    this.store.catalogStatus() === "ready" && this.itinerary().length > 0 &&
     this.itinerary().every(stop => this.catalogById().has(stop.placeId)));
   readonly outOfOrder = computed(() => this.itinerary().some((stop, i, stops) => i > 0 && stop.time < stops[i - 1].time));
   readonly placeLimit = ROOM_PLACE_LIMIT;
@@ -397,6 +398,12 @@ export class GroupRoom {
     if (this.busy() || !this.canCopy()) return;
     this.busy.set(true);
     try {
+      if (this.roomGateway.enabled) {
+        if (await this.store.copyRoomItinerary(room.code, room.revision!, room.activeMemberId)) {
+          this.store.toast("Đã mở bản lịch trình cá nhân. Bạn có thể xem và chỉnh trong Lịch trình của tôi.");
+        } else { void this.roomGateway.load(); }
+        return;
+      }
       if (await this.store.createTrip({ name: room.title, date: room.date, source: "room", points: this.itinerary().map(stop => ({
         placeId: stop.placeId, time: stop.time, snapshot: stop.snapshot, keptRevision: stop.keptRevision,
       })) }, { preserveSnapshots: true })) this.store.toast("Đã lưu một bản vào Lịch trình của tôi.");

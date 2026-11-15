@@ -53,6 +53,7 @@ class ItineraryService
                     // Approved-place revision handling is a separate contract with places/moderation.
                     // Ordinary edits preserve snapshots. Client-supplied snapshots are never trusted.
                     'snapshot' => $old->get($place->id)?->snapshot ?? self::snapshot($place),
+                    'kept_revision' => $old->get($place->id)?->kept_revision,
                 ]);
             }
 
@@ -86,6 +87,7 @@ class ItineraryService
                 'placeId' => $p->public_id, 'time' => $p->time, 'date' => $p->date,
                 'note' => $p->note, 'estimatedCost' => $p->estimated_cost === null ? null : (int) $p->estimated_cost,
                 'snapshot' => json_decode($p->snapshot, true, flags: JSON_THROW_ON_ERROR),
+                'keptRevision' => $p->kept_revision,
             ])->all(),
         ];
     }

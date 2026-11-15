@@ -61,7 +61,7 @@ export function orderTripDays(points: TripItem[], start: string): TripItem[] {
   return [...points].sort((left, right) => tripDay(left, start).localeCompare(tripDay(right, start)));
 }
 export function validateTripDraft(draft: TripDraft): string {
-  if (!draft.name.trim() || draft.name.trim().length > 80) return "Nhập tên chuyến đi tối đa 80 ký tự.";
+  if (!draft.name.trim() || Array.from(draft.name.trim()).length > 80) return "Nhập tên chuyến đi tối đa 80 ký tự.";
   if ((draft.date && !validTripDate(draft.date)) ||
       (draft.endDate && (!draft.date || !validTripDate(draft.endDate) || draft.endDate < draft.date))) {
     return "Chọn ngày bắt đầu và ngày kết thúc hợp lệ.";

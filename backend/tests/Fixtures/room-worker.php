@@ -2,6 +2,7 @@
 
 // Separate PHP process used only by the MySQL concurrency tests; never an HTTP route.
 use App\Models\User;
+use App\Services\RoomItineraryCopyService;
 use App\Services\Rooms\RoomService;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +32,7 @@ try {
         'suggest' => $rooms->suggest($argv[2], $user, $ids[0]),
         'vote' => $rooms->vote($argv[2], $user, $ids),
         'finalize' => $rooms->finalize($argv[2], $user, $ids),
+        'copy' => ['revision' => $app->make(RoomItineraryCopyService::class)->copy($user->id, $argv[2], $ids[0])->version],
     };
     echo json_encode(['status' => 200, 'revision' => $result['revision']], JSON_THROW_ON_ERROR);
 } catch (ValidationException) {

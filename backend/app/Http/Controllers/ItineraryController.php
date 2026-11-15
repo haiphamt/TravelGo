@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CopyRoomItineraryRequest;
 use App\Http\Requests\SaveItineraryRequest;
 use App\Models\Itinerary;
 use App\Services\ItineraryService;
+use App\Services\RoomItineraryCopyService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -29,6 +31,14 @@ class ItineraryController extends Controller
         $trip = $this->service->save($request->user()->id, $request->validated());
 
         return response()->json(['data' => $this->service->payload($trip)], 201);
+    }
+
+    public function copyRoom(CopyRoomItineraryRequest $request, RoomItineraryCopyService $copies): JsonResponse
+    {
+        $data = $request->validated();
+        $trip = $copies->copy($request->user()->id, $data['roomCode'], (int) $data['roomRevision']);
+
+        return response()->json(['data' => $this->service->payload($trip)]);
     }
 
     public function update(SaveItineraryRequest $request, string $id): JsonResponse

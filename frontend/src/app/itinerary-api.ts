@@ -30,6 +30,7 @@ export function parseSavedItinerary(value: unknown): SavedTrip & { version: numb
   const points = raw.points.map((point: Record<string, unknown>) => {
     if (!point || typeof point !== 'object' || !validPlaceId(point.placeId) || typeof point.time !== 'string' ||
         (point.date != null && typeof point.date !== 'string') || (point.note != null && typeof point.note !== 'string') ||
+        (point.keptRevision != null && (typeof point.keptRevision !== 'string' || point.keptRevision.length > 200)) ||
         (point.estimatedCost != null && typeof point.estimatedCost !== 'number') || !validTripSnapshot(point.snapshot as TripSnapshot)) {
       throw new ItineraryApiError('Dữ liệu điểm ghé không hợp lệ.');
     }
@@ -37,6 +38,7 @@ export function parseSavedItinerary(value: unknown): SavedTrip & { version: numb
       placeId: point.placeId, time: point.time, date: (point.date || undefined) as string | undefined,
       note: (point.note ?? undefined) as string | undefined,
       estimatedCost: point.estimatedCost as number | null | undefined, snapshot: point.snapshot as TripSnapshot,
+      keptRevision: (point.keptRevision ?? undefined) as string | undefined,
     };
   });
   const trip = { ...raw, points } as unknown as SavedTrip & { version: number };
@@ -117,7 +119,7 @@ export class ItineraryApi {
   async save(draft: TripDraft, id?: string): Promise<SavedTrip> {
     const error = validateTripDraft(draft);
     if (error) throw new ItineraryApiError(error);
-    if (draft.source === 'room') throw new ItineraryApiError('Chưa thể sao chép kết quả phòng lúc này. Bạn có thể tự tạo lịch trình.');
+    if (draft.source === 'room' && !id) throw new ItineraryApiError('Hãy sao chép kết quả phòng bằng nút lưu lịch trình cá nhân trong phòng.');
     await this.session(true);
     if (id && !this.versions.has(id)) throw new ItineraryApiError('Tải lại lịch trình trước khi chỉnh sửa.');
     const payload = {
@@ -128,6 +130,24 @@ export class ItineraryApi {
     };
     const response = await this.json(id ? '/' + encodeURIComponent(id) : '', id ? 'PUT' : 'POST', payload) as { data: unknown };
     return this.saved(response?.data);
+  }
+
+  async copyRoom(roomCode: string, roomRevision: number, memberId: string): Promise<SavedTrip> {
+    if (!/^[A-F0-9]{8}$/.test(roomCode) || !Number.isSafeInteger(roomRevision) || roomRevision < 1) {
+      throw new ItineraryApiError('Tải lại phòng trước khi lưu lịch trình cá nhân.');
+    }
+    await this.session(true);
+    if (this.owner !== memberId) throw new ItineraryApiError('Tài khoản đăng nhập đã thay đổi. Tải lại phòng trước khi lưu.', 401);
+    try {
+      // The server reads membership and the saved room; no client snapshots or owner IDs are sent.
+      const response = await this.json('/from-room', 'POST', { roomCode, roomRevision }) as { data: unknown };
+      return this.saved(response?.data);
+    } catch (error) {
+      if (error instanceof ItineraryApiError && error.status === 409) {
+        throw new ItineraryApiError('Phòng vừa thay đổi hoặc chưa chốt. Tải lại phòng trước khi lưu.', 409);
+      }
+      throw error;
+    }
   }
 
   async remove(id: string): Promise<void> {

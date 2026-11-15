@@ -1,52 +1,47 @@
-# feat(itineraries): persist account trips and add mock suggestion previews
-
-Nội dung bàn giao cho Draft PR của Quỳnh Hân. Các phụ thuộc tích hợp được liệt kê trong phần Review.
+# feat(itineraries): save account trips and copy room plans
 
 ## Task liên quan
 
-- Task 3 — Nguyễn Thị Quỳnh Hân, lịch trình thủ công và bằng AI.
-- [Hướng dẫn Task 3](https://github.com/haiphamt/TravelGo/blob/5431943/docs/ITINERARIES_TASK.md). Bổ sung mã MAxx và link backlog thực tế khi nhóm cấp; chưa có thông tin để điền.
-- Nhánh đích hiện tại: `feat/travelgo-frontend`. Nhánh này đang dựa thêm trên commit schema `places` `362b450` của Hữu Hiếu; chờ review/merge phụ thuộc trước khi hợp nhất lịch trình.
+- Task 3 — Nguyễn Thị Quỳnh Hân: lịch trình thủ công, bản xem trước gợi ý và lưu kết quả phòng sang lịch trình cá nhân.
+- [Hướng dẫn Task 3](https://github.com/haiphamt/TravelGo/blob/5431943/docs/ITINERARIES_TASK.md). Chưa có mã MAxx/link backlog để điền.
+- Base: `feat/travelgo-frontend`. Phụ thuộc schema places [PR #4](https://github.com/haiphamt/TravelGo/pull/4) tại `362b450` và lõi phòng của Công Định [PR #7](https://github.com/haiphamt/TravelGo/pull/7) tại `e70e380`. Giữ nguyên commit của đồng đội. Ưu tiên review/merge phụ thuộc trước; sau đó Git loại phần chung khỏi diff PR này.
 
 ## Thay đổi / đầu ra
 
-- API danh sách/chi tiết/tạo/cập nhật/xóa lịch trình của người đăng nhập; dùng session và CSRF, kiểm tra chủ sở hữu trên backend.
-- Migration lịch trình và điểm ghé, FK tới tài khoản và `places.id`; payload dùng mã địa điểm công khai. Giữ thứ tự, giá trị chưa biết, snapshot và version. Lưu giao dịch để lỗi ghi điểm không làm mất kế hoạch cũ.
-- Kiểm tra ngày/giờ, 1–5 điểm, trùng điểm, chi phí, ngân sách, ghi chú, ảnh bìa và địa điểm không tồn tại. Version cũ bị từ chối bằng 409.
-- Luồng gợi ý mock từ danh mục server, có tùy chọn Local, ưu tiên tên/món chính và cân bằng danh mục theo frontend; bản xem trước chưa ghi lịch trình. Có interface để thay provider sau khi nhóm chọn. Người giao việc xác nhận tiếp tục mô phỏng khi nhóm chưa chọn provider/luồng sao chép.
-- Adapter Angular cho các màn hiện có, giữ bản nháp khi lỗi, không tự nhập lịch trình demo vào tài khoản. Chế độ server bật bằng `frontend/public/itinerary-config.json`; mặc định demo trong lúc chờ auth/dữ liệu.
-- Template chỉ thêm trạng thái lỗi vào vùng danh sách, nhãn mock vào phần xem trước và đổi câu mô tả lưu theo tài khoản ở `app.ts`/`trip.html` khi bật API. Giữ CSS, ảnh, bố cục và các nút hiện có.
-- Bổ sung Playwright 1.65.1 và bộ test chạy lại được trong repo qua Laravel/MySQL thật. Router fixture đăng nhập chỉ có trong máy chủ kiểm thử opt-in, không đăng ký vào ứng dụng bình thường.
-- Sửa thiếu hai entry `@emnapi/core` và `@emnapi/runtime` 1.11.3 trong package-lock để `npm ci` kiểm tra được. Thêm dependency kiểm thử Playwright; giữ nguyên phiên bản các thư viện đã có.
-- Điều chỉnh test rollback schema places để gỡ/khôi phục bảng lịch trình phụ thuộc đúng thứ tự khóa ngoại.
+Lịch trình lưu theo tài khoản trên Laravel/MySQL: tạo thủ công hoặc xem trước gợi ý mô phỏng, xác nhận lưu, mở lại và chỉnh sửa. Thành viên phòng đã chốt có thể dùng nút hiện có để lưu một bản cá nhân từ lịch trình nhóm; sửa bản cá nhân không thay kết quả phòng.
 
-Chi tiết request/response, cách bật API, cách chạy và phần cần đồng đội chốt: `backend/docs/ITINERARIES_API.md`.
+- CRUD kiểm tra chủ sở hữu, ngày/giờ, 1–5 điểm, trùng điểm, ngân sách/chi phí, ghi chú và ảnh bìa. Lưu header/điểm trong transaction; version cũ trả 409, lỗi gửi giữ bản nháp.
+- Gợi ý dùng danh mục server qua provider mô phỏng có nhãn, không lưu trước khi xác nhận. AI thật chưa được nhóm chọn provider.
+- `POST /api/itineraries/from-room` chỉ nhận `roomCode`, `roomRevision`; máy chủ đọc phòng và kiểm tra thành viên, trạng thái đã chốt, phiên bản. Đọc `itinerary ?? result`, giữ thứ tự, giờ, snapshot, dấu giữ thông tin cũ và null/0. Người sở hữu lấy từ session.
+- Cùng tài khoản/phòng/phiên bản mở lại cùng bản, giữ chỉnh sửa cá nhân. Hai request đồng thời hoặc retry sau mất phản hồi không tạo trùng. Phiên bản phòng mới tạo bản mới; xóa bản cá nhân cho phép lưu lại phiên bản đó.
+- Migration thêm `itinerary_room_copies` và cột nullable `itinerary_stops.kept_revision`. Không đổi migration places, không xóa lịch trình đang có. Chạy `php artisan migrate` sau schema phòng/lịch trình.
+- Giải quyết xung đột `backend/bootstrap/app.php` để đăng ký cả hai nhóm route và `frontend/proxy.conf.json` để proxy `/api/**`.
+- Nối nút lưu cá nhân hiện có, kiểm tra tài khoản trước khi gửi; cho chỉnh bản `source: room` qua API lịch trình. Sửa mở lại cùng bản gây trùng dòng trong danh sách và thống nhất giới hạn tên Unicode với phòng.
+- Giữ bố cục/CSS/ảnh. Template chỉ đổi dữ liệu, quyền và thông báo như phần nối API. Bật server bằng `itinerary-config.json` với `storage: "api"`; mặc định demo trong lúc chờ auth/danh mục chung. Lỗi API không tự lưu thành công vào demo.
+- Playwright chạy lại được qua Laravel/MySQL thật, fixture login chỉ nằm trong máy chủ kiểm thử opt-in. Thay đổi Playwright/lockfile từ phần bàn giao trước giữ nguyên phiên bản thư viện ứng dụng.
+
+Hợp đồng/cách chạy: [API lịch trình](https://github.com/haiphamt/TravelGo/blob/feat/itineraries/backend/docs/ITINERARIES_API.md), [sao chép để Định review](https://github.com/haiphamt/TravelGo/blob/feat/itineraries/backend/docs/ROOM_ITINERARY_COPY.md).
 
 ## Kiểm tra và minh chứng
 
-- Môi trường: PHP 8.3.36, Composer 2.11.2, MySQL Community Server 8.4.13, Node 24.21.0. Cấu hình và tài khoản database nằm ở `.env`/`.env.testing` cục bộ, đã được Git bỏ qua.
-- `composer install` và `composer check-platform-reqs`: đạt. PHP có `pdo_mysql`, `fileinfo`, XML và các extension cần thiết.
-- `php artisan migrate --force`: đạt trên `travelgo_dev`, gồm migration places của người phụ trách và migration lịch trình.
-- `php artisan test --compact --no-ansi`: **35 passed, 134 assertions**, trên MySQL `travelgo_test`. Có test hai tài khoản, đầu vào sai, bảo toàn snapshot, version cũ, rollback khi ghi điểm thất bại, mock ID sai/trùng, từ khóa món chính/cân bằng loại địa điểm, provider lỗi/quá thời gian và router fixture không xuất hiện trong ứng dụng bình thường.
-- `npm test`: **49 passed**. Bao gồm test adapter về CSRF, giữ draft, đổi tài khoản, public ID, preview, thông báo lỗi trường nhập và phản hồi sai định dạng.
-- `npm ci --ignore-scripts --dry-run --no-audit --no-fund`: đạt kiểm tra lockfile. Cài thư viện thực tế bằng `npm install --ignore-scripts --package-lock=false` trước khi sửa thiếu entry trong lock; không mô tả dry-run là một lượt clean install thực tế.
-- `npm run build`: đạt; còn cảnh báo initial bundle vượt mức warning và CommonJS Leaflet, không chạm CSS/map để xử lý ngoài task.
-- `php vendor/bin/pint --dirty --test`: đạt. `git diff --check`: đạt.
-- `npm run test:itineraries`: **6 passed**, Playwright/Edge headless, viewport 1440×1000 và 390×844. Request lịch trình thực sự qua Laravel, session cookie, CSRF và MySQL; tạo/sửa/reload, hai tài khoản riêng, không có CSRF bị từ chối, mất kết nối giữ draft qua reload rồi retry, preview chưa lưu và xác nhận lưu đều đạt. Danh mục frontend dùng cùng fixture demo có trong MySQL. Đăng nhập fixture tạo session test; chưa kiểm tra email/Google hoặc AI thật.
-- Ảnh kết quả nằm trong `frontend/playwright-report`, mở bằng `npx playwright show-report`. Cách chạy và giới hạn schema test được ghi trong tài liệu API. Báo cáo/trace và các cấu hình cục bộ đều được Git bỏ qua; đính kèm ảnh cần thiết khi đăng PR.
+- PHP 8.3.36, MySQL Community Server 8.4.13, Node 24.21.0. PHPUnit/Playwright dùng riêng `travelgo_test`, kiểm tra schema/driver trước reset; không chạy hai bộ đồng thời.
+- `php artisan test --compact --no-ansi`: **67 passed, 459 assertions**. CRUD, snapshot, quyền hai tài khoản, version cũ, dữ liệu sai, rollback khi ghi lỗi, provider mô phỏng và bốn ca hai PHP process đồng thời: gia nhập, đề xuất, chốt/bỏ phiếu, sao chép lặp.
+- `npm test`: **62 passed**. Adapter kiểm tra CSRF, đổi tài khoản, tham chiếu nguồn phòng, retry, metadata và danh sách không trùng.
+- `npm run build`: đạt; còn warning initial bundle **718.17 kB/700 kB** và Leaflet CommonJS.
+- `npm run test:itineraries`: **8 passed**, desktop 1440×1000/mobile 390×844. Sáu ca tạo thủ công/preview/giữ draft và hai ca sao chép phòng dùng hai phiên cookie. Request đi qua proxy, session, CSRF, MySQL. Ca mất phản hồi cho máy chủ ghi xong trước khi ngắt, retry cùng UUID; mở lại/chỉnh thứ tự bản riêng và phòng giữ nguyên.
+- Test rollback schema được cập nhật theo thứ tự khóa ngoại mới. Pint trên các file PHP thay đổi và `git diff --check` đạt.
+- [Ảnh minh chứng sao chép](https://github.com/haiphamt/TravelGo/blob/feat/itineraries/docs/evidence/room-itinerary-copy/README.md). Báo cáo HTML/trace ở `frontend/playwright-report`, `frontend/test-results` cục bộ, đã được Git bỏ qua.
 
 ## Review
 
-- Người review cần mời: ít nhất một thành viên; Tuấn Hải xem session/CSRF và phần Angular; Hữu Hiếu xem phụ thuộc places. Công Định xem đề xuất payload sao chép khi nối task phòng.
-- [x] Tự rà luồng, diff, dữ liệu thử, bộ test và bản dựng.
-- [x] AI hỗ trợ triển khai API, adapter, test và tài liệu. Kết quả được kiểm tra bằng PHPUnit trên MySQL, node:test, build, Pint và Playwright desktop/mobile đi qua backend thật.
-- [x] Hoàn thiện gợi ý có nhãn mô phỏng theo xác nhận của người giao việc khi provider chưa được chốt.
-- [x] File môi trường thật, vendor và node_modules được Git bỏ qua.
-- [ ] Chốt auth session/guard và kiểm tra đăng nhập thật với Tuấn Hải.
-- [ ] Review/merge schema và nối danh mục MySQL/API địa điểm thật.
-- [ ] Chốt phiên bản thay đổi được duyệt để nối hành vi cập nhật/giữ/thay điểm từ workflow demo. Kế hoạch hiện được giữ nguyên trong API khi thao tác chưa nối.
-- [ ] Nhóm chọn provider AI rồi triển khai kết nối backend, timeout và cấu hình khóa cục bộ.
-- [ ] Chốt quyền/payload sao chép kết quả phòng với Công Định; hiện chưa mở nguồn `room` ở API.
-- [x] Người phụ trách đã cho phép commit, push và mở Draft PR để nhóm review.
+- Đã mời review trong PR. Tuấn Hải xem Angular/session/CSRF; Công Định xem hợp đồng sao chép và phần nối phòng; Hữu Hiếu xem schema/danh mục. Triển khai trong nhánh này chưa có nghĩa đồng đội đã duyệt hợp đồng.
+- [x] Tự rà diff, ID địa điểm, quyền, giao dịch và kết quả kiểm thử thực tế.
+- [x] AI hỗ trợ API, adapter, test, tích hợp, tài liệu; đã kiểm tra bằng PHPUnit/MySQL, node:test, build và Playwright.
+- [x] Không commit file môi trường, mật khẩu, vendor, node_modules hoặc báo cáo cục bộ.
+- [x] Luồng sao chép đã triển khai để review.
+- [ ] Review/merge phụ thuộc, nghiệm thu hợp đồng sao chép với Định.
+- [ ] Tuấn Hải nối đăng nhập thật; Hữu Hiếu/Minh Hiếu nối danh mục/importer/API đã duyệt.
+- [ ] Hữu Hiếu/Quang Huy chốt trạng thái và phiên bản địa điểm được duyệt. Chỉnh thông thường giữ snapshot; cập nhật/giữ/thay điểm của workflow demo vẫn báo chờ hợp đồng khi bật API.
+- [ ] Nhóm chọn nhà cung cấp AI trước khi nối AI thật; bản hiện tại có nhãn mô phỏng theo xác nhận của người giao việc.
 
-Chưa đánh dấu task hoàn thành hoặc tuyên bố tích hợp end-to-end khi các phụ thuộc trên chưa được nhóm chấp nhận.
+Giữ Draft tới khi nhóm xác nhận các phụ thuộc tích hợp và review. Cập nhật PR Task 3 đang có, không mở PR trùng cho cùng phần lịch trình.

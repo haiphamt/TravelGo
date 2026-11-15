@@ -35,7 +35,7 @@ class SaveItineraryRequest extends FormRequest
                     $fail('Ảnh bìa không hợp lệ hoặc vượt 1 MB.');
                 }
             }],
-            'source' => ['sometimes', Rule::in(['manual', 'ai-demo'])],
+            'source' => ['sometimes', Rule::in($this->isMethod('put') ? ['manual', 'ai-demo', 'room'] : ['manual', 'ai-demo'])],
             'version' => [$this->isMethod('put') ? 'required' : 'sometimes', 'integer', 'min:1'],
             'points' => ['required', 'array', 'list', 'min:1', 'max:5'],
             'points.*.placeId' => ['required', 'string', 'max:80', 'distinct:strict', 'regex:~^(?:osm:(?:node|way|relation)/[0-9]+|tg-(?:local|demo|place)-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})$~'],

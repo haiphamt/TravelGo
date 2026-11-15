@@ -108,3 +108,7 @@ Tham khảo framework: [Laravel session authentication](https://laravel.com/docs
 Payload danh sách phải có chỉ số tuần tự; phản hồi lịch trình được kiểm tra đầy đủ trước khi nhận. Giới hạn nhãn thống nhất theo ký tự Unicode; tên hồ sơ rỗng yêu cầu nhập tên hiển thị. Phiếu nháp được xóa khi đổi phòng/tài khoản. Lỗi 5xx chỉ hiển thị thông báo phù hợp cho người dùng.
 
 Đã đối chiếu nhánh feat/itineraries (09f8535) và feat/places-reviews-api (7a522d9). API lịch trình hiện chưa bật source room theo tài liệu của Quỳnh Hân, nên phần sao chép vẫn chờ hai bên xác nhận. Nhánh tích hợp chưa nhận các thay đổi này.
+
+### Tích hợp trên nhánh Quỳnh Hân
+
+Sau mốc trên, nhánh `feat/itineraries` đã lấy lõi phòng `e70e380` và bổ sung [API sao chép sang lịch trình cá nhân](ROOM_ITINERARY_COPY.md), gồm phần nối nút hiện có. Đây là hợp đồng được triển khai để review; cần Công Định xác nhận trước khi nghiệm thu, chưa phải thay đổi đã merge vào nhánh tích hợp. Các giới hạn auth, danh mục và trạng thái địa điểm nêu trên vẫn còn áp dụng.

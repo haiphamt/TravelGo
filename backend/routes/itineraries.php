@@ -14,6 +14,7 @@ Route::get('/api/itineraries/session', fn (Request $request) => response()->json
 
 Route::middleware(['web', 'auth'])->prefix('api/itineraries')->group(function () {
     Route::post('/suggestions', [ItinerarySuggestionController::class, 'store'])->middleware('throttle:20,1');
+    Route::post('/from-room', [ItineraryController::class, 'copyRoom'])->middleware('throttle:30,1');
     Route::get('/', [ItineraryController::class, 'index']);
     Route::post('/', [ItineraryController::class, 'store']);
     Route::get('/{id}', [ItineraryController::class, 'show'])->whereUuid('id');

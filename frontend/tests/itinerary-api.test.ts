@@ -108,3 +108,61 @@ test('suggestions only request preview and reject malformed, duplicate or out-of
     points = bad; await assert.rejects(() => api.suggest(input), ItineraryApiError);
   }
 });
+
+test('room copying sends only a source reference, uses CSRF and keeps the verified snapshot and acknowledgement', async () => {
+  const calls: { url: string; init?: RequestInit }[] = [];
+  const copy = { ...saved, source: 'room', name: '😀'.repeat(80), points: [{ ...saved.points[0], keptRevision: 'source:reviewed' }] };
+  const api = new ItineraryApi(async (url, init) => {
+    calls.push({ url, init });
+    if (url.endsWith('/session')) return json({ authenticated: true, userId: '42', csrfToken: 'csrf-copy' });
+    if (init?.method === 'GET') return json({ data: [] });
+    return json({ data: copy });
+  });
+  await api.list();
+  const trip = await api.copyRoom('AB123456', 7, '42');
+  const write = calls.at(-1)!;
+  assert.equal(write.url, '/api/itineraries/from-room');
+  assert.equal(write.init?.method, 'POST');
+  assert.deepEqual(JSON.parse(String(write.init?.body)), { roomCode: 'AB123456', roomRevision: 7 });
+  assert.equal((write.init?.headers as Record<string, string>)['X-CSRF-TOKEN'], 'csrf-copy');
+  assert.deepEqual(trip.points[0].snapshot, snapshot);
+  assert.equal(trip.points[0].keptRevision, 'source:reviewed');
+  await api.save(trip, trip.id);
+  assert.equal(calls.at(-1)!.url, '/api/itineraries/' + trip.id);
+  assert.equal(JSON.parse(String(calls.at(-1)!.init?.body)).source, 'room');
+});
+
+test('room copying blocks invalid references, changed accounts and old room actors before writing', async () => {
+  let owner = '1'; let writes = 0;
+  const api = new ItineraryApi(async (url, init) => {
+    if (url.endsWith('/session')) return json({ authenticated: true, userId: owner, csrfToken: 'csrf' });
+    if (init?.method === 'GET') return json({ data: [] });
+    writes++; return json({ data: saved });
+  });
+  await api.list();
+  await assert.rejects(() => api.copyRoom('../bad', 1, '1'), ItineraryApiError);
+  await assert.rejects(() => api.copyRoom('AB123456', 0, '1'), ItineraryApiError);
+  await assert.rejects(() => api.copyRoom('AB123456', 1, '2'), (e: ItineraryApiError) => e.status === 401);
+  owner = '2';
+  await assert.rejects(() => api.copyRoom('AB123456', 1, '1'), (e: ItineraryApiError) => e.status === 401);
+  assert.equal(writes, 0);
+});
+
+test('stale room responses request a room reload and a lost response can be retried without changing the source', async () => {
+  let status = 409;
+  const bodies: unknown[] = [];
+  const api = new ItineraryApi(async (url, init) => {
+    if (url.endsWith('/session')) return json({ authenticated: true, userId: '1', csrfToken: 'csrf' });
+    if (init?.method === 'GET') return json({ data: [] });
+    bodies.push(JSON.parse(String(init?.body)));
+    if (status === 0) throw new TypeError('lost response');
+    return status === 200 ? json({ data: { ...saved, source: 'room' } }) : json({}, status);
+  });
+  await api.list();
+  await assert.rejects(() => api.copyRoom('AB123456', 5, '1'), /Tải lại phòng/);
+  status = 0;
+  await assert.rejects(() => api.copyRoom('AB123456', 5, '1'), /Kết nối bị gián đoạn/);
+  status = 200;
+  assert.equal((await api.copyRoom('AB123456', 5, '1')).source, 'room');
+  assert.deepEqual(bodies, Array(3).fill({ roomCode: 'AB123456', roomRevision: 5 }));
+});

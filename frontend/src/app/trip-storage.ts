@@ -51,7 +51,7 @@ export function activateTrip(state: DemoState, next: SavedTrip): DemoState {
     tripBudget: next.budget,
     tripCover: next.cover,
     tripSource: next.source,
-    savedTrips: hasActiveTrip(state) ? [currentTrip(state), ...savedTrips] : savedTrips,
+    savedTrips: hasActiveTrip(state) && currentTrip(state).id !== next.id ? [currentTrip(state), ...savedTrips] : savedTrips,
   };
 }
 

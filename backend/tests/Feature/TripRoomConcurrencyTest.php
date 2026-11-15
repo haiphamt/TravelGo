@@ -125,4 +125,19 @@ class TripRoomConcurrencyTest extends TestCase
         $this->actingAs($guest)->putJson('/api/rooms/'.$room['code'].'/votes', ['placeIds' => []])->assertConflict();
         $this->assertSame($count, DB::table('trip_room_votes')->count());
     }
+
+    public function test_two_copy_requests_for_the_same_member_and_revision_create_only_one_itinerary(): void
+    {
+        [$rooms, $room, $owner] = $this->fixture();
+        $rooms->suggest($room['code'], $owner, 'osm:node/1');
+        $rooms->openVoting($room['code'], $owner);
+        $rooms->vote($room['code'], $owner, ['osm:node/1']);
+        $room = $rooms->finalize($room['code'], $owner, ['osm:node/1']);
+        $this->assertSame([200, 200], $this->race($room, [
+            ['copy', $owner, [$room['revision']]], ['copy', $owner, [$room['revision']]],
+        ]));
+        $this->assertDatabaseCount('itineraries', 1);
+        $this->assertDatabaseCount('itinerary_stops', 1);
+        $this->assertDatabaseCount('itinerary_room_copies', 1);
+    }
 }

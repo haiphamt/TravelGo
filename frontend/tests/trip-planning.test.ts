@@ -51,3 +51,12 @@ test("date ordering groups stops by day while retaining custom order within the 
   const laterTime = { placeId: "osm:way/15", time: "13:00" };
   assert.deepEqual(orderTripDays([secondDay, laterTime, legacyPoint], plan.date), [laterTime, legacyPoint, secondDay]);
 });
+
+test("opening the same copied itinerary again keeps a single entry and the saved personal edits", () => {
+  const first = activateTrip(structuredClone(EMPTY_STATE), { ...plan, source: 'room' });
+  const updated = activateTrip(first, { ...plan, source: 'room', name: 'Bản riêng đã chỉnh' });
+  assert.equal(updated.tripName, 'Bản riêng đã chỉnh');
+  assert.equal(updated.savedTrips?.some(trip => trip.id === plan.id), false);
+  assert.equal(validateTripDraft({ ...plan, name: '😀'.repeat(80) }), '');
+  assert.match(validateTripDraft({ ...plan, name: '😀'.repeat(81) }), /80 ký tự/);
+});

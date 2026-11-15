@@ -377,6 +377,18 @@ export class TravelStore {
       });
     });
   }
+  async copyRoomItinerary(roomCode: string, roomRevision: number, memberId: string): Promise<boolean> {
+    if (!this.itineraryApi || !this.ready()) {
+      this.toast("Chưa kết nối được dịch vụ lịch trình. Vui lòng thử lại sau.");
+      return false;
+    }
+    try {
+      const saved = await this.itineraryApi.copyRoom(roomCode, roomRevision, memberId);
+      this.state.update(state => activateTrip(state, saved));
+      this.itineraryError.set("");
+      return true;
+    } catch (error) { this.reportItineraryError(error); return false; }
+  }
   async switchTrip(id: string): Promise<boolean> {
     if (this.itineraryApi) {
       try {

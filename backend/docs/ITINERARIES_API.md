@@ -4,7 +4,7 @@ Task 3 — nhánh `feat/itineraries`. Đọc cùng `rules.md` và hướng dẫn
 
 ## Phạm vi và phụ thuộc
 
-Đã triển khai CRUD lịch trình theo tài khoản, kiểm tra đầu vào, thứ tự điểm ghé, snapshot địa điểm, lưu giao dịch và bản xem trước gợi ý mô phỏng. Chưa tích hợp nhà cung cấp AI thật. Người dùng phải xác nhận lưu bằng API tạo lịch trình riêng.
+Đã triển khai CRUD lịch trình theo tài khoản, kiểm tra đầu vào, thứ tự điểm ghé, snapshot địa điểm, lưu giao dịch, bản xem trước gợi ý mô phỏng và sao chép lịch trình từ phòng đã chốt. Chưa tích hợp nhà cung cấp AI thật. Người dùng phải xác nhận lưu bằng API tạo lịch trình riêng.
 
 Nhánh làm việc lấy gốc `feat/travelgo-frontend` tại `f4406f5`, sau đó lấy nguyên commit schema địa điểm `362b450` của Hữu Hiếu làm phụ thuộc. Không viết lại migration `places`. PR lịch trình cần chờ PR schema được review/merge; hợp đồng schema hiện vẫn là bản đề xuất của người phụ trách.
 
@@ -23,6 +23,7 @@ Các endpoint nghiệp vụ dùng middleware Laravel `web` và `auth`. Người 
 | GET | `/api/itineraries` | `{data: SavedTrip[]}` của tài khoản hiện tại. |
 | GET | `/api/itineraries/{uuid}` | `{data: SavedTrip}` hoặc 404 nếu không thuộc tài khoản. |
 | POST | `/api/itineraries` | Tạo và trả 201 `{data: SavedTrip}`. |
+| POST | `/api/itineraries/from-room` | Lưu/mở bản cá nhân từ phòng đã chốt; nhận `roomCode`, `roomRevision`, trả 200 `{data: SavedTrip}`. |
 | PUT | `/api/itineraries/{uuid}` | Thay toàn bộ thông tin và điểm ghé; bắt buộc `version` đã đọc. |
 | DELETE | `/api/itineraries/{uuid}` | Xóa lịch trình của mình và điểm ghé, trả 204. Màn danh sách hiện chưa có nút xóa nên không tự thêm nút. |
 | POST | `/api/itineraries/suggestions` | Tạo bản xem trước; không ghi bảng lịch trình. Giới hạn 20 request/phút cho mỗi người đăng nhập. |
@@ -80,7 +81,7 @@ Chạy `php artisan serve --host=127.0.0.1 --port=8000` trong `backend/`, sau đ
 1. **Tuấn Hải:** session cookie/CSRF như trên hay guard khác, và tín hiệu đổi tài khoản. Hiện chưa kiểm tra được đăng nhập email/Google thật xuyên suốt trình duyệt.
 2. **Hữu Hiếu + Minh Hiếu:** merge schema, nhập danh mục và tra cứu địa điểm thật. Frontend vẫn đọc danh mục bàn giao; API lưu chỉ nhận điểm thực sự tồn tại trong MySQL.
 3. **Hữu Hiếu + Quang Huy:** hợp đồng phiên bản thay đổi được duyệt. Chỉnh sửa thông thường giữ snapshot đã lưu; các thao tác xác nhận cập nhật/giữ/thay điểm của workflow demo chưa nối API. Ở chế độ API, thao tác đó báo đang chờ hợp đồng và giữ kế hoạch, không báo lưu giả.
-4. **Công Định:** đề xuất sao chép kết quả dưới dạng TripDraft với thứ tự, giờ ghé và mã công khai. Định kiểm tra quyền lấy kết quả phòng; Hân kiểm tra chủ lịch trình và lưu qua API chung. Chưa chốt quyền ai được sao chép, thời điểm kết quả được phép dùng và metadata nguồn phòng, vì vậy chưa mở luồng `source: room`. Không coi đề xuất này là hợp đồng đã được đồng đội duyệt.
+4. **Công Định:** PR Hân đã tích hợp lõi phòng từ PR #7 tại `e70e380` và triển khai [hợp đồng sao chép](ROOM_ITINERARY_COPY.md). Máy chủ kiểm tra thành viên, trạng thái và phiên bản phòng, lưu bản riêng theo tài khoản. Cần Định review hợp đồng và phần nối nút; chưa coi việc triển khai trong nhánh Hân là đồng đội đã phê duyệt. Hai xung đột routing/proxy giữa hai nhánh đã được giải quyết. Ưu tiên merge PR #7 trước để diff PR Hân chỉ còn thay đổi lịch trình.
 
 ## Kiểm thử
 
