@@ -20,6 +20,8 @@ export interface RoomStop extends RoomPlace {
 }
 
 export interface GroupRoomRecord {
+  revision?: number;
+  phase?: "preparing" | "voting" | "finalized";
   code: string;
   title: string;
   date: string;
@@ -68,7 +70,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function isLabel(value: unknown, max: number): value is string {
-  return typeof value === "string" && !!value.trim() && value.length <= max;
+  return typeof value === "string" && !!value.trim() && Array.from(value).length <= max;
 }
 
 function isMember(value: unknown): value is RoomMember {
@@ -76,7 +78,7 @@ function isMember(value: unknown): value is RoomMember {
 }
 
 function isPlace(value: unknown): value is RoomPlace {
-  return isRecord(value) && isLabel(value.placeId, 64) && isLabel(value.name, 250);
+  return isRecord(value) && isLabel(value.placeId, 80) && isLabel(value.name, 255);
 }
 
 function uniqueBy<T>(items: T[], key: (item: T) => string): T[] {
