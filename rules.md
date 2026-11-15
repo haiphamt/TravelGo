@@ -22,17 +22,31 @@
 4. Push nhánh và mở **một PR cho một task hoặc một nhóm thay đổi liên quan trực tiếp**. Dùng Draft PR khi cần góp ý sớm. Dùng [mẫu PR hiện có](.github/pull_request_template.md) và điền mã task của backlog TravelGo.
 5. Mời ít nhất một thành viên khác review. Nếu chạm `frontend/`, mời người phụ trách frontend xem phần tích hợp. Chỉ hợp nhất sau khi đã xử lý các góp ý cần sửa, giải quyết xung đột và chạy kiểm tra trên bản cuối. Đưa thay đổi vào `main` qua PR đã được review.
 
-### Nhánh đề xuất cho 5 phần việc
+### Phân công triển khai và nhánh bắt đầu
 
-| Phần việc | Nhánh bắt đầu |
-| --- | --- |
-| Khung Laravel, MySQL và dữ liệu | `feat/backend-foundation` |
-| Tài khoản và phân quyền | `feat/auth-roles` |
-| Địa điểm, Góc Địa Phương, yêu thích và đánh giá | `feat/places-reviews` |
-| Lịch trình và phòng cùng đi | `feat/trips-rooms` |
-| Đóng góp, quyền quản lý và xét duyệt | `feat/owner-moderation` |
+| Phụ trách | Nhánh bắt đầu | Phần việc |
+| --- | --- | --- |
+| Phạm Tuấn Hải | `feat/auth-roles` | Hộp thoại Angular, đăng ký và đăng nhập bằng email, đăng nhập Google, đăng xuất, phiên đăng nhập và vai trò tài khoản. |
+| Chung Minh Hiếu | `feat/place-data-import` | Phần khung Laravel/MySQL đã merge. Tiếp tục viết lệnh nhập danh mục địa điểm vào MySQL. [Hướng dẫn nhập dữ liệu](docs/PLACE_DATA_IMPORT_TASK.md) · [Hướng dẫn khung backend](docs/BACKEND_FOUNDATION_TASK.md) |
+| Lê Nguyễn Hữu Hiếu | `feat/places-reviews` | Migration bảng `places`, API địa điểm, Khám phá, Góc Địa Phương, yêu thích và đánh giá. [Hướng dẫn triển khai](docs/PLACES_REVIEWS_TASK.md) |
+| Nguyễn Thị Quỳnh Hân | `feat/itineraries` | Tạo lịch trình thủ công và bằng AI, lưu và chỉnh sửa lịch trình. [Hướng dẫn triển khai](docs/ITINERARIES_TASK.md) |
+| Phạm Công Định | `feat/trip-rooms` | Tạo phòng, tham gia bằng mã mời, đề xuất điểm ghé và bình chọn. [Hướng dẫn triển khai](docs/TRIP_ROOMS_TASK.md) |
+| Triệu Quang Huy | `feat/owner-moderation` | API cho Chủ cơ sở và Quản trị viên, quyền quản lý địa điểm, xử lý đóng góp và xét duyệt. [Hướng dẫn triển khai](docs/OWNER_MODERATION_TASK.md) |
 
-Người phụ trách khung backend mở PR đầu tiên để nhóm dùng chung cấu hình Laravel, MySQL và dữ liệu thử. Những người làm API có thể thống nhất hợp đồng API trong lúc chờ review. Tách nhánh triển khai từ nhánh tích hợp sau khi PR khung backend đã được hợp nhất. Tách nhánh mới khi nhận task độc lập tiếp theo.
+Tài khoản tự đăng ký bằng email hoặc đăng nhập lần đầu bằng Google có vai trò **Người dùng**. Người phụ trách xét duyệt triển khai luồng cấp quyền quản lý cho **Chủ cơ sở**. Mỗi người phụ trách API kiểm tra quyền trên tài nguyên thuộc phần mình và đưa kiểm thử vào cùng PR.
+
+[PR khung Laravel/MySQL #3](https://github.com/haiphamt/TravelGo/pull/3) đã merge vào `feat/travelgo-frontend`. Tạo nhánh task từ phiên bản mới nhất của nhánh tích hợp này. Tách nhánh mới khi nhận task độc lập tiếp theo.
+
+### Thứ tự bàn giao giữa các task
+
+| Phụ trách | Bắt đầu ngay | Khi nối và kiểm thử chung |
+| --- | --- | --- |
+| Hữu Hiếu | Viết migration bảng `places` trên `feat/places-reviews`, mời Minh Hiếu xem các cột và mở PR riêng cho migration và kiểm thử schema. | Tiếp tục làm API địa điểm bằng bản ghi thật đã có trong repo. Nối yêu thích và đánh giá với phiên tài khoản của Tuấn Hải. |
+| Minh Hiếu | Viết lệnh nhập từ danh mục có sẵn trên `feat/place-data-import` ngay khi hai bạn chốt tên cột và khóa. | Lấy migration `places` để chạy nhập và thử nhập lại trên MySQL. Mở PR phần nhập sau khi bảng đã có ở nhánh tích hợp. |
+| Quỳnh Hân và Công Định | Làm logic lịch trình, tạo phòng, thành viên và các bài kiểm thử có thể chạy với tài khoản thử. | Dùng bảng `places` cho điểm ghé và đề xuất. Nối phiên đăng nhập để lưu theo tài khoản. Phần sao chép kết quả phòng sang lịch trình cần hợp đồng giữa hai bạn. Quỳnh Hân tích hợp nhà cung cấp AI khi nhóm đã chọn. |
+| Quang Huy | Làm luồng gửi yêu cầu, trạng thái xét duyệt, kiểm tra quyền và lịch sử. | Chốt cách dùng vai trò với Tuấn Hải. Dùng dữ liệu của Hữu Hiếu khi nối duyệt thay đổi địa điểm, quyền quản lý cơ sở và báo cáo đánh giá. |
+
+Mỗi người có thể thử phần của mình bằng dữ liệu kiểm thử riêng. Khi PR có migration khóa ngoại tới `places`, lấy migration chuẩn của Hữu Hiếu để chạy và kiểm tra phần đó.
 
 Ví dụ tạo nhánh API địa điểm khi nhóm đang tích hợp trên `feat/travelgo-frontend`:
 
@@ -54,9 +68,22 @@ PR cần cho người review biết:
 ## 4. Thống nhất API trước khi nối frontend
 
 - Với API mới hoặc thay đổi, chốt với người tích hợp phương thức, đường dẫn, tham số, ví dụ request/response, điều kiện truy cập và cách báo lỗi. Ghi hợp đồng ngắn gọn trong task hoặc PR để hai bên có thể triển khai song song.
-- Giữ mã địa điểm ổn định giữa danh mục, bản đồ, yêu thích, đánh giá và lịch trình. Nếu backend dùng khóa nội bộ, thống nhất cách ánh xạ với mã nguồn OSM và Góc Địa Phương.
+- Dùng [quy ước mã địa điểm chung](#mã-địa-điểm-dùng-chung) cho danh mục, bản đồ, yêu thích, đánh giá, lịch trình, Phòng cùng đi và xét duyệt.
 - Backend kiểm tra dữ liệu và quyền cho từng thao tác, kể cả khi giao diện đã ẩn nút. Kiểm tra quyền theo đúng tài khoản, địa điểm hoặc phòng. Ví dụ, Chủ cơ sở chỉ sửa địa điểm được cấp quyền và chỉ chủ phòng mới chốt bình chọn.
 - Thống nhất dữ liệu thiếu, danh sách rỗng, phân trang và lỗi quyền truy cập. Giữ `null` cho giá hoặc tọa độ chưa biết, tránh trả giá, điểm đánh giá hoặc trạng thái mở cửa tự điền. Xử lý trường hợp API lỗi hoặc tải chậm trong các trạng thái giao diện đang có.
+
+### Mã địa điểm dùng chung
+
+| Dữ liệu | Mã công khai |
+| --- | --- |
+| Địa điểm từ OpenStreetMap | Giữ nguyên `osm:node/<id>`, `osm:way/<id>` hoặc `osm:relation/<id>`, ví dụ `osm:node/5922616527`. Loại đối tượng là một phần của mã. |
+| Hồ sơ Góc Địa Phương đã có | Giữ nguyên `tg-local-<uuid>` trong danh mục, ví dụ `tg-local-37d7c541-b4e5-8d01-8bf7-e5dbc0466e1f`. |
+| Địa điểm mới do TravelGo tạo | Backend cấp một lần `tg-place-<uuid>` viết thường. Với đóng góp mới, có thể giữ mã trong hồ sơ chờ và dùng lại khi duyệt. Tiền tố `tg-demo-` dành cho dữ liệu dùng thử hiện có. |
+
+- MySQL dùng `places.id` là `BIGINT UNSIGNED` tự tăng và `places.public_id` là chuỗi bắt buộc, duy nhất. Các bảng nghiệp vụ tham chiếu `places.id` qua khóa ngoại cùng kiểu. Backend ánh xạ mã công khai từ API sang khóa nội bộ khi ghi dữ liệu.
+- API trả mã công khai dạng chuỗi ở `id` của địa điểm. Các payload tham chiếu địa điểm dùng cùng chuỗi đó, ví dụ `placeId: "osm:node/5922616527"`. Xác định hồ sơ Góc Địa Phương qua trường phân loại `local`. Hữu Hiếu thống nhất đường dẫn API và kiểm thử mã OSM chứa `/` qua API và liên kết chi tiết. Có thể truyền toàn bộ mã qua tham số truy vấn hoặc JSON để giữ nguyên chuỗi.
+- Giữ mã công khai khi đổi tên, giờ bán hoặc vị trí của cùng một địa điểm. Khi nhập lại, đối chiếu theo cặp nguồn và mã nguồn ổn định, cập nhật bản ghi cũ và giữ `public_id`. Với OSM, mã nguồn gồm cả loại đối tượng và số, ví dụ `node/5922616527`. Với danh mục Góc Địa Phương hiện có, dùng mã hồ sơ đã lưu để đối chiếu khi chưa có mã nguồn riêng ổn định. Tên và tọa độ không đủ để tự gộp hồ sơ.
+- Lê Nguyễn Hữu Hiếu viết migration bảng `places` và bàn giao các cột, khóa và trường có thể `null` cho Chung Minh Hiếu. Minh Hiếu dùng bảng đó cho phần nhập dữ liệu. Khi nối backend, kiểm tra `tg-place-<uuid>` trong bộ kiểm tra ID dùng chung của Angular và thử mở chi tiết, lưu yêu thích hoặc lịch trình bằng mã mới.
 
 ## 5. Quy tắc cho người phụ trách dữ liệu
 
