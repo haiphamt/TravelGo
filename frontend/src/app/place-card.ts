@@ -19,7 +19,7 @@ export class PlaceCard {
   readonly money = money;
   readonly failedPhoto = signal<string | null>(null);
   readonly isFavorite = computed(() => this.store.hasFavorite(this.place().id));
-  readonly review = computed(() => this.store.visibleReviewFor(this.place().id));
+  readonly review = computed(() => this.store.ratingFor(this.place().id));
   readonly suggestedHours = computed(() => this.place().localProfile?.hours.summary || this.place().hours);
   readonly categoryLabel = computed(() =>
     this.place().localProfile?.categoryLabel ?? CATEGORIES.find(category => category.id === this.place().category)?.name,

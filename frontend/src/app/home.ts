@@ -84,7 +84,7 @@ export class Home {
     filterPlaces(this.store.places(), this.suggestionFilters()).filter(place => place.image).slice(0, 8));
   readonly suggestionContext = computed(() => this.categoryContext(this.activeHomeCategory()));
   readonly interestedPlaces = computed(() => {
-    const savedIds = new Set(this.store.state().favorites);
+    const savedIds = new Set(this.store.favoriteIds());
     return filterPlaces(this.store.places().filter(place => savedIds.has(place.id)), this.suggestionFilters()).slice(0, 2);
   });
   readonly featuredAreas = computed(() => {

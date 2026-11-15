@@ -171,9 +171,12 @@ export function localToday(): string {
   const now = new Date();
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 }
+export function hcmToday(now = new Date()): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+}
 export function validateReview(
   review: Pick<Review, "rating" | "text" | "photos" | "visitedOn">,
-  today = localToday(),
+  today = hcmToday(),
 ): string {
   if (
     !Number.isInteger(review.rating) ||

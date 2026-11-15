@@ -16,7 +16,7 @@ import { Icon } from "./icon";
           <dt>Địa điểm OpenStreetMap</dt><dd>Danh mục trích từ dữ liệu OSM ngày 08/11/2026 và đã lọc các trụ sở hành chính, địa điểm có nhãn hạn chế vào. <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors · ODbL</a>. Tác giả, nguồn và giấy phép ảnh nằm trong chi tiết từng địa điểm. <a routerLink="/ho-so-uu-tien">Xem ảnh của các cơ sở ưu tiên</a>.</dd>
           <dt>Góc Địa Phương</dt><dd>50 hồ sơ tham khảo từ <a href="https://ganhmuusinh.io.vn/" target="_blank" rel="noopener noreferrer">Gánh Mưu Sinh</a>, có đối chiếu một số trường từ <a href="https://ganhmuusinh.vn/" target="_blank" rel="noopener noreferrer">ganhmuusinh.vn</a>. Ảnh đang chờ xác nhận quyền sử dụng. Thông tin hồ sơ chưa được TravelGo xác minh thực địa.</dd>
           <dt>Giờ bán và giá</dt><dd>Giờ hiển thị là thông tin nguồn ghi nhận, có thể đã thay đổi. Chưa có giá được kiểm tra trong bộ hồ sơ này. Thiếu giá không có nghĩa là miễn phí.</dd>
-          <dt>Yêu thích, đánh giá, lịch trình và đóng góp</dt><dd>Chỉ lưu trong trình duyệt hiện tại. Quyết định xét duyệt, quyền quản lý và thay đổi hồ sơ trong bản thử cũng chỉ có hiệu lực tại đây.</dd>
+          <dt>Yêu thích, đánh giá, lịch trình và đóng góp</dt><dd>Yêu thích và đánh giá được lưu theo tài khoản trên máy chủ. Lịch trình, đóng góp và quyết định xét duyệt trong bản thử chỉ lưu trong trình duyệt hiện tại; không thay đổi hồ sơ trên máy chủ.</dd>
         </dl>
       } @else {
         <p>{{ info().description }}</p>

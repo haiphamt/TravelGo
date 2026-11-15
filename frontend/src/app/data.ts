@@ -55,6 +55,8 @@ export interface Place {
   sourceUpdatedAt: string | null;
   referenceOnly: boolean;
   photoCredit: string | null;
+  reviewCount?: number;
+  rating?: number | null;
   photoSource?: { url: string; license: string; licenseUrl: string };
   facets?: PlaceFacet[];
   mobile?: boolean;
