@@ -74,6 +74,8 @@ php artisan serve
 
 ## 4. PR tiếp theo — Nhập danh mục địa điểm
 
+[Mở task chi tiết cho Minh Hiếu](PLACE_DATA_IMPORT_TASK.md) để xem hợp đồng `places`, bảng ánh xạ dữ liệu, prompt cho Codex, kiểm thử và mẫu PR nhập danh mục.
+
 [PR khung #3](https://github.com/haiphamt/TravelGo/pull/3) đã merge. Cập nhật nhánh tích hợp rồi tạo `feat/place-data-import`. Thống nhất cột và khóa với Hữu Hiếu, sau đó viết lệnh nhập song song với migration bảng `places`. Khi Hữu Hiếu đẩy migration lên PR, có thể dùng nó để chạy thử trên MySQL cục bộ. Cập nhật nhánh và chạy lại trước khi mở PR nhập dữ liệu sau khi migration đã merge.
 
 - Đọc `frontend/public/data/catalog.json`, `frontend/public/data/sources.json` và `frontend/src/app/catalog.ts` để đối chiếu định dạng, mã địa điểm, các trường thiếu và thông tin nguồn. Đọc `frontend/public/data/osm-photo-sources.json` nếu cần chuyển thông tin ảnh đã có nguồn rõ ràng.

@@ -27,7 +27,7 @@
 | Phụ trách | Nhánh bắt đầu | Phần việc |
 | --- | --- | --- |
 | Phạm Tuấn Hải | `feat/auth-roles` | Hộp thoại Angular, đăng ký và đăng nhập bằng email, đăng nhập Google, đăng xuất, phiên đăng nhập và vai trò tài khoản. |
-| Chung Minh Hiếu | `feat/backend-foundation` | Khung Laravel/MySQL, migration, dữ liệu thử và quy trình nhập dữ liệu địa điểm. [Hướng dẫn triển khai](docs/BACKEND_FOUNDATION_TASK.md) |
+| Chung Minh Hiếu | `feat/place-data-import` | Phần khung Laravel/MySQL đã merge. Tiếp tục viết lệnh nhập danh mục địa điểm vào MySQL. [Hướng dẫn nhập dữ liệu](docs/PLACE_DATA_IMPORT_TASK.md) · [Hướng dẫn khung backend](docs/BACKEND_FOUNDATION_TASK.md) |
 | Lê Nguyễn Hữu Hiếu | `feat/places-reviews` | Migration bảng `places`, API địa điểm, Khám phá, Góc Địa Phương, yêu thích và đánh giá. [Hướng dẫn triển khai](docs/PLACES_REVIEWS_TASK.md) |
 | Nguyễn Thị Quỳnh Hân | `feat/itineraries` | Tạo lịch trình thủ công và bằng AI, lưu và chỉnh sửa lịch trình. [Hướng dẫn triển khai](docs/ITINERARIES_TASK.md) |
 | Phạm Công Định | `feat/trip-rooms` | Tạo phòng, tham gia bằng mã mời, đề xuất điểm ghé và bình chọn. [Hướng dẫn triển khai](docs/TRIP_ROOMS_TASK.md) |
