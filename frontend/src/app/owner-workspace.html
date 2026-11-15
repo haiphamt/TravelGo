@@ -48,7 +48,7 @@
             <div class="owner-card-heading">
               <h2>Quyền quản lý địa điểm</h2><span class="workflow-status" data-status="approved">Đã cấp quyền</span>
             </div>
-            <p class="muted">Bạn có thể đề xuất cập nhật và phản hồi đánh giá cho địa điểm này trong bản thử.</p>
+            <p class="muted">Bạn có thể đề xuất cập nhật và phản hồi đánh giá cho địa điểm này.</p>
             <a class="button primary" routerLink="/chu-co-so" [queryParams]="{view: 'manage', place: target.id}">Quản lý địa điểm<tg-icon name="arrow" /></a>
           </section>
         } @else if (activeClaim(); as request) {
@@ -99,13 +99,13 @@
       <ol class="owner-steps">
         <li><strong>Chọn địa điểm</strong><p>Tìm đúng tên và địa chỉ trong danh mục TravelGo.</p></li>
         <li><strong>Gửi thông tin đối chiếu</strong><p>Cho biết vai trò của bạn tại địa điểm và xác nhận sự đồng ý.</p></li>
-        <li><strong>Theo dõi kết quả</strong><p>Quyền quản lý có hiệu lực sau khi yêu cầu được duyệt trong bản thử.</p></li>
+        <li><strong>Theo dõi kết quả</strong><p>Quyền quản lý có hiệu lực sau khi yêu cầu được duyệt.</p></li>
       </ol>
       <a class="text-button" routerLink="/chu-co-so" [queryParams]="{view: 'history'}">Xem lịch sử yêu cầu<tg-icon name="arrow" /></a>
     </aside>
   </div>
 } @else if (!store.ready() || store.catalogStatus() === 'loading') {
-  <section class="workflow-panel"><h2>Địa điểm được cấp quyền</h2><p class="muted" role="status">Đang tải danh mục và quyền quản lý thử nghiệm…</p></section>
+  <section class="workflow-panel"><h2>Địa điểm được cấp quyền</h2><p class="muted" role="status">Đang tải danh mục và quyền quản lý…</p></section>
 } @else if (store.catalogStatus() === 'error') {
   <section class="workflow-panel">
     <h2>Địa điểm được cấp quyền</h2>
@@ -123,9 +123,9 @@
       </div>
       @if (place()) {
         @if (selectedClaim()?.status === 'revoked') {
-          <p class="muted">Quyền quản lý địa điểm này đã bị thu hồi trong bản thử.</p>
+          <p class="muted">Quyền quản lý địa điểm này đã bị thu hồi.</p>
         } @else {
-          <p class="muted">Bạn chưa có quyền quản lý địa điểm này trong bản thử.</p>
+          <p class="muted">Bạn chưa có quyền quản lý địa điểm này.</p>
         }
         <a class="button secondary" routerLink="/chu-co-so" [queryParams]="{view: 'claim', place: linkedId()}">
           {{ activeClaim() ? 'Xem yêu cầu quản lý' : 'Xin quyền quản lý địa điểm' }}<tg-icon name="arrow" />
@@ -178,7 +178,7 @@
           }
 
           <section class="owner-panel owner-review" aria-labelledby="owner-review-title">
-            <h2 id="owner-review-title">Đánh giá thử hiện hành</h2>
+            <h2 id="owner-review-title">Đánh giá hiện hành</h2>
             @if (review(); as current) {
               <p class="owner-review-meta muted small"><tg-icon name="star" /><strong>{{ current.rating }}/5</strong><span>{{ current.updatedAt | date:'dd/MM/yyyy HH:mm':'+0700' }}</span></p>
               @if (current.text) { <p class="owner-review-text">{{ current.text }}</p> }
@@ -211,7 +211,7 @@
               }
               @if (replyError()) { <p class="message error" role="alert">{{ replyError() }}</p> }
             } @else {
-              <p class="muted">Chưa có đánh giá thử hiện hành để phản hồi hoặc báo cáo.</p>
+              <p class="muted">Chưa có đánh giá hiện hành để phản hồi hoặc báo cáo.</p>
             }
           </section>
 

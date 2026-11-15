@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from "@angular/core";
+import { Component, computed, effect, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { Icon } from "./icon";
@@ -23,7 +23,7 @@ export class Contributions {
   readonly withdrawing = signal(false);
   readonly entries = computed(() => this.workflow.requests().filter(request => request.actor === "user"));
   readonly editing = computed(() => this.entries().find(request => request.id === this.editingId() && request.status === "needs-info") ?? null);
-  readonly place = computed(() => this.store.places().find(place => place.id === this.selectedId()) ?? null);
+  readonly place = computed(() => this.workflow.places().find(place => place.id === this.selectedId() && place.revision) ?? null);
   readonly formKind = computed(() => {
     const view = this.view();
     return view === "history" ? "new" : view;
@@ -36,6 +36,7 @@ export class Contributions {
   ];
 
   constructor() {
+    effect(() => { const id = this.selectedId(); if (id) void this.workflow.loadPlace(id); });
     inject(ActivatedRoute).queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
       const place = params.get("place") ?? "";
       this.selectedId.set(place);

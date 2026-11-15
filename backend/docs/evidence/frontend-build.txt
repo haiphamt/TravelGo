@@ -1,0 +1,50 @@
+
+> travelgo-frontend@0.1.0 build
+> ng build
+
+> Building...
+√ Building...
+Initial chunk files | Names             |  Raw size | Estimated transfer size
+styles-KZHNPPAJ.css | styles            | 206.36 kB |                35.73 kB
+chunk-M3QCTENB.js   | -                 | 157.44 kB |                46.57 kB
+main-3QVPQGNB.js    | main              | 151.97 kB |                25.29 kB
+chunk-CAI6DYBK.js   | -                 | 108.68 kB |                27.78 kB
+chunk-3RZPQIDX.js   | -                 |  40.48 kB |                 8.37 kB
+chunk-TUWKOUMF.js   | -                 |  28.08 kB |                 8.95 kB
+chunk-GMPN44RY.js   | -                 |   6.92 kB |                 2.50 kB
+chunk-VVMIHGS6.js   | -                 |   2.65 kB |                 1.29 kB
+chunk-FQJXWQ3F.js   | -                 | 829 bytes |               829 bytes
+chunk-AY4LCFTV.js   | -                 | 720 bytes |               720 bytes
+
+                    | Initial total     | 704.13 kB |               158.02 kB
+
+Lazy chunk files    | Names             |  Raw size | Estimated transfer size
+chunk-EEYFBCKE.js   | leaflet-src       | 149.55 kB |                37.61 kB
+chunk-X3MIMSGU.js   | browser           |  67.78 kB |                17.80 kB
+chunk-MRZZIZQI.js   | group-room        |  47.80 kB |                11.29 kB
+chunk-UTHNCYNN.js   | detail            |  44.73 kB |                10.98 kB
+chunk-SEBNJJI2.js   | explore           |  42.29 kB |                 9.31 kB
+chunk-5P3QW3IH.js   | map-page          |  41.90 kB |                10.90 kB
+chunk-TSXZ5CAR.js   | admin-workspace   |  40.39 kB |                10.08 kB
+chunk-OEBWVUMB.js   | -                 |  30.46 kB |                 7.84 kB
+chunk-D5MCJC3I.js   | owner-workspace   |  29.74 kB |                 7.03 kB
+chunk-6CTBWMUO.js   | priority-review   |  28.84 kB |                 5.71 kB
+chunk-YPVSEKC5.js   | home              |  27.83 kB |                 7.31 kB
+chunk-T7WBCP6W.js   | trip              |  27.76 kB |                 7.55 kB
+chunk-V2Q5SP7J.js   | planner-create-ai |  23.96 kB |                 7.55 kB
+chunk-UWTDI2RS.js   | review            |  19.74 kB |                 6.00 kB
+chunk-3KROIUZD.js   | trip-builder      |  14.11 kB |                 4.36 kB
+...and 9 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [5.130 seconds] - 2026-11-15T09:27:15.459Z
+
+▲ [WARNING] bundle initial exceeded maximum budget. Budget 700.00 kB was not met by 4.13 kB with a total of 704.13 kB.
+
+
+▲ [WARNING] Module 'leaflet' used by 'src/app/map-page.ts' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+Output location: <repo>\frontend\dist\travelgo
