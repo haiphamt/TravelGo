@@ -1,0 +1,36 @@
+
+   PASS  Tests\Unit\WorkflowRulesTest
+  ✓ terminal states cannot be approved and only claims can be revoked
+  ✓ wall time is vietnam time and explicit offsets are preserved                                                 0.02s
+  ✓ temporary change is active at start and inactive at end
+  ✓ impossible calendar dates are rejected
+
+   PASS  Tests\Feature\HealthTest
+  ✓ laravel reports that it is up                                                                                4.37s
+
+   PASS  Tests\Feature\ModerationTest
+  ✓ private endpoints require session and ignore forged identity                                                 2.82s
+  ✓ new place only appears after approval and keeps its assigned public id                                       0.07s
+  ✓ author isolation resubmission and withdrawal state machine                                                   0.07s
+  ✓ invalid data coordinates and forged image are rejected                                                       0.05s
+  ✓ claim grant is scoped and revocation rejects pending owner work                                              0.06s
+  ✓ duplicate claims and non admin decisions are rejected                                                        0.03s
+  ✓ stale place conflict does not write history or public data                                                   0.03s
+  ✓ approval rolls back public write if history cannot be saved                                                  0.06s
+  ✓ scheduled temporary move activates and restores at boundaries                                                0.10s
+  ✓ report targets stable photo id and rejects stale review                                                      0.05s
+  ✓ owner reply requires current grant and current review version                                                0.05s
+  ✓ successive permanent edits are ordered and reconciliation does not change revision                           0.08s
+  ✓ pause accepts an empty patch and restores the previous status                                                0.06s
+  ✓ clearing optional description preserves unknown data as null                                                 0.05s
+  ✓ source edits during temporary change are not overwritten on expiry                                           0.03s
+  ✓ keep and hide review decisions change only the reported review                                               0.06s
+  ✓ reply read model uses server photos and hides replies after revocation                                       0.05s
+  ✓ web middleware rejects csrf less writes outside the test bypass                                              0.03s
+
+   PASS  Tests\Feature\MySqlFoundationTest
+  ✓ mysql uses the agreed unsigned account id type                                                               0.04s
+  ✓ seeding twice preserves demo accounts and their ids                                                          0.06s
+
+  Tests:    25 passed (138 assertions)
+  Duration: 40.72s

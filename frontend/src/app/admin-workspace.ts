@@ -59,7 +59,7 @@ export class AdminWorkspace {
   readonly staleUpdate = computed(() => {
     const item = this.selected();
     return item?.kind === "update" && item.status === "pending" && this.store.catalogStatus() === "ready" &&
-      item.baseRevision !== this.workflow.revision(item.placeId);
+      this.workflow.revision(item.placeId) !== null && item.baseRevision !== this.workflow.revision(item.placeId);
   });
   readonly heading = computed(() => {
     const kind = this.kind();
@@ -92,7 +92,7 @@ export class AdminWorkspace {
   readonly targetReview = computed(() => {
     const item = this.selected();
     if (item?.kind !== "report" || !item.placeId) return undefined;
-    const review = this.store.reviewFor(item.placeId);
+    const review = item.currentReview;
     return review?.updatedAt === item.reviewVersion ? review : undefined;
   });
   readonly coordinates = computed(() => {
@@ -162,6 +162,7 @@ export class AdminWorkspace {
     return rows.filter(row => row.after !== undefined && row.after !== row.before);
   }
   select(item: WorkflowRequest, dialog: HTMLDialogElement, opener: HTMLButtonElement) {
+    if (item.kind !== "new") void this.workflow.loadPlace(item.placeId);
     this.opener = opener;
     this.selectedId.set(item.id);
     this.reason = "";

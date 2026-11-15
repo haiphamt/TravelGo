@@ -81,7 +81,7 @@ export const workflowLabels = {
 const categories = ["coffee", "food", "nature", "culture", "drink", "lodging"];
 const text = (value: unknown) => typeof value === "string" ? value.trim() : "";
 export function placeRevision(place?: Place): string | null {
-  return place ? place.demoChange?.revision ?? `source:${place.sourceUpdatedAt ?? ""}` : null;
+  return place ? place.revision ?? place.demoChange?.revision ?? `source:${place.sourceUpdatedAt ?? ""}` : null;
 }
 export function managesPlace(state: WorkflowState, id: string) {
   return state.requests.some(item => item.kind === "claim" && item.status === "approved" && item.placeId === id);

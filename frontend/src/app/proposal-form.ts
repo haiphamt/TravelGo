@@ -47,15 +47,16 @@ import { WorkflowStore } from "./workflow-store";
 })
 export class WorkflowPlacePicker {
   readonly store = inject(TravelStore);
+  private readonly workflow = inject(WorkflowStore);
   readonly selectedId = input("");
   readonly selectedIdChange = output<string>();
   readonly query = signal("");
   private readonly searchField = viewChild<ElementRef<HTMLInputElement>>("searchField");
-  readonly selected = computed(() => this.store.places().find(place => place.id === this.selectedId()));
+  readonly selected = computed(() => this.workflow.places().find(place => place.id === this.selectedId()));
   readonly matches = computed(() => {
     const words = normalize(this.query()).split(/\s+/).filter(Boolean);
     if (!words.length) return [];
-    return this.store.places().filter(place => {
+    return this.workflow.places().filter(place => {
       const text = normalize(`${place.name} ${place.area} ${place.products.join(" ")}`);
       return words.every(word => text.includes(word));
     }).slice(0, 8);
@@ -126,6 +127,7 @@ export class WorkflowPlacePicker {
 })
 export class WorkflowHistory {
   readonly store = inject(TravelStore);
+  private readonly workflow = inject(WorkflowStore);
   readonly entries = input.required<WorkflowRequest[]>();
   readonly heading = input("Đóng góp của tôi");
   readonly emptyMessage = input("Các yêu cầu bạn gửi sẽ xuất hiện ở đây.");
@@ -134,7 +136,7 @@ export class WorkflowHistory {
   readonly withdraw = output<string>();
   readonly labels = workflowLabels;
   readonly ordered = computed(() => [...this.entries()].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)));
-  private readonly placeNames = computed(() => new Map(this.store.places().map(place => [place.id, place.name])));
+  private readonly placeNames = computed(() => new Map(this.workflow.places().map(place => [place.id, place.name])));
 
   exists(id?: string) {
     return id !== undefined && this.placeNames().has(id);
@@ -193,8 +195,8 @@ export class ProposalForm {
   readonly creating = computed(() => this.kind() === "new");
   readonly move = computed(() => this.kind() === "update" && (this.change() === "temporary-move" || this.change() === "permanent-move"));
   readonly details = computed(() => this.creating() || (this.kind() === "update" && this.change() === "details"));
-  readonly review = computed(() => this.store.visibleReviewFor(this.place()?.id ?? ""));
-  readonly reviewPhotos = computed(() => this.store.visibleReviewPhotos(this.place()?.id ?? ""));
+  readonly review = computed(() => this.workflow.reviewFor(this.place()?.id ?? ""));
+  readonly reviewPhotos = computed(() => this.workflow.reviewPhotos(this.place()?.id ?? ""));
   readonly reportAvailable = computed(() => {
     const review = this.review();
     const request = this.editing();

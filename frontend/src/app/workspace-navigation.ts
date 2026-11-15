@@ -64,7 +64,7 @@ const ADMIN_LINKS = [
         }
       </nav>
       <div class="role-bottom">
-        <p>Bản dùng thử trên trình duyệt này</p>
+        <p>Dữ liệu theo tài khoản của bạn</p>
         <a routerLink="/" (click)="closeMenu()"><tg-icon name="back" /> Về trang Người dùng</a>
       </div>
     </ng-template>

@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { Component, ElementRef, Injector, afterNextRender, computed, inject, signal, viewChild } from "@angular/core";
+import { Component, ElementRef, Injector, afterNextRender, computed, effect, inject, signal, viewChild } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
@@ -13,7 +13,7 @@ type OwnerView = "places" | "claim" | "history";
 
 const viewCopy = {
   places: { title: "Địa điểm quản lý", description: "Theo dõi quyền quản lý, đề xuất cập nhật hồ sơ và phản hồi đánh giá tại từng địa điểm." },
-  claim: { title: "Xin quyền quản lý", description: "Chọn địa điểm trong danh mục và gửi thông tin để Quản trị viên đối chiếu trong bản thử." },
+  claim: { title: "Xin quyền quản lý", description: "Chọn địa điểm trong danh mục và gửi thông tin để Quản trị viên đối chiếu." },
   history: { title: "Lịch sử yêu cầu", description: "Theo dõi tiến độ xác minh, đề xuất cập nhật và báo cáo đánh giá bạn đã gửi." },
 };
 
@@ -49,23 +49,23 @@ export class OwnerWorkspace {
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)));
   readonly editing = computed(() => this.entries().find(request => request.id === this.editingId() && request.status === "needs-info") ?? null);
   readonly managed = computed(() => {
-    const ids = new Set(this.claims().filter(request => request.status === "approved").map(request => request.placeId));
-    return this.store.places().filter(place => ids.has(place.id));
+    return this.workflow.places().filter(place => this.workflow.canManage(place.id));
   });
   readonly selectedId = computed(() => {
     const placeId = this.editing()?.placeId || this.linkedId();
     if (placeId) return placeId;
     return this.view() === "places" ? this.managed()[0]?.id ?? "" : "";
   });
-  readonly place = computed(() => this.store.places().find(place => place.id === this.selectedId()) ?? null);
+  readonly place = computed(() => this.workflow.places().find(place => place.id === this.selectedId() && place.revision) ?? null);
   readonly canManage = computed(() => !!this.place() && this.workflow.canManage(this.selectedId()));
   readonly selectedClaim = computed(() => this.claims().find(request => request.placeId === this.selectedId()));
   readonly activeClaim = computed(() => this.claims().find(request => request.placeId === this.selectedId()
     && (request.status === "pending" || request.status === "needs-info")));
-  readonly review = computed(() => this.canManage() ? this.store.visibleReviewFor(this.selectedId()) : undefined);
+  readonly review = computed(() => this.canManage() ? this.workflow.reviewFor(this.selectedId()) : undefined);
   readonly reply = computed(() => this.canManage() ? this.workflow.visibleReply(this.selectedId()) : undefined);
 
   constructor() {
+    effect(() => { const id = this.selectedId(); if (id) void this.workflow.loadPlace(id); });
     this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
       const place = params.get("place") ?? "";
       const view = params.get("view");

@@ -1,5 +1,7 @@
 # Backend TravelGo
 
+Task 5: [hợp đồng đóng góp, quyền quản lý và xét duyệt](docs/OWNER_MODERATION_API.md), [kết quả kiểm tra và minh chứng](docs/OWNER_MODERATION_VALIDATION.md). Cần migration địa điểm/đánh giá và adapter auth được tích hợp trước khi triển khai phần này; fixture migration chỉ phục vụ database test riêng.
+
 Khung Laravel 13 dùng MySQL cho các nhánh backend của TravelGo. Route `GET /up` kiểm tra ứng dụng khởi động và trả HTTP 200 khi Laravel hoạt động. Migration quản lý bảng `users` và các bảng hạ tầng Laravel cho session, cache, queue và token đặt lại mật khẩu.
 
 ## Yêu cầu

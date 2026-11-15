@@ -6,6 +6,7 @@ import { provideAnimationsAsync } from "@angular/platform-browser/animations/asy
 import { providePrimeNG } from "primeng/config";
 import Aura from "@primeng/themes/aura";
 import type { Trip } from "./app/trip";
+import { moderationGuard } from "./app/moderation-guard";
 
 // Static hosting may decode the escaped slash in an OSM place ID on a full-page request.
 function restoreOsmPlaceLink(review: boolean): RedirectFunction {
@@ -113,17 +114,20 @@ bootstrapApplication(App, {
         },
         {
           path: "dong-gop",
+          canActivate: [moderationGuard()],
           loadComponent: () => import("./app/contributions").then(m => m.Contributions),
           title: "Đóng góp của tôi · TravelGo",
         },
         {
           path: "chu-co-so",
+          canActivate: [moderationGuard()],
           data: { workspace: "owner" },
           loadComponent: () => import("./app/owner-workspace").then(m => m.OwnerWorkspace),
           title: "Chủ cơ sở · TravelGo",
         },
         {
           path: "quan-tri",
+          canActivate: [moderationGuard(true)],
           data: { workspace: "admin" },
           loadComponent: () => import("./app/admin-workspace").then(m => m.AdminWorkspace),
           title: "Quản trị viên · TravelGo",

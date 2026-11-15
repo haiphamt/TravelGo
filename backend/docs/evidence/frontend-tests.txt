@@ -1,0 +1,63 @@
+
+> travelgo-frontend@0.1.0 test
+> node --experimental-strip-types --test tests/*.test.ts
+
+✔ HCM catalog preserves source IDs and missing prices without invented photos or ratings (42.1825ms)
+✔ each enriched OSM cover matches its stable ID, source and license without changing other places (98.8909ms)
+✔ catalog boundary rejects duplicate IDs, non-HCM records, broken coordinates, unsafe media and source URLs (0.3725ms)
+✔ unknown price is distinct from an explicitly known zero price (2.8477ms)
+✔ a profile with missing coordinates remains in the catalog without assigning a substitute (0.2802ms)
+✔ discovery query parsing accepts only known categories/sorts and explicit Local scope (1.8215ms)
+✔ discovery uses the same accent-insensitive name, product and area matching with category/Local filters (0.8525ms)
+✔ price sorting keeps unknown prices last and preserves their source order without treating missing as zero (0.3202ms)
+✔ map/list query serialization preserves actual filter scope and removes default fields (0.2947ms)
+✔ the source address filter excludes missing addresses and round trips through map links (0.4673ms)
+✔ Local source groups filter the same catalog and survive list/detail/map query context (67.9654ms)
+✔ OSM facets enrich exact catalog IDs and survive list/detail/map query context (84.9426ms)
+✔ source districts are exact and can combine with free-text address search across list and map (70.7474ms)
+✔ 24-hour filtering uses exact published hours and excludes closed places (52.5269ms)
+✔ missing and malformed coordinates never become an outbound directions point (2.6498ms)
+✔ marker grouping preserves every ID, bounds dense points and resolves distant points on zoom (23.566ms)
+✔ nearby map results use a 5 km radius and keep only valid coordinates (0.4538ms)
+✔ room votes follow membership and the owner locks ballots independently of itinerary edits (7.9603ms)
+✔ the prepared 50 Local profiles are enriched with source metadata and without bundled reference photos (78.6114ms)
+✔ source hours retain Monday–Sunday order, date meanings, unknowns and quality flags (42.5135ms)
+✔ Local metadata is optional for older catalog payloads and does not fill missing weekdays (0.4231ms)
+✔ Local boundary rejects malformed nested fields, invalid dates and unsafe source URLs (1.3425ms)
+✔ queued additions preserve uniqueness, same-city and five-stop boundaries (6.4652ms)
+✔ review boundary rejects absent/invalid stars, impossible/future dates and too many photos (2.8387ms)
+✔ photo boundary rejects unsupported, empty, oversize and fourth photo (0.2232ms)
+✔ editing replaces own review instead of adding rating votes (0.2582ms)
+✔ accent-insensitive Vietnamese search and ordered outbound Maps link (3.8299ms)
+✔ unresolved saved refs do not redirect visible time edits, reordering, addition or removal (0.8238ms)
+✔ reorder across an unresolved middle ref preserves it and ignores stale neighbor IDs (1.4111ms)
+✔ approved TravelGo IDs survive saved references and server revision takes precedence (2.1703ms)
+✔ CSRF token uses the decoded Laravel cookie and rejects malformed encoding (0.6627ms)
+✔ place IDs containing slash remain a single encoded query value (61.2068ms)
+✔ the browser fetch implementation receives its required global receiver (0.5433ms)
+✔ all private pages load and admin queue uses its separate endpoint (2.4189ms)
+✔ invalid pagination fails instead of returning an incomplete queue (0.7889ms)
+✔ writes preserve server version and use session cookies and CSRF header (0.4433ms)
+✔ validation errors and session/conflict failures stay failures without browser fallback (1.4828ms)
+✔ network failures and successful HTML responses are rejected (0.8046ms)
+✔ the priority review contains 250 distinct existing food businesses and preserves the Local selection (57.0944ms)
+✔ creating and switching a saved trip preserves the legacy plan and added itinerary fields (5.2937ms)
+✔ itinerary validation rejects invalid dates, duplicate stops and invalid budgets (0.7328ms)
+✔ date ordering groups stops by day while retaining custom order within the day (11.9456ms)
+✔ itinerary suggestions respect catalog categories, place status, area and Local preference (60.3931ms)
+✔ only the author can supplement or withdraw; an approved contribution uses its reserved place ID (3.2287ms)
+✔ a grant requires consent, evidence and approval and covers only the claimed place (0.4278ms)
+✔ revoking an approved claim suspends pending owner updates without undoing published edits (10.1895ms)
+✔ approval checks the proposal base revision and excludes rejected or withdrawn changes (0.2893ms)
+✔ temporary moves activate at the TP.HCM time and restore original coordinates on expiry (1.6091ms)
+✔ moderation refers to the review version and original photo index without mutating the review (0.7074ms)
+✔ a form opened before a scheduled update cannot submit or supplement against the stale revision (0.3535ms)
+✔ approved price changes leave the old trip budget until keep, update, or replace is chosen (0.5591ms)
+ℹ tests 51
+ℹ suites 0
+ℹ pass 51
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 561.4531

@@ -14,7 +14,7 @@
   }
 
   @if (kind() === 'report' && !reportAvailable()) {
-    <p class="muted">{{ editing() ? 'Đánh giá hoặc ảnh trong yêu cầu đã thay đổi. Bạn có thể gửi báo cáo cho phiên bản hiện hành.' : 'Địa điểm này chưa có đánh giá thử hiện hành để báo cáo.' }}</p>
+    <p class="muted">{{ editing() ? 'Đánh giá hoặc ảnh trong yêu cầu đã thay đổi. Bạn có thể gửi báo cáo cho phiên bản hiện hành.' : 'Địa điểm này chưa có đánh giá hiện hành để báo cáo.' }}</p>
     @if (editing()) { <button class="button secondary" type="button" (click)="cancel.emit()">Quay lại lịch sử</button> }
   } @else {
     <form (ngSubmit)="send()" ngNativeValidate>
@@ -80,17 +80,17 @@
           <label><span>Mối quan hệ với địa điểm</span><select name="relationship" [(ngModel)]="relationship">
             <option value="owner">Chủ cơ sở</option><option value="representative">Người đại diện của Chủ cơ sở</option>
           </select></label>
-          <label class="workflow-wide"><span>Thông tin đối chiếu trong tình huống thử</span>
+          <label class="workflow-wide"><span>Thông tin đối chiếu quyền quản lý</span>
             <textarea name="evidence" [(ngModel)]="evidence" maxlength="600" rows="3" required></textarea>
-            <small class="muted">Chỉ hiển thị trong yêu cầu và màn xét duyệt. Dùng mô tả thử nghiệm, tránh nhập giấy tờ hoặc liên hệ cá nhân.</small>
+            <small class="muted">Chỉ người gửi và Quản trị viên xem được thông tin này. Tránh nhập giấy tờ hoặc thông tin cá nhân không cần thiết.</small>
           </label>
           <label class="workflow-wide workflow-check"><input name="agreement" type="checkbox" required [(ngModel)]="agreement" />
-            <span>{{ relationship === 'representative' ? 'Tôi xác nhận có sự đồng ý của Chủ cơ sở trong tình huống thử.' : 'Tôi xác nhận đồng ý gửi yêu cầu quản lý trong tình huống thử.' }}</span>
+            <span>{{ relationship === 'representative' ? 'Tôi xác nhận có sự đồng ý của Chủ cơ sở.' : 'Tôi xác nhận đồng ý gửi yêu cầu quản lý.' }}</span>
           </label>
         }
 
         @if (kind() === 'report' && review(); as current) {
-          <div class="workflow-wide workflow-note"><tg-icon name="star" /><span>{{ current.rating }}/5 · Đánh giá thử ngày {{ current.updatedAt | date:'dd/MM/yyyy':'+0700' }}
+          <div class="workflow-wide workflow-note"><tg-icon name="star" /><span>{{ current.rating }}/5 · Đánh giá ngày {{ current.updatedAt | date:'dd/MM/yyyy':'+0700' }}
             @if (current.text) { <br />{{ current.text }} }
           </span></div>
           <label class="workflow-wide"><span>Nội dung muốn báo cáo</span><select name="photoIndex" [(ngModel)]="photoIndex" [disabled]="!!editing()">
