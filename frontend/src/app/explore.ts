@@ -85,11 +85,11 @@ export class Explore {
   readonly resultTitle = computed(() => this.mode() === "local" ? "Những điểm ghé địa phương" :
     this.mode() === "favorites" ? "Địa điểm đã lưu" : "Địa điểm tại TP. Hồ Chí Minh");
 
-  readonly favoriteIds = computed(() => new Set(this.store.state().favorites));
+  readonly favoriteIds = computed(() => new Set(this.store.favoriteIds()));
   readonly favoritePlaces = computed(() => this.store.places().filter(place => this.favoriteIds().has(place.id)));
   readonly missingFavorites = computed(() => {
     const knownIds = new Set(this.favoritePlaces().map(place => place.id));
-    return this.store.state().favorites.filter(id => !knownIds.has(id));
+    return this.store.favoriteIds().filter(id => !knownIds.has(id));
   });
   readonly filtered = computed(() => {
     if (this.mode() !== "favorites") return filterPlaces(this.store.places(), this.filters());

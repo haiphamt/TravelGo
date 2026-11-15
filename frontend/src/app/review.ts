@@ -14,7 +14,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { TravelStore } from "./store";
 import { Icon } from "./icon";
 import {
-  localToday,
+  hcmToday,
   MAX_PHOTOS,
   MAX_REVIEW_TEXT,
   validatePhoto,
@@ -32,7 +32,7 @@ export class ReviewPage {
   router = inject(Router);
   destroy = inject(DestroyRef);
   id = signal("");
-  place = computed(() => this.store.places().find((p) => p.id === this.id()));
+  place = computed(() => this.store.placeFor(this.id()));
   rating = signal(0);
   text = signal("");
   visitedOn = signal("");
@@ -47,7 +47,7 @@ export class ReviewPage {
   cameraPending = signal(false);
   cameraVideo = viewChild<ElementRef<HTMLVideoElement>>("cameraVideo");
   cameraDialog = viewChild<ElementRef<HTMLDialogElement>>("cameraDialog");
-  today = localToday();
+  today = hcmToday();
   maxText = MAX_REVIEW_TEXT;
   stars = [1, 2, 3, 4, 5];
   ratingLabels = [
@@ -66,14 +66,37 @@ export class ReviewPage {
   ];
   editing = computed(() => !!this.store.reviewFor(this.id()));
   private loadedId = "";
+  private loadedGeneration = -1;
   private disposed = false;
   constructor() {
     this.route.paramMap
       .pipe(takeUntilDestroyed())
-      .subscribe((params) => this.id.set(params.get("id") ?? ""));
+      .subscribe((params) => {
+        this.id.set(params.get("id") ?? "");
+        this.loadedId = "";
+        this.rating.set(0);
+        this.text.set("");
+        this.visitedOn.set("");
+        this.photos.set([]);
+        void this.store.loadPlaceDetail(this.id());
+        void this.store.loadOwnReview(this.id());
+      });
     effect(() => {
       const id = this.id();
-      if (this.store.ready() && id && this.loadedId !== id) {
+      const generation = this.store.accountGeneration();
+      if (generation !== this.loadedGeneration) {
+        this.loadedGeneration = generation;
+        this.loadedId = "";
+        this.rating.set(0);
+        this.text.set("");
+        this.visitedOn.set("");
+        this.photos.set([]);
+        this.error.set("");
+        this.preview.set(false);
+        this.stopCamera();
+      }
+      const status = this.store.ownReviewStatus()[id];
+      if ((status === "ready" || status === "guest") && id && this.loadedId !== id) {
         const existing = this.store.reviewFor(id);
         this.loadedId = id;
         this.rating.set(existing?.rating ?? 0);
@@ -128,14 +151,15 @@ export class ReviewPage {
     }
     this.processing.set(true);
     this.error.set("");
+    const generation = this.store.accountGeneration();
     try {
       const processed = await Promise.all(
         files.map((file) => this.preparePhoto(file)),
       );
-      if (!this.disposed)
+      if (!this.disposed && generation === this.store.accountGeneration())
         this.photos.update((current) => [...current, ...processed]);
     } catch {
-      this.error.set(
+      if (generation === this.store.accountGeneration()) this.error.set(
         "Có ảnh không đọc được. Hãy chọn lại ảnh JPG, PNG hoặc WebP hợp lệ.",
       );
     } finally {
@@ -267,7 +291,7 @@ export class ReviewPage {
     if (!error) this.preview.set(true);
   }
   async submit() {
-    if (this.saving() || this.processing() || !this.store.ready()) return;
+    if (this.saving() || this.processing() || this.store.ownReviewStatus()[this.id()] === "loading") return;
     const review = this.reviewValue();
     const error = validateReview(review);
     this.error.set(error);
@@ -278,7 +302,7 @@ export class ReviewPage {
     this.saving.set(true);
     if (await this.store.saveReview(review)) {
       this.store.toast(
-        "Đã lưu đánh giá trong bản dùng thử trên trình duyệt này.",
+        "Đã lưu đánh giá của bạn trên TravelGo.",
       );
       await this.router.navigate(["/dia-diem", this.id()], {queryParamsHandling: "preserve"});
     } else

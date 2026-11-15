@@ -1,6 +1,6 @@
 import { Injectable, computed, effect, signal } from "@angular/core";
-import { City, Place, withOsmFacets } from "./data";
-import { parseCatalog } from "./catalog";
+import { City, Place } from "./data";
+import { ApiError, PlacesApi, type ApiReview } from "./places-api";
 import {
   DemoState,
   EMPTY_STATE,
@@ -10,23 +10,19 @@ import {
   appendTripPoint,
   normalize,
   orderTripDays,
-  upsertReview,
   validateReview,
   validateTripDraft,
 } from "./logic";
-import { activateTrip, restoreTripFields, validPlaceId } from "./trip-storage";
+import { activateTrip, restoreTripFields } from "./trip-storage";
 import { restoreRoomState } from "./room-state";
 import {
   EMPTY_WORKFLOW,
   nextWorkflowBoundary,
-  projectCatalog,
   resolveTripSelection,
   restoreWorkflow,
   tripNeedsReview,
   tripSnapshot,
   validTripSnapshot,
-  visibleReview,
-  visibleReviewPhotos,
 } from "./workflow";
 
 @Injectable({ providedIn: "root" })
@@ -45,6 +41,22 @@ export class TravelStore {
   readonly notice = signal("");
   readonly storageWarning = signal("");
   readonly ready = signal(false);
+  readonly favoriteIds = signal<string[]>([]);
+  readonly accountStatus = signal<"loading" | "ready" | "guest" | "error">("loading");
+  readonly accountError = signal("");
+  readonly favoritePending = signal(false);
+  private readonly api = new PlacesApi();
+  private accountEpoch = 0;
+  readonly accountGeneration = signal(0);
+  private readonly ownReviews = signal<Record<string, ApiReview | null>>({});
+  readonly ownReviewStatus = signal<Record<string, "loading" | "ready" | "guest" | "error">>({});
+  readonly publicReviews = signal<Record<string, ApiReview[]>>({});
+  readonly reviewStatus = signal<Record<string, "loading" | "ready" | "error">>({});
+  readonly reviewErrors = signal<Record<string, string>>({});
+  readonly reviewPages = signal<Record<string, { page: number; lastPage: number }>>({});
+  readonly detailStatus = signal<Record<string, "loading" | "ready" | "missing" | "error">>({});
+  readonly detailErrors = signal<Record<string, string>>({});
+  private readonly detailPlaces = signal<Record<string, Place>>({});
   readonly tripPlaces = computed(() => this.state().trip.flatMap(item => {
     const currentPlace = this.places().find(place => place.id === item.placeId);
     if (!currentPlace) return [];
@@ -77,6 +89,7 @@ export class TravelStore {
     });
     void this.loadCatalog();
     void this.load();
+    void this.refreshAccount();
   }
   async loadCatalog() {
     if (this.catalogLoading) return;
@@ -84,13 +97,7 @@ export class TravelStore {
     this.catalogStatus.set("loading");
     this.catalogError.set("");
     try {
-      const facets = fetch("/data/osm-facets.json", { credentials: "same-origin" })
-        .then((response) => response.ok ? response.json() : null)
-        .catch(() => null);
-      const response = await fetch("/data/catalog.json", { credentials: "same-origin" });
-      if (!response.ok) throw new Error(`Không tải được danh mục (HTTP ${response.status}).`);
-      const places = parseCatalog(await response.json());
-      this.sourcePlaces.set(withOsmFacets(places, await facets));
+      this.sourcePlaces.set(await this.api.catalog());
       this.catalogStatus.set("ready");
     } catch (error) {
       this.catalogError.set(error instanceof Error ? error.message : "Không tải được danh mục địa điểm.");
@@ -99,10 +106,13 @@ export class TravelStore {
       this.catalogLoading = false;
     }
   }
-  catalogAt(now: string) {
-    return projectCatalog(this.sourcePlaces(), this.workflow(), now);
+  catalogAt(_now: string) {
+    // Demo moderation is kept in its own state; it cannot rewrite server data.
+    const details = this.detailPlaces();
+    return this.sourcePlaces().map(place => details[place.id] ?? place);
   }
   private catalogHas(id: string) {
+    if (this.detailStatus()[id] === "ready" && this.detailPlaces()[id]) return true;
     if (this.catalogStatus() !== "ready") {
       this.toast("Danh mục chưa tải xong. Hãy thử lại sau khi danh sách xuất hiện.");
       return false;
@@ -140,27 +150,8 @@ export class TravelStore {
         // Persisted references are not pruned against a catalog that may still be loading.
         // This namespace does not import reviews from the old invented-place prototype.
         this.state.set({
-          favorites: Array.isArray(candidate.favorites)
-            ? [...new Set(candidate.favorites.filter(validPlaceId))]
-            : [],
-          reviews: Array.isArray(candidate.reviews)
-            ? candidate.reviews.filter(
-                (r) =>
-                  r &&
-                  validPlaceId(r.placeId) &&
-                  typeof r.text === "string" &&
-                  typeof r.visitedOn === "string" &&
-                  typeof r.updatedAt === "string" &&
-                  Number.isFinite(Date.parse(r.updatedAt)) &&
-                  Array.isArray(r.photos) &&
-                  r.photos.every(
-                    (p) =>
-                      typeof p === "string" &&
-                      /^data:image\/(jpeg|png|webp);base64,/.test(p),
-                  ) &&
-                  !validateReview(r),
-              )
-            : [],
+          favorites: [],
+          reviews: [],
           ...restoreTripFields(candidate),
           roomState: restoreRoomState(candidate.roomState),
           workflow: restoreWorkflow(candidate.workflow),
@@ -225,36 +216,145 @@ export class TravelStore {
     this.noticeTimer = setTimeout(() => this.notice.set(""), 5500);
   }
   hasFavorite(id: string) {
-    return this.state().favorites.includes(id);
+    return this.favoriteIds().includes(id);
   }
-  async toggleFavorite(id: string) {
-    if (!this.catalogHas(id)) return;
-    const existed = this.hasFavorite(id);
-    if (
-      await this.update((s) => ({
-        ...s,
-        favorites: s.favorites.includes(id)
-          ? s.favorites.filter((x) => x !== id)
-          : [...s.favorites, id],
-      }))
-    )
-      this.toast(existed ? "Đã bỏ khỏi yêu thích." : "Đã lưu vào yêu thích.");
-  }
-  async removeFavorite(id: string) {
-    if (await this.update(state => state.favorites.includes(id)
-      ? { ...state, favorites: state.favorites.filter(saved => saved !== id) }
-      : null)) {
-      this.toast("Đã bỏ khỏi yêu thích.");
+  // The account module should call this after login/logout; no local role grants access.
+  async refreshAccount() {
+    const epoch = ++this.accountEpoch;
+    this.accountGeneration.set(epoch);
+    const reviewPlaces = Object.keys(this.ownReviewStatus());
+    this.favoriteIds.set([]);
+    this.ownReviews.set({});
+    this.ownReviewStatus.set({});
+    this.accountStatus.set("loading");
+    this.accountError.set("");
+    try {
+      const ids = await this.api.favorites();
+      if (epoch !== this.accountEpoch) return;
+      this.favoriteIds.set(ids);
+      this.accountStatus.set("ready");
+    } catch (error) {
+      if (epoch !== this.accountEpoch) return;
+      this.accountStatus.set(error instanceof ApiError && error.status === 401 ? "guest" : "error");
+      this.accountError.set(this.apiMessage(error));
+    } finally {
+      if (epoch === this.accountEpoch) await Promise.all(reviewPlaces.map(id => this.loadOwnReview(id)));
     }
   }
+  private apiMessage(error: unknown) {
+    return error instanceof Error ? error.message : "Chưa xử lý được. Hãy thử lại.";
+  }
+  private accountFailure(error: unknown) {
+    if (error instanceof ApiError && error.status === 401) {
+      ++this.accountEpoch;
+      this.accountGeneration.set(this.accountEpoch);
+      this.favoriteIds.set([]);
+      this.ownReviews.set({});
+      this.ownReviewStatus.update(status => Object.fromEntries(Object.keys(status).map(id => [id, "guest" as const])));
+      this.accountStatus.set("guest");
+    }
+    this.toast(this.apiMessage(error));
+  }
+  private async requireAccount() {
+    if (this.accountStatus() === "guest") {
+      this.toast("Hãy đăng nhập để lưu yêu thích và đánh giá.");
+      return false;
+    }
+    if (this.accountStatus() !== "ready") await this.refreshAccount();
+    if (this.accountStatus() === "ready") return true;
+    this.toast(this.accountError() || "Hãy đăng nhập để lưu yêu thích và đánh giá.");
+    return false;
+  }
+  async toggleFavorite(id: string) {
+    if (!this.catalogHas(id) || this.favoritePending()) return;
+    if (!await this.requireAccount()) return;
+    const existed = this.hasFavorite(id);
+    this.favoritePending.set(true);
+    const epoch = this.accountEpoch;
+    try {
+      const favorites = await this.api.favorites(existed ? "DELETE" : "PUT", id);
+      if (epoch !== this.accountEpoch) return;
+      this.favoriteIds.set(favorites);
+      this.toast(existed ? "Đã bỏ khỏi yêu thích." : "Đã lưu vào yêu thích.");
+    } catch (error) { if (epoch === this.accountEpoch) this.accountFailure(error); }
+    finally { this.favoritePending.set(false); }
+  }
+  async removeFavorite(id: string) {
+    if (this.favoritePending() || !await this.requireAccount()) return;
+    this.favoritePending.set(true);
+    const epoch = this.accountEpoch;
+    try {
+      const favorites = await this.api.favorites("DELETE", id);
+      if (epoch !== this.accountEpoch) return;
+      this.favoriteIds.set(favorites);
+      this.toast("Đã bỏ khỏi yêu thích.");
+    } catch (error) { if (epoch === this.accountEpoch) this.accountFailure(error); }
+    finally { this.favoritePending.set(false); }
+  }
   reviewFor(id: string) {
-    return this.state().reviews.find((r) => r.placeId === id);
+    return this.ownReviews()[id] ?? undefined;
   }
   visibleReviewFor(id: string) {
-    return visibleReview(this.workflow(), this.reviewFor(id));
+    const review = this.reviewFor(id);
+    return review?.hidden ? undefined : review;
   }
   visibleReviewPhotos(id: string) {
-    return visibleReviewPhotos(this.workflow(), this.reviewFor(id));
+    return this.visibleReviewFor(id)?.photos.map((src, index) => ({ src, index })) ?? [];
+  }
+  placeFor(id: string) {
+    return this.detailPlaces()[id] ?? this.places().find(place => place.id === id);
+  }
+  ratingFor(id: string) {
+    const place = this.placeFor(id);
+    return place?.rating == null || !place.reviewCount ? undefined : { rating: place.rating, count: place.reviewCount };
+  }
+  async loadPlaceDetail(id: string) {
+    if (!id || this.detailStatus()[id] === "loading") return;
+    this.detailStatus.update(status => ({ ...status, [id]: "loading" }));
+    try {
+      const place = await this.api.detail(id);
+      this.detailPlaces.update(places => ({ ...places, [id]: place }));
+      this.detailStatus.update(status => ({ ...status, [id]: "ready" }));
+    } catch (error) {
+      this.detailStatus.update(status => ({ ...status, [id]: error instanceof ApiError && error.status === 404 ? "missing" : "error" }));
+      this.detailErrors.update(errors => ({ ...errors, [id]: this.apiMessage(error) }));
+    }
+  }
+  async loadOwnReview(id: string) {
+    if (!id || this.ownReviewStatus()[id] === "loading") return;
+    const epoch = this.accountEpoch;
+    this.ownReviewStatus.update(status => ({ ...status, [id]: "loading" }));
+    try {
+      const review = await this.api.ownReview(id);
+      if (epoch !== this.accountEpoch) return;
+      this.ownReviews.update(reviews => ({ ...reviews, [id]: review }));
+      this.ownReviewStatus.update(status => ({ ...status, [id]: "ready" }));
+    } catch (error) {
+      if (epoch !== this.accountEpoch) return;
+      if (error instanceof ApiError && error.status === 401) {
+        this.ownReviews.update(reviews => ({ ...reviews, [id]: null }));
+        this.ownReviewStatus.update(status => ({ ...status, [id]: "guest" }));
+      } else this.ownReviewStatus.update(status => ({ ...status, [id]: "error" }));
+    }
+  }
+  async loadReviews(id: string, more = false) {
+    if (!id || this.reviewStatus()[id] === "loading") return;
+    const current = this.reviewPages()[id];
+    if (more && current && current.page >= current.lastPage) return;
+    const page = more && current ? current.page + 1 : 1;
+    this.reviewStatus.update(status => ({ ...status, [id]: "loading" }));
+    try {
+      const result = await this.api.reviews(id, page);
+      this.publicReviews.update(reviews => ({ ...reviews, [id]: more ? [...(reviews[id] ?? []), ...result.data] : result.data }));
+      this.reviewPages.update(pages => ({ ...pages, [id]: { page: result.meta.current_page, lastPage: result.meta.last_page } }));
+      const place = this.placeFor(id);
+      if (place) this.detailPlaces.update(places => ({ ...places, [id]: { ...place, reviewCount: result.summary.count, rating: result.summary.average } }));
+      this.reviewStatus.update(status => ({ ...status, [id]: "ready" }));
+      this.reviewErrors.update(errors => ({ ...errors, [id]: "" }));
+    } catch (error) {
+      this.reviewStatus.update(status => ({ ...status, [id]: "error" }));
+      this.reviewErrors.update(errors => ({ ...errors, [id]: this.apiMessage(error) }));
+    }
   }
   async saveReview(review: Review) {
     if (!this.catalogHas(review.placeId)) return false;
@@ -263,21 +363,28 @@ export class TravelStore {
       this.toast(error);
       return false;
     }
-    return this.update((s) => {
-      const lastVersions = [
-        s.reviews.find(item => item.placeId === review.placeId)?.updatedAt,
-        ...(s.workflow?.requests.filter(item => item.placeId === review.placeId).map(item => item.reviewVersion) ?? []),
-        ...(s.workflow?.replies.filter(item => item.placeId === review.placeId).map(item => item.reviewVersion) ?? []),
-      ].flatMap(version => version && Number.isFinite(Date.parse(version)) ? [Date.parse(version) + 1] : []);
-      const updatedAt = new Date(Math.max(Date.now(), ...lastVersions)).toISOString();
-      return { ...s, reviews: upsertReview(s.reviews, { ...review, updatedAt }) };
-    });
+    if (!await this.requireAccount()) return false;
+    const epoch = this.accountEpoch;
+    try {
+      const saved = await this.api.saveReview(review);
+      if (epoch !== this.accountEpoch) return false;
+      this.ownReviews.update(reviews => ({ ...reviews, [review.placeId]: saved }));
+      this.ownReviewStatus.update(status => ({ ...status, [review.placeId]: "ready" }));
+      await Promise.all([this.loadPlaceDetail(review.placeId), this.loadReviews(review.placeId)]);
+      return true;
+    } catch (error) { if (epoch === this.accountEpoch) this.accountFailure(error); return false; }
   }
   async deleteReview(id: string) {
-    return this.update((s) => ({
-      ...s,
-      reviews: s.reviews.filter((r) => r.placeId !== id),
-    }));
+    const review = this.reviewFor(id);
+    if (!review || !await this.requireAccount()) return false;
+    const epoch = this.accountEpoch;
+    try {
+      await this.api.deleteReview(review.id);
+      if (epoch !== this.accountEpoch) return false;
+      this.ownReviews.update(reviews => ({ ...reviews, [id]: null }));
+      await Promise.all([this.loadPlaceDetail(id), this.loadReviews(id)]);
+      return true;
+    } catch (error) { if (epoch === this.accountEpoch) this.accountFailure(error); return false; }
   }
   async addTrip(id: string) {
     if (!this.catalogHas(id)) return;

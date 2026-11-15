@@ -1,8 +1,8 @@
-@if (store.catalogStatus() === "loading") {
+@if (store.detailStatus()[id()] === "loading" || !store.detailStatus()[id()]) {
   <div class="empty-state detail-state" role="status"><tg-icon name="compass" /><h1>Đang tải địa điểm…</h1></div>
-} @else if (store.catalogStatus() === "error") {
-  <div class="empty-state detail-state" role="alert"><h1>Chưa tải được địa điểm</h1><p>{{ store.catalogError() }}</p><button type="button" class="button primary" (click)="store.loadCatalog()">Thử lại</button></div>
-} @else if (place(); as place) {
+} @else if (store.detailStatus()[id()] === "error") {
+  <div class="empty-state detail-state" role="alert"><h1>Chưa tải được địa điểm</h1><p>{{ store.detailErrors()[id()] }}</p><button type="button" class="button primary" (click)="store.loadPlaceDetail(id())">Thử lại</button></div>
+} @else if (store.detailStatus()[id()] === "ready" && place(); as place) {
   @let description = introduction();
   @let sourceHours = hours();
   <div class="detail-page">
@@ -30,15 +30,15 @@
           <h1>{{ place.name }}</h1>
           <p class="detail-address"><tg-icon name="pin" />{{ place.area }}</p>
           <div class="detail-facts">
-            @if (review(); as rating) {
-              <span class="detail-score"><tg-icon name="star" />{{ rating.rating }}/5 · 1 đánh giá TravelGo bản thử</span>
+            @if (rating(); as rating) {
+              <span class="detail-score"><tg-icon name="star" />{{ rating.rating }}/5 · {{ rating.count }} đánh giá TravelGo</span>
             } @else {
               <span>Chưa có đánh giá TravelGo</span>
             }
             <span>{{ money(place.price) }}{{ place.price === null ? '' : ' / người' }}</span>
           </div>
         </div>
-        <button type="button" class="detail-favorite" [disabled]="!store.ready()"
+        <button type="button" class="detail-favorite" [disabled]="store.favoritePending() || store.accountStatus() === 'loading'"
           [attr.aria-pressed]="store.hasFavorite(place.id)"
           [attr.aria-label]="store.hasFavorite(place.id) ? 'Bỏ yêu thích' : 'Yêu thích'"
           [title]="store.hasFavorite(place.id) ? 'Bỏ yêu thích' : 'Yêu thích'"
@@ -159,19 +159,25 @@
             <header>
               <div>
                 <h2 id="detail-reviews-title">Trải nghiệm trên TravelGo</h2>
-                <p class="muted">{{ review() ? '1 đánh giá bản thử' : 'Chưa có đánh giá' }}</p>
+                <p class="muted">{{ rating() ? rating()!.count + ' đánh giá' : 'Chưa có đánh giá' }}</p>
               </div>
               <a class="text-button" [routerLink]="['/dia-diem', place.id, 'danh-gia']" [queryParams]="reviewParams()">
                 {{ ownReview() ? 'Sửa đánh giá của tôi' : 'Viết đánh giá' }}
               </a>
             </header>
-            @if (review(); as review) {
+            @if (store.reviewStatus()[id()] === 'loading' && !reviews().length) {
+              <p class="muted" role="status">Đang tải đánh giá…</p>
+            }
+            @if (store.reviewStatus()[id()] === 'error') {
+              <p class="message error" role="alert">{{ store.reviewErrors()[id()] }} <button class="text-button" type="button" (click)="store.loadReviews(id())">Thử lại</button></p>
+            }
+            @for (review of reviews(); track review.id) {
               <article class="review-entry">
                 <div class="review-author">
-                  <span class="avatar">TH</span>
+                  <span class="avatar">{{ review.author.name.slice(0, 2).toUpperCase() }}</span>
                   <div>
                     <strong
-                      >Bạn <span class="muted normal">· Bản dùng thử</span></strong
+                      >{{ review.author.name }} @if (ownReview()?.id === review.id) { <span class="muted normal">· Bạn</span> }</strong
                     >
                     <p>
                       {{ review.updatedAt | date: "dd/MM/yyyy" }}
@@ -190,17 +196,18 @@
                   <p class="muted">Chỉ chấm sao, chưa có nhận xét.</p>
                 }
                 <div class="review-photos">
-                  @for (photo of store.visibleReviewPhotos(place.id); track photo.index) {
+                  @for (photo of review.photos; track photo) {
                     <img
-                      [src]="photo.src"
-                      [alt]="'Ảnh đính kèm đánh giá ' + (photo.index + 1)"
+                      [src]="photo"
+                      [alt]="'Ảnh đính kèm đánh giá ' + ($index + 1)"
                     />
                   }
                 </div>
-                @if (workflow.visibleReply(place.id); as reply) {
-                  <div class="workflow-reply"><strong>Phản hồi của Chủ cơ sở</strong><span class="small muted"> · Bản dùng thử · {{ reply.updatedAt | date:'dd/MM/yyyy':'+0700' }}</span><p>{{ reply.text }}</p></div>
+                @if (review.reply; as reply) {
+                  <div class="workflow-reply"><strong>Phản hồi của Chủ cơ sở</strong><span class="small muted"> · {{ reply.updatedAt | date:'dd/MM/yyyy':'+0700' }}</span><p>{{ reply.text }}</p></div>
                 }
                 <div class="review-actions">
+                  @if (ownReview()?.id === review.id) {
                   <a
                     class="text-button"
                     [routerLink]="['/dia-diem', place.id, 'danh-gia']"
@@ -212,12 +219,13 @@
                   >
                     Xóa đánh giá
                   </button>
+                  }
                   <a class="text-button" routerLink="/dong-gop" [queryParams]="{place:place.id,report:'review'}">Báo cáo đánh giá hoặc ảnh</a>
                 </div>
-                @if (confirmDelete()) {
+                @if (confirmDelete() && ownReview()?.id === review.id) {
                   <div class="delete-confirm" role="alert">
                     <span
-                      >Xóa đánh giá và các ảnh đính kèm trên trình duyệt này?</span
+                      >Xóa đánh giá và các ảnh đính kèm của bạn?</span
                     ><button
                       class="button secondary"
                       (click)="confirmDelete.set(false)"
@@ -232,9 +240,11 @@
                   </div>
                 }
               </article>
-            } @else if (ownReview()) {
-              <div class="workflow-note"><tg-icon name="info" />Đánh giá của bạn đang ẩn theo quyết định trong bản thử. <a [routerLink]="['/dia-diem',place.id,'danh-gia']" [queryParams]="reviewParams()">Mở bài của tôi</a></div>
-            } @else {
+            }
+            @if (ownReview()?.hidden) {
+              <div class="workflow-note"><tg-icon name="info" />Đánh giá của bạn đang bị ẩn. <a [routerLink]="['/dia-diem',place.id,'danh-gia']" [queryParams]="reviewParams()">Mở bài của tôi</a></div>
+            }
+            @if (store.reviewStatus()[id()] === 'ready' && !reviews().length) {
               <div class="empty-state compact">
                 <tg-icon name="star" />
                 <h3>Chia sẻ trải nghiệm đầu tiên</h3>
@@ -243,6 +253,11 @@
                   ghé.
                 </p>
               </div>
+            }
+            @if (store.reviewPages()[id()]; as pages) {
+              @if (pages.page < pages.lastPage) {
+                <button type="button" class="text-button" [disabled]="store.reviewStatus()[id()] === 'loading'" (click)="store.loadReviews(id(), true)">Xem thêm đánh giá</button>
+              }
             }
             <p class="demo-note">
               Điểm TravelGo độc lập với Google Maps. Ảnh và ngày ghé do người viết

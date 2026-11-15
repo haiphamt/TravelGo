@@ -27,8 +27,9 @@ export class Detail {
   route = inject(ActivatedRoute);
   id = signal("");
   params = signal<{get(name: string): string | null}>(new URLSearchParams());
-  place = computed(() => this.store.places().find((p) => p.id === this.id()));
-  review = computed(() => this.store.visibleReviewFor(this.id()));
+  place = computed(() => this.store.placeFor(this.id()));
+  reviews = computed(() => this.store.publicReviews()[this.id()] ?? []);
+  rating = computed(() => this.store.ratingFor(this.id()));
   ownReview = computed(() => this.store.reviewFor(this.id()));
   category = computed(() => CATEGORIES.find(category => category.id === this.place()?.category)?.name);
   introduction = computed(() => {
@@ -84,6 +85,9 @@ export class Detail {
       .subscribe((params) => {
         this.id.set(params.get("id") ?? "");
         this.confirmDelete.set(false);
+        void this.store.loadPlaceDetail(this.id());
+        void this.store.loadReviews(this.id());
+        void this.store.loadOwnReview(this.id());
       });
     this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => this.params.set(params));
   }

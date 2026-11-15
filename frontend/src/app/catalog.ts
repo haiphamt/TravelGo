@@ -33,7 +33,7 @@ function sourceUrl(value: unknown): string {
     throw new Error("Liên kết nguồn không hợp lệ.");
   return result;
 }
-function localProfile(value: unknown, local: boolean): LocalProfile | undefined {
+export function parseLocalProfile(value: unknown, local: boolean): LocalProfile | undefined {
   if (value === null || value === undefined) return undefined;
   if (!local || !isRecord(value) || !isRecord(value["hours"]) || !Array.isArray(value["sources"]))
     throw new Error("Hồ sơ Local không hợp lệ.");
@@ -116,7 +116,7 @@ export function parseCatalog(input: unknown): Place[] {
       sourceUpdatedAt: date(value["sourceUpdatedAt"], "nguồn cập nhật"),
       referenceOnly: value["referenceOnly"],
       photoCredit, photoSource,
-      localProfile: localProfile(value["localProfile"], value["local"]),
+      localProfile: parseLocalProfile(value["localProfile"], value["local"]),
     };
   });
 }

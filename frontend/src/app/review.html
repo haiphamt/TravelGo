@@ -1,8 +1,10 @@
-@if (store.catalogStatus() === 'loading') {
+@if (!store.detailStatus()[id()] || store.detailStatus()[id()] === 'loading' || !store.ownReviewStatus()[id()] || store.ownReviewStatus()[id()] === 'loading') {
 <div class="empty-state" role="status"><h1>Đang tải địa điểm…</h1></div>
-} @else if (store.catalogStatus() === 'error') {
-<div class="empty-state" role="alert"><h1>Chưa tải được địa điểm</h1><p>{{ store.catalogError() }}</p><button class="button primary" (click)="store.loadCatalog()">Thử lại</button></div>
-} @else if (place(); as place) {
+} @else if (store.detailStatus()[id()] === 'error') {
+<div class="empty-state" role="alert"><h1>Chưa tải được địa điểm</h1><p>{{ store.detailErrors()[id()] }}</p><button class="button primary" (click)="store.loadPlaceDetail(id())">Thử lại</button></div>
+} @else if (store.ownReviewStatus()[id()] === 'error') {
+<div class="empty-state" role="alert"><h1>Chưa tải được đánh giá của bạn</h1><button class="button primary" (click)="store.loadOwnReview(id())">Thử lại</button></div>
+} @else if (store.detailStatus()[id()] === 'ready' && place(); as place) {
 <a class="back-link" [routerLink]="['/dia-diem', place.id]" queryParamsHandling="preserve"
   ><tg-icon name="back" />Quay lại địa điểm</a
 >
@@ -34,7 +36,7 @@
   <section class="review-form">
     @if (preview()) {
     <h2>Xem lại trước khi gửi</h2>
-    <p class="muted">Nội dung dưới đây sẽ được lưu trong bản dùng thử.</p>
+    <p class="muted">Nội dung dưới đây sẽ được lưu vào tài khoản TravelGo của bạn.</p>
     <div class="preview-stars" [attr.aria-label]="rating() + ' trên 5 sao'">
       @for (star of stars; track star) {
       <tg-icon name="star" [class.filled]="star <= rating()" /> }<strong
@@ -65,7 +67,7 @@
       ><button
         class="button primary"
         (click)="submit()"
-        [disabled]="saving() || !store.ready()"
+        [disabled]="saving() || store.ownReviewStatus()[id()] === 'loading'"
       >
         <tg-icon name="check" />{{ saving() ? 'Đang lưu…' : editing() ? 'Lưu
         thay đổi' : 'Gửi đánh giá' }}
@@ -203,7 +205,7 @@
         ><button
           class="button primary"
           type="submit"
-          [disabled]="processing() || !store.ready()"
+          [disabled]="processing() || store.ownReviewStatus()[id()] === 'loading'"
         >
           Xem trước đánh giá<tg-icon name="arrow" />
         </button>
@@ -235,8 +237,7 @@
     </p>
     <p class="local-save-note">
       <tg-icon name="info" /><span
-        >Bản dùng thử: ảnh chỉ được lưu trên trình duyệt sau khi bạn bấm gửi,
-        chưa đăng công khai.</span
+        >Bạn cần đăng nhập để gửi đánh giá. Nội dung và ảnh được đăng trên TravelGo sau khi lưu thành công.</span
       >
     </p>
   </aside>

@@ -1,0 +1,111 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Resources\PlaceResource;
+use App\Models\Place;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
+class PlaceController extends Controller
+{
+    public function index(Request $request): JsonResponse
+    {
+        $filters = $request->validate([
+            'q' => ['sometimes', 'nullable', 'string', 'max:200'],
+            'city' => ['sometimes', 'string', Rule::in(['hcm'])],
+            'category' => ['sometimes', 'string', Rule::in(['all', 'coffee', 'food', 'nature', 'culture', 'drink', 'lodging'])],
+            'local' => ['sometimes', 'boolean'],
+            'area' => ['sometimes', 'nullable', 'string', 'max:200'],
+            'district' => ['sometimes', 'nullable', 'string', 'max:80'],
+            'localType' => ['sometimes', 'nullable', 'string', 'max:80'],
+            'facet' => ['sometimes', 'string', Rule::in(['always-open', 'wifi', 'outdoor', 'takeaway', 'wheelchair', 'hotel', 'homestay', 'viewpoint'])],
+            'sort' => ['sometimes', 'string', Rule::in(['default', 'name', 'price'])],
+            'page' => ['sometimes', 'integer', 'min:1'],
+            'per_page' => ['sometimes', 'integer', 'min:1', 'max:200'],
+        ]);
+
+        $query = Place::query()->where('city', $filters['city'] ?? 'hcm')->withPublicReviewSummary();
+        $localType = trim($filters['localType'] ?? '');
+        $localOnly = $localType !== '' || (bool) ($filters['local'] ?? false);
+
+        if ($localType !== '') {
+            $query->where('local', true)
+                ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(local_profile, '$.categoryLabel')) COLLATE utf8mb4_bin = ?", [$localType]);
+        } elseif (array_key_exists('local', $filters)) {
+            $query->where('local', (bool) $filters['local']);
+        }
+
+        if (($filters['category'] ?? 'all') !== 'all') {
+            $query->where('category', $filters['category']);
+        }
+
+        $search = trim($filters['q'] ?? '');
+        if ($search !== '') {
+            // MySQL serializes JSON string arrays with ", " separators. Joining their
+            // elements keeps the catalog's name / products / address search contract.
+            $products = "REPLACE(REPLACE(REPLACE(COALESCE(JSON_UNQUOTE(products), ''), '\", \"', ' '), '[\"', ''), '\"]', '')";
+            $this->contains($query, "CONCAT_WS(' ', name, {$products}, area)", $search);
+        }
+
+        if (($area = trim($filters['area'] ?? '')) !== '') {
+            $query->where('area', '!=', 'Chưa cập nhật địa chỉ');
+            $this->contains($query, 'area', $area);
+        }
+
+        if (($district = trim($filters['district'] ?? '')) !== '') {
+            $query->whereRaw($this->searchable('source_district').' = ?', [$this->foldD($district)]);
+        }
+
+        if (($filters['facet'] ?? '') === 'always-open') {
+            $query->whereRaw("TRIM(hours) = '24/7'");
+        } elseif (isset($filters['facet'])) {
+            $query->whereJsonContains('facets', $filters['facet']);
+        }
+
+        match ($filters['sort'] ?? 'default') {
+            'name' => $query->orderBy('name'),
+            'price' => $query->orderByRaw('price IS NULL')->orderBy('price'),
+            default => $localOnly ? $query : $query->orderByRaw('photo_source IS NULL')->orderByRaw('image IS NULL'),
+        };
+
+        $page = $query->orderBy('places.id')->paginate($filters['per_page'] ?? 24);
+
+        return response()->json([
+            'data' => PlaceResource::collection($page->getCollection())->resolve($request),
+            'meta' => [
+                'current_page' => $page->currentPage(),
+                'last_page' => $page->lastPage(),
+                'per_page' => $page->perPage(),
+                'total' => $page->total(),
+            ],
+        ]);
+    }
+
+    public function show(Request $request): PlaceResource
+    {
+        $input = $request->validate(['id' => ['required', 'string', 'max:80']]);
+        $place = Place::query()->where('city', 'hcm')->where('public_id', $input['id'])
+            ->withPublicReviewSummary()->firstOrFail();
+
+        return new PlaceResource($place);
+    }
+
+    private function contains(Builder $query, string $expression, string $value): void
+    {
+        $pattern = strtr($this->foldD($value), ['=' => '==', '%' => '=%', '_' => '=_']);
+        $query->whereRaw($this->searchable($expression)." LIKE ? ESCAPE '='", ["%{$pattern}%"]);
+    }
+
+    private function searchable(string $expression): string
+    {
+        return "REPLACE(REPLACE({$expression}, 'đ', 'd'), 'Đ', 'D') COLLATE utf8mb4_unicode_ci";
+    }
+
+    private function foldD(string $value): string
+    {
+        return str_replace(['đ', 'Đ'], ['d', 'D'], $value);
+    }
+}
