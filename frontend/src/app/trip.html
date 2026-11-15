@@ -20,7 +20,7 @@
     @if (store.catalogStatus() === "loading") {
       <div class="empty-state" role="status"><h2>Đang tải danh mục cho lịch trình…</h2></div>
     } @else if (store.catalogStatus() === "error") {
-      <div class="empty-state" role="alert"><h2>Chưa tải được danh mục</h2><p>Các điểm đã lưu vẫn được giữ trên trình duyệt. {{ store.catalogError() }}</p><button class="button primary" (click)="store.loadCatalog()">Thử lại</button></div>
+      <div class="empty-state" role="alert"><h2>Chưa tải được danh mục</h2><p>Các điểm đã lưu vẫn được giữ. {{ store.catalogError() }}</p><button class="button primary" (click)="store.loadCatalog()">Thử lại</button></div>
     } @else if (hasTrip()) {
       <div class="trip-layout mx-auto max-w-7xl">
         <section>
@@ -218,7 +218,7 @@
             ><tg-icon name="store" />Thêm điểm ghé địa phương</a
           >
           <p class="demo-note">
-            Lịch trình chỉ lưu trên trình duyệt này. Kiểm tra lại vị trí và giờ nguồn trước khi đi.
+            {{ store.itineraryStorage() === 'api' ? 'Lịch trình được lưu theo tài khoản.' : 'Lịch trình chỉ lưu trên trình duyệt này.' }} Kiểm tra lại vị trí và giờ nguồn trước khi đi.
           </p>
         </aside>
       </div>

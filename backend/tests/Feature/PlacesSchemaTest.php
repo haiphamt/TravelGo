@@ -165,11 +165,16 @@ class PlacesSchemaTest extends TestCase
     public function test_places_migration_can_rollback_and_be_applied_again(): void
     {
         $migration = require database_path('migrations/2026_11_15_000000_create_places_table.php');
+        // Itinerary stops now reference places. Roll back their schema first, as a normal
+        // migration rollback would, then restore it after recreating the places table.
+        $itineraries = require database_path('migrations/2026_11_15_010000_create_itineraries_tables.php');
+        $itineraries->down();
         $migration->down();
         $this->assertFalse(Schema::hasTable('places'));
         $this->assertTrue(Schema::hasTable('users'));
 
         $migration->up();
+        $itineraries->up();
         $this->insertPlace();
         $this->assertDatabaseCount('places', 1);
     }
