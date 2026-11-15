@@ -6,7 +6,7 @@
     <a class="back-link" routerLink="/lich-trinh"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Lịch trình của tôi</a>
     <h1 class="text-2xl font-black text-slate-800 md:text-3xl">Tạo lịch trình
       bằng AI</h1>
-    <p class="mt-2 text-sm text-slate-600">Bản thử tìm điểm ghé từ danh mục TP.HCM bằng từ khóa ngay trên trình duyệt.</p>
+    <p class="mt-2 text-sm text-slate-600">{{ store.itineraryStorage() === 'api' ? 'Gợi ý mô phỏng từ danh mục TP.HCM để bạn kiểm tra trước khi lưu.' : 'Bản thử tìm điểm ghé từ danh mục TP.HCM bằng từ khóa ngay trên trình duyệt.' }}</p>
   </section>
 
   <form (ngSubmit)="generateTrip()" [attr.aria-busy]="generating()">
@@ -172,6 +172,7 @@
   @if (!committed() && preview(); as result) {
     <section class="custom-shadow mt-6 rounded-3xl border border-white bg-white p-5" aria-labelledby="planner-ai-preview">
       <h2 #previewHeading id="planner-ai-preview" tabindex="-1" class="text-xl font-black text-slate-800">Xem trước lịch trình</h2>
+      @if (result.notice) { <p class="mt-2 text-sm text-slate-600">{{ result.notice }}</p> }
       <p class="mt-2 text-sm text-slate-600">{{ result.places.length }}/{{ result.form.count }} điểm phù hợp. Giờ ghé là mốc dự kiến để bạn chỉnh sửa.</p>
       <ol class="ai-stop-list my-4 text-sm text-slate-700">
         @for (place of result.places; track place.id; let index = $index) {

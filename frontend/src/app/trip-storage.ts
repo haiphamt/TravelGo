@@ -3,7 +3,7 @@ import type { DemoState, SavedTrip, TripItem } from "./logic.ts";
 import { validTripSnapshot } from "./workflow.ts";
 
 export function validPlaceId(id: unknown): id is string {
-  return typeof id === "string" && /^(?:osm:(?:node|way|relation)\/\d+|tg-(?:local|demo)-[a-f0-9-]{36})$/.test(id);
+  return typeof id === "string" && /^(?:osm:(?:node|way|relation)\/\d+|tg-(?:local|demo|place)-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})$/.test(id);
 }
 
 function restorePoints(points: TripItem[] | undefined, start: string, end: string): TripItem[] {
@@ -51,7 +51,7 @@ export function activateTrip(state: DemoState, next: SavedTrip): DemoState {
     tripBudget: next.budget,
     tripCover: next.cover,
     tripSource: next.source,
-    savedTrips: hasActiveTrip(state) ? [currentTrip(state), ...savedTrips] : savedTrips,
+    savedTrips: hasActiveTrip(state) && currentTrip(state).id !== next.id ? [currentTrip(state), ...savedTrips] : savedTrips,
   };
 }
 
