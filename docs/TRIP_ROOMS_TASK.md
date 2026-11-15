@@ -7,7 +7,7 @@
 ## 1. Mở repo và đọc trước khi sửa
 
 1. Mở thư mục gốc của bản clone [haiphamt/TravelGo](https://github.com/haiphamt/TravelGo) trong Codex. Chọn GPT-6.1 Sol Ultra nếu có. Đọc [rules.md](../rules.md), [mẫu PR](../.github/pull_request_template.md) và [hướng dẫn khung backend](BACKEND_FOUNDATION_TASK.md). Đọc `backend/README.md` khi khung đã vào nhánh tích hợp.
-2. Chạy `git status --short` và `git fetch origin`. Có thể chuẩn bị hợp đồng và test trong lúc [PR khung #3](https://github.com/haiphamt/TravelGo/pull/3) được review. Sau khi khung vào nhánh tích hợp, tạo nhánh, ví dụ `git switch -c feat/trip-rooms origin/feat/travelgo-frontend`. Nếu nhóm đã chuyển sang `main` có cả frontend và backend thì dùng `origin/main`. Tiếp tục trên nhánh task nếu đã tạo.
+2. Chạy `git status --short` và `git fetch origin`. [PR khung #3](https://github.com/haiphamt/TravelGo/pull/3) đã merge. Có thể tạo nhánh ngay bằng `git switch -c feat/trip-rooms origin/feat/travelgo-frontend`. Nếu nhóm đã chuyển sang `main` có cả frontend và backend thì dùng `origin/main`. Tiếp tục trên nhánh task nếu đã tạo. Xem [thứ tự bàn giao](../rules.md#thứ-tự-bàn-giao-giữa-các-task) để biết lúc nào cần bảng `places` và phiên đăng nhập.
 3. Nếu hướng dẫn chưa có trên nhánh hiện tại, đọc bằng `git show origin/docs/update-team-assignments:docs/TRIP_ROOMS_TASK.md`. Trước khi sửa, đọc `frontend/src/app/{group-room,room-state,store,logic}.ts`, template `group-room.html` và `frontend/tests/group-room.test.ts`. Rà màn `/phong-cung-di` và các trạng thái hiện có trên desktop/mobile.
 
 ## 2. Hợp đồng dùng chung

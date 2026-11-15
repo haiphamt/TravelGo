@@ -74,7 +74,7 @@ php artisan serve
 
 ## 4. PR tiếp theo — Nhập danh mục địa điểm
 
-Sau khi PR khung được merge vào nhánh tích hợp, cập nhật nhánh đó rồi tạo `feat/place-data-import` cho phần nhập dữ liệu. Có thể khảo sát dữ liệu và chuẩn bị kiểm thử đầu vào trong lúc Hữu Hiếu viết migration bảng `places`. Lấy migration của Hữu Hiếu khi đã có trên nhánh tích hợp để chạy và kiểm thử phần ghi vào MySQL.
+[PR khung #3](https://github.com/haiphamt/TravelGo/pull/3) đã merge. Cập nhật nhánh tích hợp rồi tạo `feat/place-data-import`. Thống nhất cột và khóa với Hữu Hiếu, sau đó viết lệnh nhập song song với migration bảng `places`. Khi Hữu Hiếu đẩy migration lên PR, có thể dùng nó để chạy thử trên MySQL cục bộ. Cập nhật nhánh và chạy lại trước khi mở PR nhập dữ liệu sau khi migration đã merge.
 
 - Đọc `frontend/public/data/catalog.json`, `frontend/public/data/sources.json` và `frontend/src/app/catalog.ts` để đối chiếu định dạng, mã địa điểm, các trường thiếu và thông tin nguồn. Đọc `frontend/public/data/osm-photo-sources.json` nếu cần chuyển thông tin ảnh đã có nguồn rõ ràng.
 - Thống nhất các trường cần nhập với Hữu Hiếu. Tạo một lệnh Artisan hoặc seeder có đầu vào rõ ràng, kiểm tra dữ liệu rồi cập nhật theo cặp nguồn và mã nguồn có ràng buộc duy nhất trong MySQL. Giữ mã công khai ổn định khi nhập lại. Với trường chưa biết, giữ `null` hoặc áp dụng cách biểu diễn đã chốt, không suy ra giá/giờ từ văn bản mẫu.

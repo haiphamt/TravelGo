@@ -35,7 +35,18 @@
 
 Tài khoản tự đăng ký bằng email hoặc đăng nhập lần đầu bằng Google có vai trò **Người dùng**. Người phụ trách xét duyệt triển khai luồng cấp quyền quản lý cho **Chủ cơ sở**. Mỗi người phụ trách API kiểm tra quyền trên tài nguyên thuộc phần mình và đưa kiểm thử vào cùng PR.
 
-Người phụ trách khung backend mở PR đầu tiên để nhóm dùng chung cấu hình Laravel, MySQL và dữ liệu thử. Những người làm API có thể thống nhất hợp đồng API trong lúc chờ review. Tách nhánh triển khai từ nhánh tích hợp sau khi PR khung backend đã được hợp nhất. Tách nhánh mới khi nhận task độc lập tiếp theo.
+[PR khung Laravel/MySQL #3](https://github.com/haiphamt/TravelGo/pull/3) đã merge vào `feat/travelgo-frontend`. Tạo nhánh task từ phiên bản mới nhất của nhánh tích hợp này. Tách nhánh mới khi nhận task độc lập tiếp theo.
+
+### Thứ tự bàn giao giữa các task
+
+| Phụ trách | Bắt đầu ngay | Khi nối và kiểm thử chung |
+| --- | --- | --- |
+| Hữu Hiếu | Viết migration bảng `places` trên `feat/places-reviews`, mời Minh Hiếu xem các cột và mở PR riêng cho migration và kiểm thử schema. | Tiếp tục làm API địa điểm bằng bản ghi thật đã có trong repo. Nối yêu thích và đánh giá với phiên tài khoản của Tuấn Hải. |
+| Minh Hiếu | Viết lệnh nhập từ danh mục có sẵn trên `feat/place-data-import` ngay khi hai bạn chốt tên cột và khóa. | Lấy migration `places` để chạy nhập và thử nhập lại trên MySQL. Mở PR phần nhập sau khi bảng đã có ở nhánh tích hợp. |
+| Quỳnh Hân và Công Định | Làm logic lịch trình, tạo phòng, thành viên và các bài kiểm thử có thể chạy với tài khoản thử. | Dùng bảng `places` cho điểm ghé và đề xuất. Nối phiên đăng nhập để lưu theo tài khoản. Phần sao chép kết quả phòng sang lịch trình cần hợp đồng giữa hai bạn. Quỳnh Hân tích hợp nhà cung cấp AI khi nhóm đã chọn. |
+| Quang Huy | Làm luồng gửi yêu cầu, trạng thái xét duyệt, kiểm tra quyền và lịch sử. | Chốt cách dùng vai trò với Tuấn Hải. Dùng dữ liệu của Hữu Hiếu khi nối duyệt thay đổi địa điểm, quyền quản lý cơ sở và báo cáo đánh giá. |
+
+Mỗi người có thể thử phần của mình bằng dữ liệu kiểm thử riêng. Khi PR có migration khóa ngoại tới `places`, lấy migration chuẩn của Hữu Hiếu để chạy và kiểm tra phần đó.
 
 Ví dụ tạo nhánh API địa điểm khi nhóm đang tích hợp trên `feat/travelgo-frontend`:
 

@@ -7,7 +7,7 @@
 ## 1. Mở repo và đọc trước khi sửa
 
 1. Mở thư mục gốc của bản clone [haiphamt/TravelGo](https://github.com/haiphamt/TravelGo) trong Codex. Chọn GPT-6.1 Sol Ultra nếu có. Đọc [rules.md](../rules.md), [mẫu PR](../.github/pull_request_template.md), [hướng dẫn khung backend](BACKEND_FOUNDATION_TASK.md) và `backend/README.md` khi khung đã vào nhánh tích hợp.
-2. Chạy `git status --short` và `git fetch origin`. Có thể chuẩn bị luồng trạng thái, quyền và fixture trong lúc [PR khung #3](https://github.com/haiphamt/TravelGo/pull/3) được review. Khi khung vào nhánh tích hợp, tạo nhánh, ví dụ `git switch -c feat/owner-moderation origin/feat/travelgo-frontend`. Nếu nhóm đã chuyển sang `main` có cả frontend và backend thì dùng `origin/main`. Tiếp tục trên nhánh task nếu đã tạo.
+2. Chạy `git status --short` và `git fetch origin`. [PR khung #3](https://github.com/haiphamt/TravelGo/pull/3) đã merge. Có thể tạo nhánh ngay bằng `git switch -c feat/owner-moderation origin/feat/travelgo-frontend`. Nếu nhóm đã chuyển sang `main` có cả frontend và backend thì dùng `origin/main`. Tiếp tục trên nhánh task nếu đã tạo. Xem [thứ tự bàn giao](../rules.md#thứ-tự-bàn-giao-giữa-các-task) để phối hợp phần vai trò, địa điểm và báo cáo đánh giá.
 3. Nếu hướng dẫn chưa có trên nhánh hiện tại, đọc bằng `git show origin/docs/update-team-assignments:docs/OWNER_MODERATION_TASK.md`. Rà `frontend/src/app/{workflow,workflow-store,proposal-form,contributions,owner-workspace,admin-workspace}.ts` và `frontend/tests/workflow.test.ts`. Đối chiếu các màn `/dong-gop`, `/chu-co-so` và `/quan-tri` để giữ bố cục, điều hướng và trạng thái hiện có.
 
 ## 2. Hợp đồng dùng chung
