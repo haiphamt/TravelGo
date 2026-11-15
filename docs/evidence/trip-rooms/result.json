@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "code": "260F6091",
+  "accounts": 2,
+  "desktop": "1440x1000",
+  "mobile": "390x844",
+  "steps": [
+    "create",
+    "join",
+    "propose",
+    "account-switch-clears-draft",
+    "vote",
+    "finalize",
+    "edit"
+  ],
+  "errors": []
+}
