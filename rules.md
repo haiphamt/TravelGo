@@ -28,7 +28,7 @@
 | --- | --- | --- |
 | Phạm Tuấn Hải | `feat/auth-roles` | Hộp thoại Angular, đăng ký và đăng nhập bằng email, đăng nhập Google, đăng xuất, phiên đăng nhập và vai trò tài khoản. |
 | Chung Minh Hiếu | `feat/backend-foundation` | Khung Laravel/MySQL, migration, dữ liệu thử và quy trình nhập dữ liệu địa điểm. [Hướng dẫn triển khai](docs/BACKEND_FOUNDATION_TASK.md) |
-| Lê Nguyễn Hữu Hiếu | `feat/places-reviews` | API địa điểm, Khám phá, Góc Địa Phương, yêu thích và đánh giá. [Hướng dẫn triển khai](docs/PLACES_REVIEWS_TASK.md) |
+| Lê Nguyễn Hữu Hiếu | `feat/places-reviews` | Migration bảng `places`, API địa điểm, Khám phá, Góc Địa Phương, yêu thích và đánh giá. [Hướng dẫn triển khai](docs/PLACES_REVIEWS_TASK.md) |
 | Nguyễn Thị Quỳnh Hân | `feat/itineraries` | Tạo lịch trình thủ công và bằng AI, lưu và chỉnh sửa lịch trình. [Hướng dẫn triển khai](docs/ITINERARIES_TASK.md) |
 | Phạm Công Định | `feat/trip-rooms` | Tạo phòng, tham gia bằng mã mời, đề xuất điểm ghé và bình chọn. [Hướng dẫn triển khai](docs/TRIP_ROOMS_TASK.md) |
 | Triệu Quang Huy | `feat/owner-moderation` | API cho Chủ cơ sở và Quản trị viên, quyền quản lý địa điểm, xử lý đóng góp và xét duyệt. [Hướng dẫn triển khai](docs/OWNER_MODERATION_TASK.md) |
@@ -72,7 +72,7 @@ PR cần cho người review biết:
 - MySQL dùng `places.id` là `BIGINT UNSIGNED` tự tăng và `places.public_id` là chuỗi bắt buộc, duy nhất. Các bảng nghiệp vụ tham chiếu `places.id` qua khóa ngoại cùng kiểu. Backend ánh xạ mã công khai từ API sang khóa nội bộ khi ghi dữ liệu.
 - API trả mã công khai dạng chuỗi ở `id` của địa điểm. Các payload tham chiếu địa điểm dùng cùng chuỗi đó, ví dụ `placeId: "osm:node/5922616527"`. Xác định hồ sơ Góc Địa Phương qua trường phân loại `local`. Hữu Hiếu thống nhất đường dẫn API và kiểm thử mã OSM chứa `/` qua API và liên kết chi tiết. Có thể truyền toàn bộ mã qua tham số truy vấn hoặc JSON để giữ nguyên chuỗi.
 - Giữ mã công khai khi đổi tên, giờ bán hoặc vị trí của cùng một địa điểm. Khi nhập lại, đối chiếu theo cặp nguồn và mã nguồn ổn định, cập nhật bản ghi cũ và giữ `public_id`. Với OSM, mã nguồn gồm cả loại đối tượng và số, ví dụ `node/5922616527`. Với danh mục Góc Địa Phương hiện có, dùng mã hồ sơ đã lưu để đối chiếu khi chưa có mã nguồn riêng ổn định. Tên và tọa độ không đủ để tự gộp hồ sơ.
-- Chung Minh Hiếu và Lê Nguyễn Hữu Hiếu thống nhất người viết migration bảng `places`, dùng chung bảng đó cho importer và API. Khi nối backend, kiểm tra `tg-place-<uuid>` trong bộ kiểm tra ID dùng chung của Angular và thử mở chi tiết, lưu yêu thích hoặc lịch trình bằng mã mới.
+- Lê Nguyễn Hữu Hiếu viết migration bảng `places` và bàn giao các cột, khóa và trường có thể `null` cho Chung Minh Hiếu. Minh Hiếu dùng bảng đó cho phần nhập dữ liệu. Khi nối backend, kiểm tra `tg-place-<uuid>` trong bộ kiểm tra ID dùng chung của Angular và thử mở chi tiết, lưu yêu thích hoặc lịch trình bằng mã mới.
 
 ## 5. Quy tắc cho người phụ trách dữ liệu
 

@@ -35,7 +35,7 @@ Ghi quyết định ngắn vào task hoặc PR để các bạn có thể triể
 | Trao đổi với | Điểm cần thống nhất |
 | --- | --- |
 | Tuấn Hải phụ trách đăng nhập | `users.id` đã chốt là `BIGINT UNSIGNED` tự tăng trên MySQL. Cả tài khoản email và Google dùng ID nội bộ này. Tuấn Hải lưu mã định danh Google riêng để liên kết đăng nhập. Cần thống nhất nơi lưu vai trò và cách ánh xạ với `user`, `owner`, `admin` đang dùng ở frontend demo. |
-| Lê Nguyễn Hữu Hiếu phụ trách API địa điểm | Dùng `places.id`, `places.public_id` và cặp nguồn/mã nguồn theo [quy ước mã địa điểm](../rules.md#mã-địa-điểm-dùng-chung). Chốt người viết migration bảng `places`, các cột nghiệp vụ và trường có thể `null`. |
+| Lê Nguyễn Hữu Hiếu phụ trách migration bảng `places` và API địa điểm | Dùng `places.id`, `places.public_id` và cặp nguồn/mã nguồn theo [quy ước mã địa điểm](../rules.md#mã-địa-điểm-dùng-chung). Minh Hiếu trao đổi các trường cần nhập và dùng schema do Hữu Hiếu bàn giao. |
 | Quỳnh Hân, Công Định và Quang Huy phụ trách lịch trình, phòng và xét duyệt | Chia sẻ kiểu ID tài khoản và [quy ước mã địa điểm](../rules.md#mã-địa-điểm-dùng-chung). Người phụ trách từng nghiệp vụ viết migration cho bảng thuộc phần mình. |
 
 Dùng `$table->id()` trong migration bảng `users`. Các cột khóa ngoại tham chiếu `users.id` dùng kiểu tương ứng, ví dụ `$table->foreignId('user_id')->constrained('users')`. Nếu cần bổ sung cột dùng chung, mỗi thay đổi có một người phụ trách. Phần chưa thống nhất có thể làm tiếp sau khi khung Laravel đã chạy được.
@@ -74,7 +74,7 @@ php artisan serve
 
 ## 4. PR tiếp theo — Nhập danh mục địa điểm
 
-Sau khi PR khung được merge vào nhánh tích hợp, cập nhật nhánh đó rồi tạo `feat/place-data-import` cho phần nhập dữ liệu. Có thể khảo sát dữ liệu và chuẩn bị test đầu vào trong lúc chờ PR đầu.
+Sau khi PR khung được merge vào nhánh tích hợp, cập nhật nhánh đó rồi tạo `feat/place-data-import` cho phần nhập dữ liệu. Có thể khảo sát dữ liệu và chuẩn bị kiểm thử đầu vào trong lúc Hữu Hiếu viết migration bảng `places`. Lấy migration của Hữu Hiếu khi đã có trên nhánh tích hợp để chạy và kiểm thử phần ghi vào MySQL.
 
 - Đọc `frontend/public/data/catalog.json`, `frontend/public/data/sources.json` và `frontend/src/app/catalog.ts` để đối chiếu định dạng, mã địa điểm, các trường thiếu và thông tin nguồn. Đọc `frontend/public/data/osm-photo-sources.json` nếu cần chuyển thông tin ảnh đã có nguồn rõ ràng.
 - Thống nhất các trường cần nhập với Hữu Hiếu. Tạo một lệnh Artisan hoặc seeder có đầu vào rõ ràng, kiểm tra dữ liệu rồi cập nhật theo cặp nguồn và mã nguồn có ràng buộc duy nhất trong MySQL. Giữ mã công khai ổn định khi nhập lại. Với trường chưa biết, giữ `null` hoặc áp dụng cách biểu diễn đã chốt, không suy ra giá/giờ từ văn bản mẫu.
