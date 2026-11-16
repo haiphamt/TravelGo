@@ -1,4 +1,8 @@
-@if (!store.ready()) {
+@if (roomGateway.enabled && roomGateway.error()) {
+  <p class="message error" role="alert">{{ roomGateway.error() }}</p>
+  <button type="button" class="button secondary" [disabled]="busy()" (click)="roomGateway.load()">Tải lại phòng</button>
+}
+@if (!store.ready() || (roomGateway.enabled && !roomGateway.loaded())) {
   <p class="muted" role="status">Đang mở danh sách phòng…</p>
 } @else if (room(); as current) {
   <div class="page-heading">
@@ -10,7 +14,7 @@
       <tg-icon name="back" />Về danh sách phòng
     </button>
   </div>
-  <p class="workflow-note"><tg-icon name="info" /><span>Phòng và mã mời chỉ dùng trong trình duyệt này. Dùng tên thử và đổi vai để trải nghiệm luồng của chủ phòng và thành viên.</span></p>
+  <p class="workflow-note"><tg-icon name="info" /><span>{{ roomGateway.enabled ? 'Mã mời dùng để bạn bè đăng nhập và tham gia cùng phòng. Lựa chọn được lưu theo tài khoản.' : 'Phòng và mã mời chỉ dùng trong trình duyệt này. Dùng tên thử và đổi vai để trải nghiệm luồng của chủ phòng và thành viên.' }}</span></p>
 
   <section class="workflow-panel room-header" aria-labelledby="room-title">
     <div>
@@ -23,8 +27,8 @@
       <p class="muted">{{ formatDate(current.date) }} · Dự kiến {{ current.desiredStops }} điểm ghé</p>
     </div>
     <label class="workflow-search">
-      <span>Đang thao tác với vai thử</span>
-      <select [ngModel]="current.activeMemberId" [disabled]="busy()" (ngModelChange)="switchMember(current.code, $event)">
+      <span>{{ roomGateway.enabled ? 'Tài khoản đang thao tác' : 'Đang thao tác với vai thử' }}</span>
+      <select [ngModel]="current.activeMemberId" [disabled]="busy() || roomGateway.enabled" (ngModelChange)="switchMember(current.code, $event)">
         @for (member of current.members; track member.id) {
           <option [value]="member.id">{{ member.name }} · {{ member.id === current.ownerId ? 'Chủ phòng' : 'Thành viên' }}</option>
         }
@@ -120,7 +124,7 @@
             <a class="button secondary" routerLink="/lich-trinh">Lịch trình của tôi</a>
           </div>
           @if (!canCopy() && store.catalogStatus() === 'ready') {
-            <p class="muted small">Chủ phòng cần thay điểm thiếu trong danh mục trước khi tạo bản sao cá nhân.</p>
+            <p class="muted small">{{ roomGateway.enabled ? 'Tính năng lưu lịch trình cá nhân đang được hoàn thiện.' : 'Chủ phòng cần thay điểm thiếu trong danh mục trước khi tạo bản sao cá nhân.' }}</p>
           }
         </section>
       }
@@ -140,8 +144,8 @@
             <p class="message error" role="alert">Chưa tải được danh mục. Phiếu đã lưu vẫn được giữ.</p>
             <button type="button" class="button secondary" (click)="store.loadCatalog()">Tải lại danh mục</button>
           }
-        } @else if (isOwner()) {
-          <p class="muted">Thêm các điểm ghé từ danh mục, sau đó mở bình chọn cho cả phòng.</p>
+        } @else if (isOwner() || roomGateway.enabled) {
+          <p class="muted">Đề xuất điểm ghé từ danh mục; chủ phòng sẽ mở bình chọn cho cả nhóm.</p>
           @if (current.places.length < placeLimit) {
             <tg-workflow-place-picker [selectedId]="pickedId()" (selectedIdChange)="pickedId.set($event)" />
             <div class="workflow-actions">
@@ -246,10 +250,10 @@
       </ul>
       @if (!current.result.length) {
         <div class="room-invite">
-          <label class="workflow-search"><span>Mã mời trong trình duyệt này</span><input #invite type="text" readonly [value]="current.code" /></label>
+          <label class="workflow-search"><span>{{ roomGateway.enabled ? 'Mã mời tham gia phòng' : 'Mã mời trong trình duyệt này' }}</span><input #invite type="text" readonly [value]="current.code" /></label>
           <div class="workflow-actions">
             <button type="button" class="button secondary" (click)="copyCode(current.code, invite)">Sao chép mã mời</button>
-            <button type="button" class="button secondary" [disabled]="busy()" (click)="showForm('join')">Thêm người thử</button>
+            <button type="button" class="button secondary" [disabled]="busy()" (click)="roomGateway.enabled ? copyCode(current.code, invite) : showForm('join')">{{ roomGateway.enabled ? 'Mời bạn bè' : 'Thêm người thử' }}</button>
           </div>
         </div>
         @if (mode() === 'join') {
@@ -269,11 +273,11 @@
     <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
       <div class="space-y-2">
         <h1 id="room-lobby-title" tabindex="-1" class="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">Hành trình của tôi</h1>
-        <p class="text-base text-slate-600">Lưu và quản lý các phòng cùng đi trên trình duyệt này.</p>
+        <p class="text-base text-slate-600">{{ roomGateway.enabled ? 'Lưu và quản lý các phòng bạn đã tạo hoặc tham gia.' : 'Lưu và quản lý các phòng cùng đi trên trình duyệt này.' }}</p>
       </div>
       <form class="flex w-full max-w-[364px] shrink-0 items-center gap-3" ngNativeValidate (ngSubmit)="showForm('join', code())">
         <label class="relative min-w-0 flex-1">
-          <span class="sr-only">Mã mời trong trình duyệt này</span>
+          <span class="sr-only">{{ roomGateway.enabled ? 'Mã mời tham gia phòng' : 'Mã mời trong trình duyệt này' }}</span>
           <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" aria-hidden="true">#</span>
           <input id="lobby-invite" type="text" name="invite" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="8" pattern="[A-Fa-f0-9]{8}" required
             title="Mã mời gồm 8 ký tự từ 0–9 hoặc A–F" placeholder="Nhập mã mời…" [disabled]="busy()"
@@ -310,7 +314,7 @@
           }
         </div>
         <div class="workflow-actions">
-          <button type="submit" class="button primary" [disabled]="busy() || (formMode === 'join' && !code().trim())">{{ formMode === 'create' ? 'Tạo phòng thử' : 'Tham gia phòng' }}</button>
+          <button type="submit" class="button primary" [disabled]="busy() || (formMode === 'join' && !code().trim())">{{ formMode === 'create' ? (roomGateway.enabled ? 'Tạo phòng' : 'Tạo phòng thử') : 'Tham gia phòng' }}</button>
           <button type="button" class="button secondary" [disabled]="busy()" (click)="closeLobbyForm()">Hủy</button>
         </div>
       </form>

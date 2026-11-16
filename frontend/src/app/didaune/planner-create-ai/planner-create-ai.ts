@@ -17,7 +17,7 @@ const emptyDraft = {
 };
 
 type PlannerDraft = typeof emptyDraft;
-type PlannerPreview = ReturnType<typeof buildPlannerPreview> & { form: PlannerDraft; note: string; budget: number | null };
+type PlannerPreview = ReturnType<typeof buildPlannerPreview> & { form: PlannerDraft; note: string; budget: number | null; notice?: string };
 const travelModes = { car: 'Ô tô', motorbike: 'Xe máy', walking: 'Đi bộ', mixed: 'Linh hoạt' };
 const tripStyles = { balanced: 'Cân bằng', relaxed: 'Nhẹ nhàng', packed: 'Đi nhiều' };
 const energyLevels = { balanced: 'Linh hoạt', low: 'Thư thái', high: 'Năng động' };
@@ -157,7 +157,17 @@ export class PlannerCreateAi {
     if (this.destroy.destroyed) return;
     try {
       const input = { needs: form.preferencesInput, area: plannerArea(form.destinationCity), count: form.count, includeLocal: form.includeLocal };
-      const result = buildPlannerPreview(this.store.places(), input, form.desiredPlaces, form.startDate, form.endDate);
+      const remote = await this.store.suggestItinerary({ ...input,
+        requested: [...new Set(form.desiredPlaces.split(/[,;\n]/).map(s => s.trim()).filter(Boolean))].slice(0, 5),
+        startDate: form.startDate, endDate: form.endDate,
+      });
+      const result = remote ? {
+        ...remote, places: remote.points.map(point => {
+          const place = this.store.places().find(place => place.id === point.placeId);
+          if (!place || place.demoChange?.status) throw new Error('Danh mục đã thay đổi. Hãy tải lại rồi tạo gợi ý.');
+          return place;
+        }),
+      } : buildPlannerPreview(this.store.places(), input, form.desiredPlaces, form.startDate, form.endDate);
       if (!result.points.length) {
         this.error.set('Chưa tìm được điểm phù hợp trong danh mục TP.HCM. Thử tên khu vực khác hoặc từ khóa như cà phê, công viên.');
         return;
@@ -166,8 +176,8 @@ export class PlannerCreateAi {
       const note = this.buildTripNote(form);
       this.candidate.set({ ...result, form, note, budget });
       afterNextRender(() => this.previewHeading()?.nativeElement.focus(), { injector: this.injector });
-    } catch {
-      this.error.set('Chưa tạo được gợi ý. Hãy thử lại với thông tin đã nhập.');
+    } catch (error) {
+      this.error.set(error instanceof Error ? error.message : 'Chưa tạo được gợi ý. Hãy thử lại với thông tin đã nhập.');
     } finally {
       this.generating.set(false);
     }
@@ -188,7 +198,7 @@ export class PlannerCreateAi {
     this.saving.set(true);
     try {
       if (!(await this.store.createTrip(trip))) {
-        this.error.set('Chưa lưu được lịch trình. Kiểm tra danh mục và thử lại.');
+        this.error.set(this.store.itineraryError() || 'Chưa lưu được lịch trình. Kiểm tra danh mục và thử lại.');
         return;
       }
       this.committed.set(true);

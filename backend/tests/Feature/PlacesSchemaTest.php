@@ -164,8 +164,11 @@ class PlacesSchemaTest extends TestCase
 
     public function test_places_migration_can_rollback_and_be_applied_again(): void
     {
-        // Roll back dependent engagement tables before their parent places table.
-        $this->artisan('migrate:rollback', ['--step' => 2, '--force' => true])->assertSuccessful();
+        $migrations = DB::table('migrations')->orderByDesc('id')->pluck('migration');
+        $placesPosition = $migrations->search('2026_11_15_000000_create_places_table');
+        $this->assertNotFalse($placesPosition);
+        $this->artisan('migrate:rollback', ['--step' => $placesPosition + 1, '--force' => true])
+            ->assertSuccessful();
         $this->assertFalse(Schema::hasTable('places'));
         $this->assertTrue(Schema::hasTable('users'));
 

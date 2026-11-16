@@ -120,7 +120,7 @@ export class TripBuilder {
     this.editError.set("");
     try {
       if (!(await this.store.createTrip(trip))) {
-        this.editError.set("Chưa lưu được lịch trình. Kiểm tra các điểm ghé và thông tin đã nhập rồi thử lại.");
+        this.editError.set(this.store.itineraryError() || "Chưa lưu được lịch trình. Kiểm tra các điểm ghé và thông tin đã nhập rồi thử lại.");
         return;
       }
       this.saved.set(true);

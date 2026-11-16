@@ -1,4 +1,4 @@
-import { Component, ElementRef, Injector, afterNextRender, computed, inject, signal } from "@angular/core";
+import { Component, DestroyRef, ElementRef, Injector, afterNextRender, computed, effect, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import { money, Place } from "./data";
@@ -11,11 +11,14 @@ import {
   validRoomDate, validRoomTime, validStopCount,
 } from "./room-state";
 import { TravelStore } from "./store";
+import { RoomGateway } from "./room-gateway";
+import { RoomApiError } from "./room-api";
 import { placeRevision, tripNeedsReview, tripSnapshot } from "./workflow";
 
-// Dashboard layout from Didaune features/decision at 04597f6, with TravelGo's local room state.
+// Dashboard layout from Didaune features/decision at 04597f6; room data comes from Laravel.
 @Component({
   standalone: true,
+  providers: [RoomGateway],
   imports: [FormsModule, RouterLink, Icon, WorkflowPlacePicker],
   host: { class: "didaune-ui" },
   templateUrl: "./group-room.html",
@@ -23,9 +26,11 @@ import { placeRevision, tripNeedsReview, tripSnapshot } from "./workflow";
 })
 export class GroupRoom {
   readonly store = inject(TravelStore);
+  readonly roomGateway = inject(RoomGateway);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly injector = inject(Injector);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-  readonly state = computed(() => this.store.state().roomState ?? EMPTY_ROOM_STATE);
+  readonly state = computed(() => this.roomGateway.enabled ? this.roomGateway.state() : this.store.state().roomState ?? EMPTY_ROOM_STATE);
   readonly room = computed(() => this.state().rooms.find(room => room.code === this.state().activeCode));
   readonly roomFilter = signal<"all" | "owner" | "member">("all");
   readonly roomGroups = computed(() => {
@@ -103,11 +108,33 @@ export class GroupRoom {
         ? [[stop.placeId, tripSnapshot(place)] as const] : [];
     }));
   });
-  readonly canCopy = computed(() => this.store.catalogStatus() === "ready" && this.itinerary().length > 0 &&
+  readonly canCopy = computed(() => (!this.roomGateway.enabled || this.store.itineraryStorage() === "api") &&
+    this.store.catalogStatus() === "ready" && this.itinerary().length > 0 &&
     this.itinerary().every(stop => this.catalogById().has(stop.placeId)));
   readonly outOfOrder = computed(() => this.itinerary().some((stop, i, stops) => i > 0 && stop.time < stops[i - 1].time));
   readonly placeLimit = ROOM_PLACE_LIMIT;
   readonly stopLimit = ROOM_STOP_LIMIT;
+
+  constructor() {
+    let previousActor = "";
+    effect(() => {
+      const room = this.room();
+      const actor = room ? `${room.code}:${room.activeMemberId}` : "";
+      if (actor !== previousActor) {
+        previousActor = actor;
+        this.clearDrafts();
+      }
+    });
+    if (this.roomGateway.enabled) {
+      afterNextRender(() => {
+        void this.roomGateway.load();
+        const timer = setInterval(() => {
+          if (!this.busy() && !document.hidden) void this.roomGateway.load();
+        }, 5000);
+        this.destroyRef.onDestroy(() => clearInterval(timer));
+      }, { injector: this.injector });
+    }
+  }
 
   initiallySelected(room: GroupRoomRecord, placeId: string) {
     return room.result.some(stop => stop.placeId === placeId);
@@ -150,6 +177,13 @@ export class GroupRoom {
       this.store.toast("Kiểm tra tên phòng, tên hiển thị, ngày đi và số điểm mong muốn.");
       return;
     }
+    if (this.roomGateway.enabled) {
+      if (await this.remote(() => this.roomGateway.api.create({ title, name, date, desiredStops }))) {
+        this.clearDrafts();
+        this.focusAfterRender("room-title");
+      }
+      return;
+    }
     const id = crypto.randomUUID();
     if (await this.persist(state => {
       let code = crypto.randomUUID().slice(0, 8).toUpperCase();
@@ -172,6 +206,13 @@ export class GroupRoom {
       this.store.toast("Nhập mã phòng 8 ký tự và tên hiển thị.");
       return;
     }
+    if (this.roomGateway.enabled) {
+      if (await this.remote(() => this.roomGateway.api.join(code, name))) {
+        this.clearDrafts();
+        this.focusAfterRender("room-title");
+      }
+      return;
+    }
     if (await this.changeRoom(code, room => {
       if (room.result.length) return "Phòng đã chốt lịch trình và đóng bình chọn.";
       if (room.members.length >= ROOM_MEMBER_LIMIT) return `Phòng thử hỗ trợ tối đa ${ROOM_MEMBER_LIMIT} thành viên.`;
@@ -187,6 +228,13 @@ export class GroupRoom {
   }
 
   async openRoom(code: string) {
+    if (this.roomGateway.enabled) {
+      if (await this.remote(() => this.roomGateway.api.show(code))) {
+        this.clearDrafts();
+        this.focusAfterRender("room-title");
+      }
+      return;
+    }
     if (await this.persist(state => state.rooms.some(room => room.code === code) ? { ...state, activeCode: code } : null)) {
       this.clearDrafts();
       this.focusAfterRender("room-title");
@@ -194,6 +242,13 @@ export class GroupRoom {
   }
 
   async backToRooms() {
+    if (this.roomGateway.enabled) {
+      this.roomGateway.activeCode.set("");
+      this.clearDrafts();
+      void this.roomGateway.load();
+      this.focusAfterRender("room-lobby-title");
+      return;
+    }
     if (await this.persist(state => ({ ...state, activeCode: "" }))) {
       this.clearDrafts();
       this.focusAfterRender("room-lobby-title");
@@ -201,6 +256,7 @@ export class GroupRoom {
   }
 
   async switchMember(code: string, id: string) {
+    if (this.roomGateway.enabled) return;
     if (await this.changeRoom(code, room => room.members.some(member => member.id === id)
       ? { ...room, activeMemberId: id } : "Không tìm thấy thành viên thử.")) this.clearDrafts();
   }
@@ -208,7 +264,7 @@ export class GroupRoom {
   async copyCode(code: string, field: HTMLInputElement) {
     try {
       await navigator.clipboard.writeText(code);
-      this.store.toast("Đã sao chép mã mời dùng trong trình duyệt này.");
+      this.store.toast(this.roomGateway.enabled ? "Đã sao chép mã mời." : "Đã sao chép mã mời dùng trong trình duyệt này.");
     } catch {
       field.focus();
       field.select();
@@ -218,6 +274,13 @@ export class GroupRoom {
 
   async suggest(code: string) {
     const placeId = this.pickedId();
+    if (this.roomGateway.enabled) {
+      if (await this.remote(() => this.roomGateway.api.suggest(code, placeId))) {
+        this.pickedId.set("");
+        this.store.toast("Đã thêm địa điểm vào danh sách bình chọn.");
+      }
+      return;
+    }
     if (await this.changeRoom(code, room => {
       const name = this.available().get(placeId);
       if (!name || this.store.catalogStatus() !== "ready") return "Hãy chọn địa điểm có sẵn trong danh mục.";
@@ -234,12 +297,23 @@ export class GroupRoom {
   }
 
   async removeSuggestion(code: string, placeId: string) {
+    if (this.roomGateway.enabled) {
+      await this.remote(() => this.roomGateway.api.removeSuggestion(code, placeId));
+      return;
+    }
     await this.changeRoom(code, room => room.votingOpened || room.ownerId !== room.activeMemberId
       ? "Chủ phòng bỏ địa điểm trước khi mở bình chọn."
       : { ...room, places: room.places.filter(place => place.placeId !== placeId) });
   }
 
   async openVoting(code: string) {
+    if (this.roomGateway.enabled) {
+      if (await this.remote(() => this.roomGateway.api.openVoting(code))) {
+        this.pickedId.set("");
+        this.focusAfterRender("group-voting-title");
+      }
+      return;
+    }
     if (await this.changeRoom(code, room => {
       if (room.votingOpened || room.ownerId !== room.activeMemberId) return "Chỉ chủ phòng có thể mở bình chọn một lần.";
       if (this.store.catalogStatus() !== "ready" || !room.places.some(place => this.available().has(place.placeId))) {
@@ -260,6 +334,13 @@ export class GroupRoom {
 
   async submitVotes(code: string, memberId: string) {
     const ids = this.myVotes();
+    if (this.roomGateway.enabled) {
+      if (await this.remote(() => this.roomGateway.api.vote(code, ids))) {
+        this.draftVotes.set(null);
+        this.store.toast("Đã lưu lựa chọn bình chọn của bạn.");
+      }
+      return;
+    }
     if (await this.changeRoom(code, room => {
       if (memberId !== room.activeMemberId || ids.some(id => !this.available().has(id)) || this.store.catalogStatus() !== "ready") {
         return "Địa điểm hoặc vai đang thao tác đã thay đổi. Hãy kiểm tra lại.";
@@ -289,6 +370,14 @@ export class GroupRoom {
 
   async confirmDecision(code: string, memberId: string) {
     const selected = this.selectedStops();
+    if (this.roomGateway.enabled) {
+      if (await this.remote(() => this.roomGateway.api.finalize(code, selected))) {
+        this.clearDrafts();
+        this.focusAfterRender("group-itinerary-title");
+        this.store.toast("Đã chốt lịch trình nhóm.");
+      }
+      return;
+    }
     if (await this.changeRoom(code, room => {
       const available = this.available();
       if (memberId !== room.activeMemberId || this.store.catalogStatus() !== "ready" ||
@@ -309,6 +398,12 @@ export class GroupRoom {
     if (this.busy() || !this.canCopy()) return;
     this.busy.set(true);
     try {
+      if (this.roomGateway.enabled) {
+        if (await this.store.copyRoomItinerary(room.code, room.revision!, room.activeMemberId)) {
+          this.store.toast("Đã mở bản lịch trình cá nhân. Bạn có thể xem và chỉnh trong Lịch trình của tôi.");
+        } else { void this.roomGateway.load(); }
+        return;
+      }
       if (await this.store.createTrip({ name: room.title, date: room.date, source: "room", points: this.itinerary().map(stop => ({
         placeId: stop.placeId, time: stop.time, snapshot: stop.snapshot, keptRevision: stop.keptRevision,
       })) }, { preserveSnapshots: true })) this.store.toast("Đã lưu một bản vào Lịch trình của tôi.");
@@ -415,6 +510,16 @@ export class GroupRoom {
   }
 
   private updateItinerary(code: string, change: (stops: RoomStop[]) => RoomStop[] | string) {
+    if (this.roomGateway.enabled) {
+      const room = this.state().rooms.find(room => room.code === code);
+      if (!room || room.ownerId !== room.activeMemberId || !room.result.length) return Promise.resolve(false);
+      const stops = change(room.itinerary ?? room.result);
+      if (typeof stops === "string") {
+        this.store.toast(stops);
+        return Promise.resolve(false);
+      }
+      return this.remote(() => this.roomGateway.api.itinerary(room, stops));
+    }
     return this.changeRoom(code, room => {
       if (!room.result.length || room.ownerId !== room.activeMemberId) return "Chỉ chủ phòng có thể chỉnh lịch trình nhóm đã chốt.";
       const itinerary = change(room.itinerary ?? room.result);
@@ -431,6 +536,19 @@ export class GroupRoom {
         activeCode: code, rooms: state.rooms.map(item => item.code === code ? next : item),
       };
     });
+  }
+
+  private async remote(action: () => Promise<GroupRoomRecord>) {
+    if (this.busy()) return false;
+    this.busy.set(true);
+    try {
+      await this.roomGateway.mutate(action);
+      return true;
+    } catch (error) {
+      this.store.toast(error instanceof Error ? error.message : "Chưa thể cập nhật phòng.");
+      if (error instanceof RoomApiError && error.status === 409) void this.roomGateway.load();
+      return false;
+    } finally { this.busy.set(false); }
   }
 
   private async persist(change: (state: RoomState) => RoomState | string | null) {

@@ -13,7 +13,8 @@ import {
   validateReview,
   validateTripDraft,
 } from "./logic";
-import { activateTrip, restoreTripFields } from "./trip-storage";
+import { activateTrip, currentTrip, hasActiveTrip, restoreTripFields } from "./trip-storage";
+import { ItineraryApi, ItineraryApiError, type SuggestionRequest } from "./itinerary-api";
 import { restoreRoomState } from "./room-state";
 import {
   EMPTY_WORKFLOW,
@@ -27,6 +28,9 @@ import {
 
 @Injectable({ providedIn: "root" })
 export class TravelStore {
+  private itineraryApi: ItineraryApi | undefined;
+  readonly itineraryStorage = signal<"demo" | "api">("demo");
+  readonly itineraryError = signal("");
   readonly city = signal<City>("hcm");
   private readonly sourcePlaces = signal<Place[]>([]);
   private readonly clock = signal(Date.now());
@@ -125,6 +129,11 @@ export class TravelStore {
   }
   private async load() {
     try {
+      const config = await fetch('/itinerary-config.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null);
+      if (config?.storage === 'api') {
+        this.itineraryApi = new ItineraryApi();
+        this.itineraryStorage.set('api');
+      }
       this.db = await new Promise<IDBDatabase>((resolve, reject) => {
         const request = indexedDB.open("travelgo-hcm-reference-v1", 1);
         request.onupgradeneeded = () =>
@@ -152,7 +161,7 @@ export class TravelStore {
         this.state.set({
           favorites: [],
           reviews: [],
-          ...restoreTripFields(candidate),
+          ...restoreTripFields(this.itineraryApi ? structuredClone(EMPTY_STATE) : candidate),
           roomState: restoreRoomState(candidate.roomState),
           workflow: restoreWorkflow(candidate.workflow),
         });
@@ -162,6 +171,16 @@ export class TravelStore {
         "Trình duyệt chưa cho phép lưu bản dùng thử. Hãy bật lưu trữ của trang rồi tải lại.",
       );
     } finally {
+      if (this.itineraryApi) {
+        try {
+          const trips = await this.itineraryApi.list();
+          let state: DemoState = { ...this.state(), ...restoreTripFields(structuredClone(EMPTY_STATE)) };
+          if (trips.length) state = activateTrip(state, trips[0]);
+          state.savedTrips = trips.slice(1);
+          this.state.set(state);
+          this.itineraryError.set("");
+        } catch (error) { this.reportItineraryError(error); }
+      }
       this.ready.set(true);
     }
   }
@@ -170,7 +189,7 @@ export class TravelStore {
   ): Promise<boolean> {
     let success = false;
     this.queue = this.queue.then(async () => {
-      if (!this.db || !this.ready()) {
+      if ((!this.db && !this.itineraryApi) || !this.ready()) {
         this.toast(
           "Chưa thể lưu. Vui lòng tải lại trang khi trình duyệt cho phép lưu trữ.",
         );
@@ -179,6 +198,17 @@ export class TravelStore {
       try {
         const next = change(this.state());
         if (!next) return;
+        if (this.itineraryApi && JSON.stringify(currentTrip(next)) !== JSON.stringify(currentTrip(this.state()))) {
+          const previous = currentTrip(this.state());
+          try {
+            const saved = await this.itineraryApi.save(currentTrip(next), hasActiveTrip(this.state()) ? previous.id : undefined);
+            this.state.set({ ...next, ...restoreTripFields({ ...next, tripId: saved.id, trip: saved.points,
+              tripName: saved.name, tripDate: saved.date, tripEndDate: saved.endDate,
+              tripBudget: saved.budget, tripCover: saved.cover, tripNote: saved.note, tripSource: saved.source }) });
+            this.itineraryError.set(""); success = true;
+          } catch (error) { this.reportItineraryError(error); }
+          return;
+        }
         const written = await new Promise<boolean>((resolve, reject) => {
           const tx = this.db!.transaction("state", "readwrite");
           const entries = tx.objectStore("state");
@@ -186,7 +216,8 @@ export class TravelStore {
           let changed = false;
           revision.onsuccess = () => {
             if ((revision.result ?? 0) !== this.storageRevision) return;
-            entries.put(next, "current");
+            // Account itineraries stay on the server; never persist them in the shared demo cache.
+            entries.put(this.itineraryApi ? { ...next, ...restoreTripFields(structuredClone(EMPTY_STATE)) } : next, "current");
             entries.put(this.storageRevision + 1, "revision");
             changed = true;
           };
@@ -411,6 +442,15 @@ export class TravelStore {
       this.toast(error);
       return false;
     }
+    if (this.itineraryApi) {
+      try {
+        if (!this.ready()) return false;
+        const saved = await this.itineraryApi.save(draft);
+        this.state.update(state => activateTrip(state, saved));
+        this.itineraryError.set("");
+        return true;
+      } catch (error) { this.reportItineraryError(error); return false; }
+    }
     return this.update(state => {
       if (this.catalogStatus() !== "ready") {
         this.toast("Chưa tải được danh mục. Vui lòng thử lại.");
@@ -444,13 +484,36 @@ export class TravelStore {
       });
     });
   }
+  async copyRoomItinerary(roomCode: string, roomRevision: number, memberId: string): Promise<boolean> {
+    if (!this.itineraryApi || !this.ready()) {
+      this.toast("Chưa kết nối được dịch vụ lịch trình. Vui lòng thử lại sau.");
+      return false;
+    }
+    try {
+      const saved = await this.itineraryApi.copyRoom(roomCode, roomRevision, memberId);
+      this.state.update(state => activateTrip(state, saved));
+      this.itineraryError.set("");
+      return true;
+    } catch (error) { this.reportItineraryError(error); return false; }
+  }
   async switchTrip(id: string): Promise<boolean> {
+    if (this.itineraryApi) {
+      try {
+        const trip = await this.itineraryApi.show(id);
+        this.state.update(state => activateTrip(state, trip));
+        this.itineraryError.set(""); return true;
+      } catch (error) { this.reportItineraryError(error); return false; }
+    }
     return this.update(state => {
       const selected = state.savedTrips?.find(trip => trip.id === id);
       return selected ? activateTrip(state, selected) : null;
     });
   }
   async resolveTripChange(placeId: string, decision: "update" | "keep", replacementId?: string): Promise<boolean> {
+    if (this.itineraryApi) {
+      this.toast("Chưa thể xác nhận thay đổi lúc này. Kế hoạch đã lưu vẫn được giữ.");
+      return false;
+    }
     return this.update(state => {
       const item = this.tripPlaces().find(entry => entry.placeId === placeId);
       if (!item) return null;
@@ -467,5 +530,24 @@ export class TravelStore {
   }
   matches(name: string, area: string) {
     return normalize(`${name} ${area}`).includes(normalize(this.query()));
+  }
+  async suggestItinerary(input: SuggestionRequest) {
+    if (!this.itineraryApi) return null;
+    try {
+      const result = await this.itineraryApi.suggest(input);
+      const previousError = this.itineraryError();
+      this.itineraryError.set("");
+      if (previousError && this.notice() === previousError) this.notice.set("");
+      return result;
+    }
+    catch (error) { this.reportItineraryError(error); throw error; }
+  }
+  private reportItineraryError(error: unknown) {
+    const message = error instanceof Error ? error.message : "Chưa kết nối được lịch trình. Bản nháp vẫn được giữ.";
+    this.itineraryError.set(message);
+    if (error instanceof ItineraryApiError && error.status === 401) {
+      this.state.update(state => ({ ...state, ...restoreTripFields(structuredClone(EMPTY_STATE)) }));
+    }
+    this.toast(message);
   }
 }

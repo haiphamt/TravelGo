@@ -12,3 +12,5 @@ Thumbs.db
 **/dist/
 **/.angular/
 .impeccable/review/
+frontend/playwright-report/
+frontend/test-results/

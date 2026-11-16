@@ -65,7 +65,7 @@ import { WorkspaceNavigation, type WorkspaceRole } from "./workspace-navigation"
       </nav>
       <div class="sidebar-footer">
         <span class="preview-dot"></span><strong>Bản dùng thử frontend</strong>
-        <p>Yêu thích và đánh giá lưu theo tài khoản. Lịch trình và đóng góp thử lưu trên trình duyệt này.</p>
+        <p>Yêu thích và đánh giá lưu theo tài khoản. {{ store.itineraryStorage() === 'api' ? 'Lịch trình lưu theo tài khoản.' : 'Lịch trình thử lưu trên trình duyệt này.' }}</p>
         <a routerLink="/tai-khoan">Thử vai trò <tg-icon name="arrow" /></a>
         <a routerLink="/nguon-du-lieu">Nguồn dữ liệu &amp; giới hạn <tg-icon name="external" /></a>
       </div>
