@@ -33,6 +33,7 @@ export interface LocalProfile {
   sources: { label: string; url: string; updatedAt: string | null }[];
 }
 export interface Place {
+  revision?: string;
   id: string;
   name: string;
   city: City;

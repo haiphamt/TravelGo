@@ -33,13 +33,15 @@ export class TravelStore {
   readonly itineraryError = signal("");
   readonly city = signal<City>("hcm");
   private readonly sourcePlaces = signal<Place[]>([]);
+  private readonly moderatedPlaces = signal<Place[]>([]);
   private readonly clock = signal(Date.now());
   readonly catalogStatus = signal<"loading" | "ready" | "error">("loading");
   readonly catalogError = signal("");
   private catalogLoading = false;
   readonly query = signal("");
   readonly state = signal<DemoState>(structuredClone(EMPTY_STATE));
-  readonly workflow = computed(() => this.state().workflow ?? EMPTY_WORKFLOW);
+  // Legacy browser moderation is not authority for the public catalog or review visibility.
+  readonly workflow = computed(() => EMPTY_WORKFLOW);
   readonly places = computed(() => this.catalogAt(new Date(Math.max(this.clock(), Date.now())).toISOString()));
   readonly catalogTotal = computed(() => this.places().length);
   readonly notice = signal("");
@@ -111,9 +113,15 @@ export class TravelStore {
     }
   }
   catalogAt(_now: string) {
-    // Demo moderation is kept in its own state; it cannot rewrite server data.
     const details = this.detailPlaces();
-    return this.sourcePlaces().map(place => details[place.id] ?? place);
+    const places = new Map(this.sourcePlaces().map(place => [place.id, details[place.id] ?? place]));
+    for (const place of this.moderatedPlaces()) {
+      places.set(place.id, { ...places.get(place.id), ...place });
+    }
+    return [...places.values()];
+  }
+  mergeModeratedPlace(place: Place) {
+    this.moderatedPlaces.update(places => [...places.filter(item => item.id !== place.id), place]);
   }
   private catalogHas(id: string) {
     if (this.detailStatus()[id] === "ready" && this.detailPlaces()[id]) return true;

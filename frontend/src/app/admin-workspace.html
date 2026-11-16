@@ -5,7 +5,7 @@
 
 <p class="workflow-note">
   <tg-icon name="info" />
-  Yêu cầu và quyết định trong bản dùng thử được lưu trên trình duyệt này.
+  Yêu cầu và quyết định được lưu trên máy chủ, kèm người xử lý, thời điểm và lý do.
 </p>
 
 @if (store.catalogStatus() === 'error') {
@@ -128,7 +128,7 @@
         <p>Thử tìm bằng từ khóa khác hoặc đổi trạng thái.</p>
       } @else {
         <h3>Chưa có yêu cầu{{ kind() ? ' thuộc loại này' : '' }}</h3>
-        <p>Yêu cầu từ Người dùng và Chủ cơ sở trong bản dùng thử sẽ xuất hiện ở đây.</p>
+        <p>Yêu cầu từ Người dùng và Chủ cơ sở sẽ xuất hiện ở đây.</p>
       }
     </div>
   }
@@ -174,7 +174,7 @@
           @if (item.evidence) {
             <div class="workflow-request-reason"><strong>Căn cứ đối chiếu</strong><p>{{ item.evidence }}</p></div>
           }
-          <p class="muted">Quyền trong bản dùng thử chỉ áp dụng cho địa điểm của yêu cầu này.</p>
+          <p class="muted">Quyền quản lý chỉ áp dụng cho địa điểm của yêu cầu này.</p>
         </section>
       }
 
@@ -231,7 +231,7 @@
         <section class="admin-detail-section" aria-labelledby="report-title">
           <h3 id="report-title">{{ item.photoIndex != null ? 'Ảnh được báo cáo' : 'Đánh giá được báo cáo' }}</h3>
           @if (targetReview(); as review) {
-            <div class="workflow-request-reason"><strong>Đánh giá trong bản dùng thử · {{ review.rating }}/5 sao</strong><p>{{ review.text || 'Không có nhận xét' }}</p></div>
+            <div class="workflow-request-reason"><strong>Đánh giá hiện hành · {{ review.rating }}/5 sao</strong><p>{{ review.text || 'Không có nhận xét' }}</p></div>
             @if (item.photoIndex != null && review.photos[item.photoIndex]; as photo) {
               <figure class="workflow-photo"><img [src]="photo" alt="Ảnh đánh giá được báo cáo" /></figure>
             }
@@ -296,10 +296,10 @@
               <button type="button" class="button secondary" [disabled]="unavailable" (click)="decide(item, 'needs-info')">Yêu cầu bổ sung</button>
               <button type="button" class="button primary" [disabled]="unavailable || staleUpdate()" (click)="decide(item, 'approved')">
                 <tg-icon name="check" />
-                {{ item.kind === 'claim' ? 'Cấp quyền trong bản thử' : item.kind === 'report' ? 'Xử lý báo cáo' : 'Duyệt đề xuất' }}
+                {{ item.kind === 'claim' ? 'Cấp quyền quản lý' : item.kind === 'report' ? 'Xử lý báo cáo' : 'Duyệt đề xuất' }}
               </button>
             } @else {
-              <button type="button" class="button secondary workflow-reject" [disabled]="unavailable" (click)="decide(item, 'revoked')">Thu hồi quyền trong bản thử</button>
+              <button type="button" class="button secondary workflow-reject" [disabled]="unavailable" (click)="decide(item, 'revoked')">Thu hồi quyền quản lý</button>
             }
           </div>
         </section>
