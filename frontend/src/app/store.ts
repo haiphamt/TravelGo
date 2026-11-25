@@ -54,6 +54,7 @@ export class TravelStore {
   readonly accountError = signal("");
   readonly favoritePending = signal(false);
   private readonly api = new PlacesApi();
+  private readonly suggestionCache = new Map<string, { places: Place[]; expiresAt: number }>();
   private accountEpoch = 0;
   readonly accountGeneration = signal(0);
   private readonly ownReviews = signal<Record<string, ApiReview | null>>({});
@@ -102,8 +103,23 @@ export class TravelStore {
     if (this.catalogStatus() === "loading") void this.loadCatalog();
   }
   async loadSuggestions(category: Category, facet: PlaceFacet | undefined, signal: AbortSignal) {
-    const suggestions = await this.api.suggestions(category, facet, signal);
-    if (!signal.aborted && suggestions.length) {
+    const key = `${category}:${facet ?? ""}`;
+    const cached = this.suggestionCache.get(key);
+    if (cached && Date.now() < cached.expiresAt) return cached.places;
+
+    const timeout = AbortSignal.timeout(8_000);
+    const requestSignal = AbortSignal.any([signal, timeout]);
+    let suggestions: Place[];
+    try {
+      suggestions = await this.api.suggestions(category, facet, requestSignal);
+    } catch (error) {
+      if (timeout.aborted && !signal.aborted) throw new Error("Gợi ý phản hồi quá chậm. Hãy thử lại.");
+      throw error;
+    }
+    if (!requestSignal.aborted) {
+      this.suggestionCache.set(key, { places: suggestions, expiresAt: Date.now() + 60_000 });
+    }
+    if (!requestSignal.aborted && suggestions.length) {
       // Register these places so card actions work while the rest of the catalog loads.
       this.sourcePlaces.update(current => {
         const byId = new Map(current.map(place => [place.id, place]));

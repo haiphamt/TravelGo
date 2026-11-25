@@ -13,6 +13,7 @@ Route::prefix('api/auth')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->middleware('throttle:10,1,auth-login');
     Route::post('register', [AuthController::class, 'register'])->middleware('throttle:5,1,auth-register');
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('profile', [AuthController::class, 'updateProfile'])->middleware(['auth:web', 'throttle:30,1,auth-profile']);
     Route::get('google', [GoogleAuthController::class, 'redirect'])->middleware('throttle:20,1,auth-google');
     Route::get('google/callback', [GoogleAuthController::class, 'callback']);
 });

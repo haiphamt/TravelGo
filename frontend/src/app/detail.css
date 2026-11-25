@@ -66,11 +66,6 @@
 .detail-source-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; margin: 0; }
 .detail-sources a { color: #9a3412; text-decoration: underline; text-underline-offset: 3px; }
 .detail-sources tg-icon { width: 12px; height: 12px; margin-inline-start: 4px; vertical-align: -2px; }
-.detail-source-more summary { width: fit-content; padding-block: 10px; color: #334155; cursor: pointer; font-weight: 650; }
-.detail-source-more summary:focus-visible { outline: 2px solid var(--brand-text); outline-offset: 3px; }
-.detail-source-more dl { margin-top: 4px; }
-.detail-source-more ul { margin: 12px 0 0; padding-inline-start: 18px; }
-.detail-source-more li + li { margin-top: 4px; }
 
 .detail-info-list { display: grid; gap: 12px; margin: 16px 0 20px; font-size: 13px; }
 .detail-info-list > div { display: grid; grid-template-columns: 2fr 3fr; gap: 12px; }

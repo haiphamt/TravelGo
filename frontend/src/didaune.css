@@ -10,6 +10,8 @@
 .didaune-ui .text-primary,
 .didaune-ui .group:hover .group-hover\:text-primary { color: var(--brand-text); }
 .didaune-ui .global-search { min-width: 0; }
+.header-filters { display: contents; }
+.header-mobile-action, .mobile-bottom-nav { display: none; }
 .sidebar.didaune-ui nav { margin-bottom: 0; }
 .header-area {
   align-items: center;
@@ -57,13 +59,9 @@
   aside.sidebar { top: 80px; width: 256px; }
   #main-content { margin-left: 256px; }
   #main-content:has(> .didaune-ui) { padding: 80px 0 0; }
-  #main-content:has(> .didaune-ui) .page-footer { margin-inline: 32px; }
 }
 
-@media (max-width: 900px) {
-  #main-content:has(> .didaune-ui) { padding-inline: 0; }
-  #main-content:has(> .didaune-ui) .page-footer { margin-inline: 16px; }
-}
+#main-content.public-main { padding-bottom: 28px; }
 
 :root {
   --role-rail-width: 240px;
@@ -73,14 +71,130 @@
 #main-content.workspace-main {
   min-width: 0;
   margin-inline-start: var(--role-rail-width);
-  padding: 28px 32px 0;
+  padding: 28px 32px;
 }
-
-#main-content.workspace-main .page-footer { margin-inline: 0; }
 
 @media (max-width: 900px) {
   #main-content.workspace-main {
     margin-inline-start: 0;
-    padding: calc(var(--role-topbar-height) + 18px) 16px 0;
+    padding: calc(var(--role-topbar-height) + 18px) 16px 24px;
   }
+}
+
+@media (max-width: 1023px) {
+  header.topbar {
+    height: 64px;
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 0 16px;
+  }
+  .topbar .brand { width: auto; margin-inline-end: auto; font-size: clamp(20px, 5vw, 25px); }
+  .topbar .brand-mark { height: 28px; }
+  .topbar .mobile-menu, .topbar .header-mobile-action {
+    display: grid !important;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #eef2f6;
+    color: #475569;
+    font-size: 16px;
+  }
+  .topbar .mobile-menu { background: #172339; color: #fff; }
+  .topbar .account-initials { width: 44px; height: 44px; }
+  .topbar .account-dropdown { max-height: calc(100dvh - 75px); overflow: auto; }
+  .topbar .account-dropdown :focus-visible { outline-offset: -2px; }
+  .topbar .header-filters {
+    display: none;
+    position: absolute;
+    inset: 100% 0 auto;
+    z-index: 2;
+    padding: 12px 16px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    box-shadow: 0 8px 16px rgb(16 24 40 / 8%);
+  }
+  .topbar .header-filters.expanded { display: grid; gap: 9px; }
+  .topbar .header-map-link { display: none; }
+  .topbar .global-search {
+    order: initial;
+    min-height: 44px;
+    max-width: none;
+    margin: 0;
+    border-radius: 12px;
+  }
+  .topbar .global-search input, .topbar .header-area input { font-size: 16px; }
+  .topbar .global-search:has(input:focus-visible), .topbar .header-area:has(input:focus-visible) {
+    outline: 2px solid var(--brand-text);
+    outline-offset: 1px;
+  }
+  .topbar .header-filters input:focus-visible { outline: none; }
+  .topbar .city-control {
+    grid-row: 1;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .topbar .header-area { display: flex; width: 100%; min-height: 44px; }
+  aside.sidebar {
+    top: 64px;
+    z-index: 40;
+    width: min(280px, 85vw);
+    overflow-y: auto;
+    visibility: hidden;
+    transform: translateX(-100%);
+  }
+  aside.sidebar.open { visibility: visible; transform: none; }
+  aside.sidebar nav a { min-height: 44px; }
+  .menu-backdrop {
+    display: block;
+    position: fixed;
+    inset: 64px 0 0;
+    z-index: 35;
+    border: 0;
+    background: rgb(16 24 40 / 40%);
+  }
+  .mobile-bottom-nav {
+    display: grid;
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 30;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .mobile-bottom-nav a {
+    display: flex;
+    min-height: 50px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    margin-inline: 2px;
+    border-radius: 12px;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .mobile-bottom-nav i { font-size: 16px; }
+  .mobile-bottom-nav a.active { background: #fff1e6; color: #a5360d; }
+  .mobile-bottom-nav a:focus-visible { outline-offset: -2px; }
+  #main-content.public-main { margin: 0; padding: 84px 16px calc(76px + env(safe-area-inset-bottom)); }
+  #main-content.public-main:has(> .didaune-ui) { padding: 64px 0 calc(72px + env(safe-area-inset-bottom)); }
+  #main-content.public-main ~ .toast { bottom: calc(70px + env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 380px) {
+  header.topbar { gap: 4px; padding-inline: 8px; }
+  .topbar .brand { font-size: 19px; }
+  .topbar .brand-mark { height: 24px; }
+  .mobile-bottom-nav a { font-size: 10px; }
 }

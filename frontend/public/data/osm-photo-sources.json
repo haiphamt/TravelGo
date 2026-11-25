@@ -1596,6 +1596,56 @@
       "width": 960,
       "height": 660,
       "sourceOriginalSha256": "d81c402d00c578c705f856ef6439e7ddc6710751e6ba2425562ca37bbd606be5"
+    },
+    {
+      "placeId": "osm:node/4928829323",
+      "placeName": "Starbucks",
+      "path": "/images/osm/node-4928829323.jpg",
+      "credit": "lightwrite · Flickr · CC BY-SA 2.0 (ảnh chụp năm 2014)",
+      "creator": "lightwrite",
+      "title": "Starbucks, Saigon",
+      "sourcePage": "https://www.flickr.com/photos/lightwrite/14547239334/",
+      "sourceImageUrl": "https://live.staticflickr.com/3914/14547239334_10dbc40ee7.jpg",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "captureDateSource": "2014-06-21",
+      "checkedDate": "2026-11-25",
+      "matchEvidence": {
+        "osmUrl": "https://www.openstreetmap.org/node/4928829323",
+        "photoCaption": "Mặt tiền Starbucks New World ở 76 Lê Lai, đối chiếu với hình ngày khai trương.",
+        "addressSource": "https://www.starbucks.vn/store-locator/",
+        "facadeReference": "https://thanhnien.vn/starbucks-khai-truong-cua-hang-dau-tien-tai-viet-nam-185220413.htm"
+      },
+      "sha256": "ebcf1cc9b268b673de7ad2e337fc2f60ca7ffcbc2095a50bbe7de76b54cbb5e3",
+      "bytes": 70995,
+      "rendition": "Flickr 500px thumbnail, downloaded bytes unchanged.",
+      "width": 500,
+      "height": 375
+    },
+    {
+      "placeId": "osm:way/1275902196",
+      "placeName": "Le Café De Dinh",
+      "path": "/images/osm/way-1275902196.jpg",
+      "credit": "源義信 · Wikimedia Commons · CC BY 4.0 (ảnh năm 2023, trước khi đổi tên; đã thu nhỏ)",
+      "creator": "源義信",
+      "title": "Café 30/4, 135 Nam Kỳ Khởi Nghĩa",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2023-12-10_Caf%C3%A9_30%EF%BC%8F4,_Nam_K%E1%BB%B3_Kh%E1%BB%9Fi_Ngh%C4%A9a_Street,_Ho_Chi_Minh_City.jpg",
+      "sourceImageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/2023-12-10_Caf%C3%A9_30%EF%BC%8F4,_Nam_K%E1%BB%B3_Kh%E1%BB%9Fi_Ngh%C4%A9a_Street,_Ho_Chi_Minh_City.jpg/960px-2023-12-10_Caf%C3%A9_30%EF%BC%8F4,_Nam_K%E1%BB%B3_Kh%E1%BB%9Fi_Ngh%C4%A9a_Street,_Ho_Chi_Minh_City.jpg",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "captureDateSource": "2023-12-10",
+      "checkedDate": "2026-11-25",
+      "matchEvidence": {
+        "osmUrl": "https://www.openstreetmap.org/way/1275902196",
+        "photoCaption": "135 Nam Kỳ Khởi Nghĩa; nguồn năm 2026 cho thấy cùng mặt tiền và biển tròn Café 30/4 cũ tại Le Café De Dinh.",
+        "facadeReference": "https://tieudungvietnam.vn/an-uong/le-cafe-de-dinh-goc-dung-chan-xanh-mat-truoc-them-dinh-doc-lap-a119353.html",
+        "cameraCoordinates": [10.778606, 106.696094]
+      },
+      "sha256": "cba26f104b279b824f81ad0ecbc358dc2a90cb3a5bd15e8e51a6f92a58776e67",
+      "bytes": 105661,
+      "rendition": "Resized to 640px width and JPEG encoded.",
+      "width": 640,
+      "height": 480
     }
   ]
 }

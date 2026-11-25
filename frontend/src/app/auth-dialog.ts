@@ -40,6 +40,7 @@ export class AuthDialog {
     this.localError.set("");
     this.mode.set(mode);
     element.showModal();
+    element.focus({ preventScroll: true });
     element.scrollTop = 0;
   }
 

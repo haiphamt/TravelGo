@@ -8,9 +8,25 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 
 class PlaceController extends Controller
 {
+    private const IMAGE_ORDER = "CASE WHEN image IS NULL OR image = '' THEN 2 WHEN photo_source IS NULL THEN 1 ELSE 0 END";
+
+    public function catalog(Request $request): StreamedJsonResponse
+    {
+        $places = $this->placesInCity('hcm')->orderByRaw(self::IMAGE_ORDER)->orderBy('places.id')
+            ->cursor()->map(fn (Place $place) => (new PlaceResource($place))->resolve($request));
+
+        return response()->streamJson(['data' => $places], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    private function placesInCity(string $city): Builder
+    {
+        return Place::query()->where('city', $city)->withPublicReviewSummary();
+    }
+
     public function index(Request $request): JsonResponse
     {
         $filters = $request->validate([
@@ -28,7 +44,7 @@ class PlaceController extends Controller
             'per_page' => ['sometimes', 'integer', 'min:1', 'max:200'],
         ]);
 
-        $query = Place::query()->where('city', $filters['city'] ?? 'hcm')->withPublicReviewSummary();
+        $query = $this->placesInCity($filters['city'] ?? 'hcm');
         $localType = trim($filters['localType'] ?? '');
 
         if ($localType !== '') {
@@ -51,7 +67,8 @@ class PlaceController extends Controller
             // MySQL serializes JSON string arrays with ", " separators. Joining their
             // elements keeps the catalog's name / products / address search contract.
             $products = "REPLACE(REPLACE(REPLACE(COALESCE(JSON_UNQUOTE(products), ''), '\", \"', ' '), '[\"', ''), '\"]', '')";
-            $this->contains($query, "CONCAT_WS(' ', name, {$products}, area)", $search);
+            $address = "NULLIF(area, 'Chưa cập nhật địa chỉ')";
+            $this->contains($query, "CONCAT_WS(' ', name, {$products}, {$address})", $search);
         }
 
         if (($area = trim($filters['area'] ?? '')) !== '') {
@@ -72,7 +89,7 @@ class PlaceController extends Controller
         match ($filters['sort'] ?? 'default') {
             'name' => $query->orderBy('name'),
             'price' => $query->orderByRaw('price IS NULL')->orderBy('price'),
-            default => $query->orderByRaw("CASE WHEN image IS NULL OR image = '' THEN 2 WHEN photo_source IS NULL THEN 1 ELSE 0 END"),
+            default => $query->orderByRaw(self::IMAGE_ORDER),
         };
 
         $page = $query->orderBy('places.id')->paginate($filters['per_page'] ?? 24);
@@ -105,11 +122,11 @@ class PlaceController extends Controller
 
     private function searchable(string $expression): string
     {
-        return "REPLACE(REPLACE({$expression}, 'đ', 'd'), 'Đ', 'D') COLLATE utf8mb4_unicode_ci";
+        return "REPLACE(REPLACE(LOWER({$expression}), 'đ', 'd'), 'ð', 'd') COLLATE utf8mb4_unicode_ci";
     }
 
     private function foldD(string $value): string
     {
-        return str_replace(['đ', 'Đ'], ['d', 'D'], $value);
+        return str_replace(['đ', 'Đ', 'ð', 'Ð'], 'd', $value);
     }
 }

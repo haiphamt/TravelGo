@@ -66,17 +66,19 @@ test("map/list query serialization preserves actual filter scope and removes def
 
 test("the source address filter excludes missing addresses and round trips through map links", () => {
   const places = [
-    place({ id: "match", name: "Bánh mì", area: "12 Bình Thới, TP. Hồ Chí Minh" }),
+    place({ id: "match", name: "Bánh mì", area: "12 Ðường Bình Thới, TP. Hồ Chí Minh" }),
     place({ id: "name-only", name: "Bánh mì Bình Thới", area: "Nguyễn Trãi" }),
     place({ id: "unknown", name: "Bánh mì", area: "Chưa cập nhật địa chỉ" }),
   ];
-  const filters = parseDiscoveryFilters(new URLSearchParams("q=banh%20mi&area=%20binh%20thoi%20&page=2"));
+  const filters = parseDiscoveryFilters(new URLSearchParams("q=banh%20mi&area=%20duong%20binh%20thoi%20&page=2"));
   assert.deepEqual(filterPlaces(places, filters).map(place => place.id), ["match"]);
-  const query = mapQuery(new URLSearchParams("q=banh%20mi&area=binh%20thoi&page=2"), "match");
-  assert.equal(query["area"], "binh thoi");
+  const query = mapQuery(new URLSearchParams("q=banh%20mi&area=duong%20binh%20thoi&page=2"), "match");
+  assert.equal(query["area"], "duong binh thoi");
   assert.equal(query["page"], "2");
   assert.deepEqual(parseDiscoveryFilters({ get: name => query[name] ?? null }), filters);
   assert.deepEqual(filterPlaces(places, { ...filters, area: "chua cap nhat dia chi" }), []);
+  assert.deepEqual(filterPlaces(places, { ...filters, area: undefined, query: "Đường Bình Thới" }).map(place => place.id), ["match"]);
+  assert.deepEqual(filterPlaces(places, { ...filters, area: undefined, query: "chua cap nhat dia chi" }), []);
 });
 
 test("Local source groups filter the same catalog and survive list/detail/map query context", () => {

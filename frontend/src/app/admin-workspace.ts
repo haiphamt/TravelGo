@@ -1,9 +1,8 @@
 import { DatePipe } from "@angular/common";
-import { Component, ElementRef, computed, inject, linkedSignal, signal, viewChild } from "@angular/core";
+import { Component, ElementRef, computed, effect, inject, linkedSignal, signal, untracked, viewChild } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
-import { map } from "rxjs";
 import { CATEGORIES, money } from "./data";
 import { Icon } from "./icon";
 import { normalize } from "./logic";
@@ -15,23 +14,40 @@ import { WorkflowStore } from "./workflow-store";
 
 type QueueStatus = "" | "processed" | RequestStatus;
 const PAGE_SIZE = 12;
+const queueSections = {
+  all: { icon: "grid", description: "Lọc yêu cầu theo loại hoặc trạng thái để tìm hồ sơ cần xử lý." },
+  new: { icon: "pin", description: "Đối chiếu thông tin địa điểm do người dùng đề xuất." },
+  update: { icon: "map", description: "So sánh thay đổi được đề xuất với hồ sơ hiện tại." },
+  claim: { icon: "shield", description: "Kiểm tra hồ sơ và xét quyền quản lý địa điểm." },
+  report: { icon: "star", description: "Xem nội dung bị báo cáo và quyết định cách xử lý." },
+};
 
 @Component({
   standalone: true,
   imports: [DatePipe, FormsModule, RouterLink, Icon, WorkflowMap],
   templateUrl: "./admin-workspace.html",
-  styleUrl: "./admin-workspace.css",
+  styleUrls: ["./workspace-heading.css", "./admin-workspace.css"],
 })
 export class AdminWorkspace {
-  private readonly workflow = inject(WorkflowStore);
+  readonly workflow = inject(WorkflowStore);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly closeButton = viewChild.required<ElementRef<HTMLButtonElement>>("closeButton");
-  private readonly queueTitle = viewChild.required<ElementRef<HTMLHeadingElement>>("queueTitle");
+  private readonly queueTitle = viewChild<ElementRef<HTMLHeadingElement>>("queueTitle");
+  private readonly params = toSignal(this.route.queryParamMap);
   readonly store = inject(TravelStore);
   readonly labels = workflowLabels;
-  readonly kinds = Object.entries(workflowLabels.kind);
+  readonly queueSections = queueSections;
+  readonly kinds = Object.keys(workflowLabels.kind) as RequestKind[];
   readonly statuses = Object.entries(workflowLabels.status);
+  readonly numberFormat = new Intl.NumberFormat("vi-VN");
+  readonly ratingFormat = new Intl.NumberFormat("vi-VN", { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+  readonly metrics = [
+    { key: "places", label: "Địa điểm", icon: "pin" },
+    { key: "users", label: "Tài khoản", icon: "users" },
+    { key: "reviews", label: "Đánh giá công khai", icon: "star" },
+    { key: "favorites", label: "Lượt yêu thích", icon: "heart" },
+  ] as const;
   readonly quickStatuses: { key: QueueStatus; label: string }[] = [
     { key: "", label: "Tất cả" },
     { key: "pending", label: "Đang chờ" },
@@ -39,17 +55,25 @@ export class AdminWorkspace {
     { key: "processed", label: "Đã xử lý" },
   ];
   readonly selectedId = signal("");
-  readonly kind = toSignal(this.route.queryParamMap.pipe(map(params => {
-    const kind = params.get("loai") ?? "";
+  readonly kind = computed(() => {
+    const kind = this.params()?.get("loai") ?? "";
     return Object.hasOwn(workflowLabels.kind, kind) ? kind as RequestKind : "";
-  })), { initialValue: "" });
-  readonly status = signal<QueueStatus>("");
-  readonly query = signal("");
+  });
+  readonly overview = computed(() => !this.kind() && this.params()?.get("view") !== "queue");
+  readonly status = linkedSignal<QueueStatus>(() => {
+    this.overview();
+    return "";
+  });
+  readonly query = linkedSignal(() => {
+    this.overview();
+    return "";
+  });
   readonly saving = signal(false);
   readonly showMap = signal(false);
   readonly feedback = signal<{ message: string; saved: boolean } | null>(null);
   private readonly page = linkedSignal(() => {
     this.kind();
+    this.overview();
     return 1;
   });
   private opener?: HTMLButtonElement;
@@ -63,7 +87,18 @@ export class AdminWorkspace {
   });
   readonly heading = computed(() => {
     const kind = this.kind();
-    return kind ? this.labels.kind[kind] : "Xét duyệt yêu cầu";
+    return kind ? this.labels.kind[kind] : "Hàng đợi xét duyệt";
+  });
+  readonly section = computed(() => queueSections[this.kind() || "all"]);
+  readonly requestBreakdown = computed(() => {
+    const counts = this.kinds.map(kind => ({ kind, total: 0, pending: 0 }));
+    const byKind = new Map(counts.map(entry => [entry.kind, entry]));
+    for (const item of this.workflow.requests()) {
+      const entry = byKind.get(item.kind)!;
+      entry.total++;
+      if (item.status === "pending") entry.pending++;
+    }
+    return counts;
   });
   readonly requests = computed(() => {
     const kind = this.kind();
@@ -108,6 +143,12 @@ export class AdminWorkspace {
     return points.length ? points : null;
   });
 
+  constructor() {
+    effect(() => {
+      if (this.overview()) untracked(() => void this.workflow.loadAdminOverview());
+    });
+  }
+
   private processed(status: RequestStatus) {
     return status === "approved" || status === "rejected" || status === "revoked";
   }
@@ -133,7 +174,8 @@ export class AdminWorkspace {
   }
   changeKind(kind: string) {
     this.page.set(1);
-    void this.router.navigate([], { relativeTo: this.route, queryParams: { loai: kind || null }, queryParamsHandling: "merge" });
+    void this.router.navigate([], { relativeTo: this.route,
+      queryParams: { loai: kind || null, view: kind ? null : "queue" }, queryParamsHandling: "merge" });
   }
   clearFilters() {
     this.changeQuery("");
@@ -176,10 +218,10 @@ export class AdminWorkspace {
     this.showMap.set(false);
     this.feedback.set(null);
     const opener = this.opener;
-    const title = this.queueTitle().nativeElement;
+    const title = this.queueTitle()?.nativeElement;
     this.opener = undefined;
     requestAnimationFrame(() => {
-      if (!this.selectedId() && title.isConnected) {
+      if (!this.selectedId() && title?.isConnected) {
         (opener?.isConnected ? opener : title).focus({ preventScroll: true });
       }
     });

@@ -1,0 +1,55 @@
+.workspace-heading { margin-bottom: 24px; }
+.workspace-heading h1 { margin: 0 0 6px; }
+.workspace-heading p { max-width: 56ch; margin: 0; color: var(--muted); line-height: 1.55; }
+.workspace-heading .button { margin-top: 16px; }
+
+.workspace-landing {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 38%);
+  gap: 24px;
+  align-items: center;
+  padding: 20px 20px 20px 26px;
+  border: 1px solid var(--workspace-cover-border, #f3dcc9);
+  border-radius: var(--radius);
+  background: var(--workspace-cover-surface, #fff3e8);
+  color: var(--workspace-cover-heading, var(--text));
+}
+
+.workspace-landing h1 { font-size: 32px; }
+.workspace-landing p { color: var(--workspace-cover-text, #6f4a37); }
+
+.workspace-cover {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #ced6de;
+}
+
+.workspace-cover img { width: 100%; height: 164px; }
+.workspace-cover figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 18px 12px 8px;
+  background: linear-gradient(transparent, rgb(15 23 42 / 85%));
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.workspace-cover a { display: inline-flex; align-items: center; gap: 5px; padding-block: 5px; }
+.workspace-cover a:hover { text-decoration: underline; }
+.workspace-cover a:focus-visible { outline-color: #fff; }
+.workspace-cover a tg-icon { width: 13px; height: 13px; }
+
+@media (max-width: 600px) {
+  .workspace-heading { margin-bottom: 18px; }
+  .workspace-landing {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    padding: 18px;
+  }
+  .workspace-landing h1 { font-size: 25px; }
+  .workspace-cover img { height: 115px; }
+}

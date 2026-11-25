@@ -31,6 +31,7 @@ Tất cả route dưới đây yêu cầu phiên. Danh tính lấy từ phiên; 
 | `PUT /api/contributions/{uuid}` | Tác giả bổ sung một yêu cầu `needs-info`; gửi lại toàn bộ draft cùng `expectedVersion`. Không đổi kind/place/đối tượng báo cáo. |
 | `POST /api/contributions/{uuid}/withdraw` | Tác giả rút `pending` hoặc `needs-info`, body `{expectedVersion}`. |
 | `GET /api/moderation/queue` | Chỉ admin; bộ lọc và phân trang như danh sách cá nhân. |
+| `GET /api/moderation/overview` | Chỉ admin. `data.catalog` gồm `places`, `users`, `reviews` (công khai) và `favorites`. `data.topPlaces` gồm tối đa 5 địa điểm theo số đánh giá công khai giảm dần, sau đó theo điểm trung bình giảm dần và ID nội bộ. Mỗi mục trả `id`, `name`, `area`, `reviewCount` và `rating`. |
 | `POST /api/moderation/{uuid}/decision` | Chỉ admin; `{expectedVersion,decision,reason,reportAction?}`. |
 | `GET /api/moderation/place?id=...` | Snapshot canonical và `revision` SHA-256; mã có `/` truyền qua query đã encode. Đồng bộ thay đổi đã duyệt trong transaction. |
 | `GET /api/moderation/reviews?placeId=...` | Tối đa 50 đánh giá hiện hành mới nhất cho form hiện có; ID ảnh ổn định và phản hồi hợp lệ. Không trả email hoặc đường dẫn file riêng. |

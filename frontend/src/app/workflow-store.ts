@@ -1,7 +1,7 @@
 import { Injectable, computed, effect, inject, signal } from "@angular/core";
 import { TravelStore } from "./store";
 import type { Place } from "./data";
-import { ModerationClient, ModerationError, type ModerationSession, type ServerReview, type ServerWorkflowRequest } from "./moderation-api";
+import { ModerationClient, ModerationError, type AdminOverview, type ModerationSession, type ServerReview, type ServerWorkflowRequest } from "./moderation-api";
 import { placeRevision, type DemoActor, type ReportAction, type WorkflowDecision, type WorkflowDraft } from "./workflow";
 
 @Injectable({ providedIn: "root" })
@@ -13,12 +13,15 @@ export class WorkflowStore {
   private readonly serverReviews = signal<ServerReview[]>([]);
   private readonly grants = signal<string[]>([]);
   private generation = 0;
+  private overviewAttempt = 0;
   private adminQueue = false;
   private readonly boundaryTick = signal(0);
   readonly requests = signal<ServerWorkflowRequest[]>([]);
   readonly entries = this.requests;
   readonly loading = signal(false);
   readonly error = signal("");
+  readonly adminOverview = signal<AdminOverview | null>(null);
+  readonly adminOverviewError = signal("");
   readonly places = computed(() => {
     const places = new Map(this.store.places().map(place => [place.id, place]));
     for (const place of this.serverPlaces()) places.set(place.id, place);
@@ -52,7 +55,7 @@ export class WorkflowStore {
     try {
       const session = await this.api.session();
       if (generation !== this.generation) return false;
-      if (admin && !session.admin) throw new ModerationError("Tài khoản không có quyền Quản trị viên.", 403);
+      if (admin && !session.admin) throw new ModerationError("Hãy chọn Đổi tài khoản và đăng nhập bằng tài khoản Quản trị viên.", 403);
       this.session.set(session);
       return await this.refresh(generation);
     } catch (error) {
@@ -70,6 +73,22 @@ export class WorkflowStore {
     return this.reviewFor(placeId)?.photos.map((src, index) => ({ src, index })) ?? [];
   }
   visibleReply(placeId: string) { return this.reviewFor(placeId)?.reply ?? undefined; }
+
+  async loadAdminOverview() {
+    if (!this.session()?.admin) return;
+    const generation = this.generation;
+    const attempt = ++this.overviewAttempt;
+    this.adminOverview.set(null);
+    this.adminOverviewError.set("");
+    try {
+      const overview = await this.api.overview();
+      if (generation === this.generation && attempt === this.overviewAttempt) this.adminOverview.set(overview);
+    } catch {
+      if (generation === this.generation && attempt === this.overviewAttempt) {
+        this.adminOverviewError.set("Chưa tải được thống kê. Hãy thử lại.");
+      }
+    }
+  }
 
   async loadPlace(placeId: string) {
     if (!placeId || !this.session()) return false;
@@ -137,6 +156,7 @@ export class WorkflowStore {
       const target = placeId ?? result.data?.placeId;
       const loaded = target && (placeId || result.data?.status === "approved") ? await this.loadPlace(target) : true;
       await this.refresh(generation);
+      if (generation === this.generation && this.adminQueue && this.adminOverview()) void this.loadAdminOverview();
       if (generation === this.generation) this.store.toast(loaded ? "Đã lưu thay đổi trên máy chủ." : "Đã lưu trên máy chủ; chưa tải lại được hồ sơ. Hãy mở lại màn hình để xem kết quả.");
       return true;
     } catch (error) {
@@ -168,6 +188,8 @@ export class WorkflowStore {
     this.serverPlaces.set([]);
     this.serverReviews.set([]);
     this.error.set("");
+    this.adminOverview.set(null);
+    this.adminOverviewError.set("");
   }
 
   private fail(error: unknown) {

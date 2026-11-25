@@ -16,6 +16,10 @@ export class Auth {
 
   private readonly initialSession = this.loadSession().catch(() => {}).finally(() => this.ready.set(true));
 
+  waitForInitialSession() {
+    return this.initialSession;
+  }
+
   open(mode: AuthMode = "login") {
     this.error.set("");
     this.prompt.set({ mode });
@@ -29,7 +33,11 @@ export class Auth {
     return this.update("logout", {});
   }
 
-  private async update(path: "login" | "register" | "logout", data: object) {
+  async updateProfile(name: string, accountId: string) {
+    return this.update("profile", { name, account_id: accountId });
+  }
+
+  private async update(path: "login" | "register" | "logout" | "profile", data: object) {
     if (this.pending()) return false;
     this.pending.set(true);
     this.error.set("");
@@ -79,6 +87,7 @@ export class Auth {
       const validation = response.status === 422 && body?.errors && typeof body.errors === "object"
         ? Object.values(body.errors).flat().find(value => typeof value === "string") : undefined;
       const message = response.status === 401 && path === "login" ? "Email hoặc mật khẩu chưa đúng."
+        : response.status === 401 ? "Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại."
         : response.status === 419 ? "Phiên đã hết hạn. Hãy thử lại."
         : response.status === 409 ? "Phiên đăng nhập vừa thay đổi. Hãy tải lại trang."
         : response.status === 429 ? "Bạn đã thử quá nhiều lần. Vui lòng thử lại sau."

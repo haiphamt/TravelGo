@@ -1,4 +1,4 @@
-import { afterNextRender, Component, computed, effect, inject, Injector, signal } from "@angular/core";
+import { afterNextRender, Component, computed, effect, inject, Injector, input, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import type { Category, Place, PlaceFacet } from "./data";
 import { filterPlaces, type DiscoveryFilters } from "./discovery";
@@ -46,6 +46,7 @@ const voucherPreviews = [
 })
 export class Home {
   private readonly injector = inject(Injector);
+  readonly backdrop = input(false);
   readonly store = inject(TravelStore);
   readonly recentPlaces = inject(RecentPlaces);
   readonly recentlyViewed = computed(() => {
@@ -128,7 +129,9 @@ export class Home {
       if (!signal.aborted) this.suggestions.set({ status: "error",
         message: error instanceof Error ? error.message : "Chưa tải được gợi ý địa điểm." });
     } finally {
-      if (!signal.aborted) afterNextRender(() => this.store.ensureCatalog(), { injector: this.injector });
+      if (!signal.aborted && !this.backdrop()) {
+        afterNextRender(() => this.store.ensureCatalog(), { injector: this.injector });
+      }
     }
   }
 

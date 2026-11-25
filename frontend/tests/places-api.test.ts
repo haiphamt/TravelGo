@@ -118,15 +118,17 @@ test("authentication, session expiry and validation failures remain visible to c
   await assert.rejects(offline.catalog(), /Không kết nối/);
 });
 
-test("catalog consumes API pages and rejects duplicates or changed totals instead of mixing snapshots", async () => {
+test("catalog loads in a single request and rejects duplicate places", async () => {
   const second = { ...place, id: "osm:node/88888", image: null, images: [], photoSource: null };
-  const makeApi = (changed: boolean, duplicate: boolean) => new PlacesApi((async input => {
-    const page = Number(new URL(String(input), "https://travelgo.test").searchParams.get("page"));
-    return json({ data: [page === 1 || duplicate ? place : second], meta: { current_page: page, last_page: 2, per_page: 1, total: changed && page === 2 ? 3 : 2 } });
+  let calls = 0;
+  const makeApi = (duplicate: boolean) => new PlacesApi((async input => {
+    calls++;
+    assert.equal(input, "/api/places/catalog");
+    return json({ data: [place, duplicate ? place : second] });
   }) as typeof fetch, () => "");
-  assert.deepEqual((await makeApi(false, false).catalog()).map(item => item.id), [place.id, second.id]);
-  await assert.rejects(makeApi(true, false).catalog(), /vừa thay đổi/);
-  await assert.rejects(makeApi(false, true).catalog(), /vừa thay đổi/);
+  assert.deepEqual((await makeApi(false).catalog()).map(item => item.id), [place.id, second.id]);
+  assert.equal(calls, 1);
+  await assert.rejects(makeApi(true).catalog(), /trùng lặp/);
 });
 
 test("home suggestions only request the first page for the selected category and facet", async () => {

@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from "@angular/core";
+import { Component, computed, effect, inject, signal, ViewEncapsulation } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { Icon } from "./icon";
@@ -13,6 +13,8 @@ type ContributionView = "new" | "update" | "report" | "history";
   standalone: true,
   imports: [RouterLink, Icon, ProposalForm, WorkflowHistory, WorkflowPlacePicker],
   templateUrl: "./contributions.html",
+  styleUrl: "./contributions.css",
+  encapsulation: ViewEncapsulation.None,
 })
 export class Contributions {
   readonly store = inject(TravelStore);
@@ -28,11 +30,11 @@ export class Contributions {
     const view = this.view();
     return view === "history" ? "new" : view;
   });
-  readonly views: { key: ContributionView; label: string }[] = [
-    {key: "new", label: "Địa điểm mới"},
-    {key: "update", label: "Đề xuất cập nhật"},
-    {key: "report", label: "Báo cáo đánh giá"},
-    {key: "history", label: "Đóng góp của tôi"},
+  readonly views: { key: ContributionView; label: string; icon: string }[] = [
+    { key: "new", label: "Địa điểm mới", icon: "pin" },
+    { key: "update", label: "Đề xuất cập nhật", icon: "map" },
+    { key: "report", label: "Báo cáo đánh giá", icon: "shield" },
+    { key: "history", label: "Đóng góp của tôi", icon: "clock" },
   ];
 
   constructor() {

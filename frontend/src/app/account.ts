@@ -1,45 +1,60 @@
-import { Component, inject } from "@angular/core";
+import { afterNextRender, Component, ElementRef, inject, Injector, signal, viewChild } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { Auth } from "./auth";
 import { Icon } from "./icon";
+import { TravelStore } from "./store";
 
 @Component({
   standalone: true,
   imports: [RouterLink, Icon],
-  template: `
-    <section class="feature-status">
-      <span class="status-icon" aria-hidden="true"><tg-icon name="user" /></span>
-      <h1>Tài khoản của bạn</h1>
-      @if (auth.user(); as user) {
-        <p><strong>{{ user.name }}</strong><br />{{ user.email }}</p>
-        <div class="feature-actions">
-          <a class="button secondary" routerLink="/yeu-thich">Địa điểm yêu thích</a>
-          <a class="button secondary" routerLink="/dong-gop">Đóng góp của tôi</a>
-          <a class="button secondary" routerLink="/chu-co-so">Chủ cơ sở</a>
-          @if (user.admin) {
-            <a class="button secondary" routerLink="/quan-tri">Quản trị viên</a>
-          }
-        </div>
-        <div class="feature-actions">
-          <button type="button" class="button primary" [disabled]="auth.pending()" (click)="logout()">{{ auth.pending() ? 'Đang đăng xuất…' : 'Đăng xuất' }}</button>
-        </div>
-        @if (auth.error()) { <p role="alert">{{ auth.error() }}</p> }
-      } @else if (auth.ready()) {
-        <p>Đăng nhập để lưu địa điểm yêu thích, viết đánh giá và tham gia phòng cùng đi.</p>
-        <div class="feature-actions">
-          <button type="button" class="button primary" (click)="auth.open()">Đăng nhập</button>
-          <button type="button" class="button secondary" (click)="auth.open('register')">Đăng ký</button>
-        </div>
-      } @else {
-        <p role="status">Đang mở tài khoản…</p>
-      }
-    </section>
-  `,
+  templateUrl: "./account.html",
+  styleUrl: "./account.css",
 })
 export class Account {
   readonly auth = inject(Auth);
+  readonly store = inject(TravelStore);
+  readonly editing = signal(false);
+  readonly saving = signal(false);
+  readonly profileError = signal("");
+  readonly saved = signal(false);
+  readonly activityLinks = [
+    { path: "/yeu-thich", icon: "heart", label: "Địa điểm yêu thích", detail: "Xem lại những nơi bạn đã lưu" },
+    { path: "/lich-trinh", icon: "calendar", label: "Lịch trình của bạn", detail: "Mở và chỉnh sửa lịch trình đã lưu" },
+    { path: "/phong-cung-di", icon: "users", label: "Phòng cùng đi", detail: "Lên kế hoạch và bình chọn cùng bạn bè" },
+    { path: "/dong-gop", icon: "plus", label: "Đóng góp của tôi", detail: "Theo dõi các đề xuất đã gửi" },
+  ];
 
-  async logout() {
-    if (await this.auth.logout()) location.assign("/");
+  private readonly injector = inject(Injector);
+  private readonly nameInput = viewChild<ElementRef<HTMLInputElement>>("nameInput");
+  private readonly editButton = viewChild<ElementRef<HTMLButtonElement>>("editButton");
+
+  editProfile(editing: boolean) {
+    this.editing.set(editing);
+    this.profileError.set("");
+    if (editing) this.saved.set(false);
+    afterNextRender(() => (editing ? this.nameInput() : this.editButton())?.nativeElement.focus(), {
+      injector: this.injector,
+    });
+  }
+
+  async saveName(rawName: string, accountId: string) {
+    if (this.auth.pending()) return;
+    const name = rawName.trim();
+    if (!name) {
+      this.profileError.set("Hãy nhập họ và tên.");
+      this.nameInput()?.nativeElement.focus();
+      return;
+    }
+
+    this.profileError.set("");
+    this.saving.set(true);
+    const saved = await this.auth.updateProfile(name, accountId);
+    this.saving.set(false);
+    if (saved) {
+      this.saved.set(true);
+      this.editProfile(false);
+    } else {
+      this.profileError.set(this.auth.error());
+    }
   }
 }

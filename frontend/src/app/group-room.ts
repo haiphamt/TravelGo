@@ -1,6 +1,6 @@
 import { Component, DestroyRef, ElementRef, Injector, afterNextRender, computed, effect, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { RouterLink } from "@angular/router";
+import { ActivatedRoute, RouterLink } from "@angular/router";
 import { money, Place } from "./data";
 import { Icon } from "./icon";
 import { normalize, TripSnapshot } from "./logic";
@@ -116,6 +116,9 @@ export class GroupRoom {
   readonly stopLimit = ROOM_STOP_LIMIT;
 
   constructor() {
+    const invitation = inject(ActivatedRoute).snapshot.queryParamMap.get("invite");
+    if (invitation && /^[\da-f]{8}$/i.test(invitation)) this.code.set(invitation.toUpperCase());
+
     let previousActor = "";
     effect(() => {
       const room = this.room();

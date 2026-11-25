@@ -92,19 +92,10 @@
           </div>
         </aside>
         <div class="detail-main">
-          @if (description || place.local || sourceHours || amenities().length) {
+          @if (description || (!place.local && sourceHours) || amenities().length) {
             <section class="detail-panel detail-description detail-intro">
               <h2>{{ description ? 'Giới thiệu' : 'Thông tin địa điểm' }}</h2>
               @if (description) { <p>{{ description }}</p> }
-              @if (place.local) {
-                <div class="message">
-                  <tg-icon name="info" />
-                  <div>
-                    <strong>{{ place.mobile ? 'Điểm bán có thể di chuyển' : 'Kiểm tra thông tin trước khi ghé' }}</strong>
-                    <p>Hồ sơ tham khảo, chưa được nhóm TravelGo xác minh thực địa. Giờ bán hoặc vị trí có thể thay đổi. Đánh giá không tự thay đổi thông tin địa điểm.</p>
-                  </div>
-                </div>
-              }
               @if ((!place.local && sourceHours) || amenities().length) {
                 <dl class="detail-recorded-facts">
                   @if (!place.local && sourceHours) {
@@ -146,11 +137,7 @@
                     <dl class="local-weekdays">@for (day of profile.hours.weekdays; track day) { <div><dt>{{ weekdayLabel(day) }}</dt><dd>{{ weekdayHours(day) }}</dd></div> }</dl>
                   } @else {
                     <p class="local-hours-summary">{{ profile.hours.summary || 'Nguồn chưa có giờ bán.' }}</p>
-                    <p class="small muted">Nguồn không ghi rõ lịch theo từng thứ.</p>
                   }
-                  @for (warning of profile.hours.qualityFlags; track warning) { <p class="local-hours-warning"><tg-icon name="info" />{{ warning }}</p> }
-                  <p class="small muted">Giờ bán từ <a [href]="profile.hours.sourceUrl" target="_blank" rel="noopener noreferrer">{{ profile.hours.sourceLabel }}<tg-icon name="external" /></a>.</p>
-                  <p class="small muted">@if (profile.hours.observedAt) { Nguồn ghi nhận giờ bán: {{ profile.hours.observedAt | date:'dd/MM/yyyy':'+0700' }}. } @else { Nguồn chưa có ngày ghi nhận giờ bán. } TravelGo chưa xác nhận lại lịch này; không dùng để khẳng định hiện đang mở cửa.</p>
                 }
               </section>
             }
@@ -264,43 +251,26 @@
               cung cấp, chưa xác minh việc ghé thực tế.
             </p>
           </section>
-          <section class="detail-sources" aria-labelledby="detail-sources-title">
-            <h2 id="detail-sources-title" class="sr-only">Nguồn thông tin</h2>
-            <p class="detail-source-row">
-              <strong>Nguồn dữ liệu</strong>
-              @if (place.sourceLicense === 'ODbL-1.0') {
-                <a [href]="place.sourceUrl" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Hồ sơ ' + place.name + ' trên OpenStreetMap'">© OpenStreetMap contributors<tg-icon name="external" /></a>
-                <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">ODbL 1.0</a>
-              } @else {
-                @if (place.sourceUrl) {
-                  <a [href]="place.sourceUrl" target="_blank" rel="noopener noreferrer">{{ place.sourceLabel }}<tg-icon name="external" /></a>
-                } @else { <span>{{ place.sourceLabel }}</span> }
-                <span>{{ place.sourceLicense }}</span>
-              }
-              @if (place.sourceUpdatedAt) {
-                <span>Bản ghi nguồn cập nhật <time [attr.datetime]="place.sourceUpdatedAt">{{ place.sourceUpdatedAt | date:'dd/MM/yyyy':'+0700' }}</time></span>
-              }
-            </p>
-            @if (place.localProfile; as profile) {
-              <details class="detail-source-more">
-                <summary>Các nguồn đã đối chiếu</summary>
-                @if (profile.collectedAt || profile.preparedAt) {
-                  <dl class="local-source-dates">
-                    @if (profile.collectedAt) { <div><dt>Thu thập hồ sơ từ nguồn</dt><dd>{{ profile.collectedAt | date:'dd/MM/yyyy':'+0700' }}</dd></div> }
-                    @if (profile.preparedAt) { <div><dt>Chuẩn bị bộ tham khảo</dt><dd>{{ profile.preparedAt | date:'dd/MM/yyyy':'+0700' }}</dd></div> }
-                  </dl>
+          @if (!place.local) {
+            <section class="detail-sources" aria-labelledby="detail-sources-title">
+              <h2 id="detail-sources-title" class="sr-only">Nguồn thông tin</h2>
+              <p class="detail-source-row">
+                <strong>Nguồn dữ liệu</strong>
+                @if (place.sourceLicense === 'ODbL-1.0') {
+                  <a [href]="place.sourceUrl" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Hồ sơ ' + place.name + ' trên OpenStreetMap'">© OpenStreetMap contributors<tg-icon name="external" /></a>
+                  <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">ODbL 1.0</a>
+                } @else {
+                  @if (place.sourceUrl) {
+                    <a [href]="place.sourceUrl" target="_blank" rel="noopener noreferrer">{{ place.sourceLabel }}<tg-icon name="external" /></a>
+                  } @else { <span>{{ place.sourceLabel }}</span> }
+                  <span>{{ place.sourceLicense }}</span>
                 }
-                <ul>
-                  @for (source of profile.sources; track source.url) {
-                    <li>
-                      <a [href]="source.url" target="_blank" rel="noopener noreferrer">{{ source.label }}<tg-icon name="external" /></a>
-                      @if (source.updatedAt) { <span> · Bản ghi nguồn cập nhật {{ source.updatedAt | date:'dd/MM/yyyy':'+0700' }}</span> }
-                    </li>
-                  }
-                </ul>
-              </details>
-            }
-          </section>
+                @if (place.sourceUpdatedAt) {
+                  <span>Bản ghi nguồn cập nhật <time [attr.datetime]="place.sourceUpdatedAt">{{ place.sourceUpdatedAt | date:'dd/MM/yyyy':'+0700' }}</time></span>
+                }
+              </p>
+            </section>
+          }
         </div>
       </div>
     </div>

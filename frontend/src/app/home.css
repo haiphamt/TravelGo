@@ -45,6 +45,9 @@ p {
   list-style: none;
 }
 
+.home-vouchers { margin-bottom: clamp(30px, 4vw, 56px); }
+.home-areas { margin-bottom: clamp(24px, 3vw, 42px); }
+
 .recent-places-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
@@ -69,6 +72,8 @@ p {
   isolation: isolate;
   display: flex;
   aspect-ratio: 8 / 5;
+  width: 100%;
+  min-width: 0;
   min-height: 168px;
   flex-direction: column;
   justify-content: center;
@@ -79,6 +84,26 @@ p {
   border-radius: 16px;
   color: #fff8ef;
 }
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .voucher-preview {
+    transition: transform 300ms cubic-bezier(.2, .8, .35, 1.35), box-shadow 230ms ease;
+  }
+
+  .voucher-preview:hover {
+    transform: translateY(-6px) scale(1.015);
+    box-shadow: 0 12px 24px rgb(15 23 42 / 16%);
+  }
+}
+
+.home-data-credit {
+  display: inline-block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: .75rem;
+}
+
+.home-data-credit:hover { text-decoration: underline; }
 
 .voucher-preview img,
 .voucher-preview::after {
@@ -205,6 +230,7 @@ p {
   flex-direction: column;
   justify-content: center;
   padding: 12px 16px;
+  overflow-wrap: anywhere;
 }
 
 .owner-invite-panel {
@@ -230,17 +256,50 @@ p {
 }
 
 @media (max-width: 767px) {
-  .voucher-grid,
   .interest-grid {
     grid-template-columns: 1fr;
     gap: 12px;
   }
+}
+
+@media (max-width: 1279px) {
+  .area-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 1023px) {
+  .home-vouchers > div:first-child { margin-bottom: 8px; }
+  .voucher-grid {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 14px) / 2);
+    gap: 14px;
+    padding-block: 8px 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+  .voucher-grid:focus-visible { outline-offset: 3px; }
+  .voucher-preview {
+    aspect-ratio: 16 / 9;
+    min-height: 140px;
+    max-height: 210px;
+    scroll-snap-align: start;
+  }
 
   .owner-invite-panel {
-    align-items: flex-start;
+    min-height: 0;
     flex-direction: column;
-    padding: 24px;
+    gap: 14px;
+    padding: clamp(20px, 4.5vw, 30px) 16px;
+    text-align: center;
   }
+  .owner-invite-panel h2 { margin-bottom: 8px; }
+}
+
+@media (max-width: 559px) {
+  .voucher-grid { grid-auto-columns: min(86%, 350px); }
+  .area-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .area-card { padding-inline: 12px; }
 }
 
 /* The compact category control comes from Didaune's home.css. */
@@ -344,6 +403,68 @@ p {
   color: #9a3412;
 }
 
+@media (max-width: 1023px) {
+  .home-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
+    gap: 12px 8px;
+    overflow: visible;
+  }
+
+  .home-categories > a { min-width: 0; gap: 4px; }
+  .home-categories > a > div { width: 44px; height: 44px; font-size: 18px; }
+  .home-categories > a > span { line-height: 1.25; }
+  .home-categories > a > span:last-child { text-align: center; }
+
+  .trending-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: visible;
+  }
+
+  .trending-grid > a { min-width: 0; max-width: none; }
+
+  #top-menu-right {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: auto;
+    margin: 0 0 16px;
+  }
+
+  #top-menu-right li { margin: 0; }
+
+  #top-menu-right li button {
+    gap: 6px;
+    width: auto;
+    min-height: 40px;
+    padding: 6px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    box-shadow: none;
+  }
+
+  #top-menu-right li #toggle-menu-button { background: #fff1e6; }
+  #top-menu-right i { flex: none; width: auto; height: auto; margin: 0; background: transparent; }
+  #top-menu-right li button::after { content: none; }
+
+  #top-menu-right span {
+    display: inline;
+    position: static;
+    padding: 0;
+    transform: none;
+    background: transparent;
+    color: inherit;
+  }
+
+  #top-menu-right span::after { content: none; }
+}
+
+@media (max-width: 619px) {
+  .trending-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
 @media screen and (min-width: 1401px) {
   #top-menu-right {
     top: 112px;
@@ -370,5 +491,16 @@ p {
 @media (prefers-reduced-motion: reduce) {
   #top-menu-right li button {
     transition: none;
+  }
+}
+@media (width < 1024px) {
+  .home-suggestion-grid > tg-place-card:nth-child(n + 5) {
+    display: none;
+  }
+}
+
+@media (1024px <= width < 1280px) {
+  .home-suggestion-grid > tg-place-card:nth-child(n + 7) {
+    display: none;
   }
 }

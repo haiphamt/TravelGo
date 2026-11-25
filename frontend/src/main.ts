@@ -1,12 +1,20 @@
 import { bootstrapApplication } from "@angular/platform-browser";
 import { inject } from "@angular/core";
-import { Router, provideRouter, withInMemoryScrolling, type RedirectFunction } from "@angular/router";
+import { Router, provideRouter, withInMemoryScrolling, type CanMatchFn, type RedirectFunction } from "@angular/router";
 import { App } from "./app/app";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { providePrimeNG } from "primeng/config";
 import Aura from "@primeng/themes/aura";
 import type { Trip } from "./app/trip";
 import { moderationGuard } from "./app/moderation-guard";
+import { Auth } from "./app/auth";
+
+// Guests match a sign-in screen at the same URL to retain place and room links.
+const signedIn: CanMatchFn = async () => {
+  const auth = inject(Auth);
+  await auth.waitForInitialSession();
+  return auth.user() !== null;
+};
 
 // Static hosting may decode the escaped slash in an OSM place ID on a full-page request.
 function restoreOsmPlaceLink(review: boolean): RedirectFunction {
@@ -106,7 +114,14 @@ bootstrapApplication(App, {
         },
         {
           path: "phong-cung-di",
+          canMatch: [signedIn],
           loadComponent: () => import("./app/group-room").then((m) => m.GroupRoom),
+          title: "Phòng cùng đi · TravelGo",
+        },
+        {
+          path: "phong-cung-di",
+          loadComponent: () => import("./app/auth-required").then(m => m.AuthRequired),
+          data: { authRequired: "Đăng nhập để tạo phòng, tham gia bằng mã mời và cùng bạn bè lên lịch trình." },
           title: "Phòng cùng đi · TravelGo",
         },
         {
@@ -116,8 +131,15 @@ bootstrapApplication(App, {
         },
         {
           path: "dong-gop",
+          canMatch: [signedIn],
           canActivate: [moderationGuard()],
           loadComponent: () => import("./app/contributions").then(m => m.Contributions),
+          title: "Đóng góp của tôi · TravelGo",
+        },
+        {
+          path: "dong-gop",
+          loadComponent: () => import("./app/auth-required").then(m => m.AuthRequired),
+          data: { authRequired: "Đăng nhập để chia sẻ địa điểm, gửi đề xuất cập nhật và theo dõi kết quả xét duyệt." },
           title: "Đóng góp của tôi · TravelGo",
         },
         {

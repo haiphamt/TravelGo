@@ -1,0 +1,85 @@
+<section class="account-page" aria-labelledby="account-title">
+  <h1 id="account-title">Tài khoản của bạn</h1>
+
+  @if (auth.user(); as user) {
+    <div class="account-primary">
+      <section class="account-panel" aria-labelledby="profile-heading">
+        <div class="account-panel-heading">
+          <h2 id="profile-heading">Thông tin cá nhân</h2>
+          @if (!editing()) {
+            <button #editButton type="button" class="button secondary" [disabled]="auth.pending()" (click)="editProfile(true)">
+              Chỉnh sửa
+            </button>
+          }
+        </div>
+
+        <div class="account-fields">
+          @if (editing()) {
+            <form class="account-form" novalidate (submit)="$event.preventDefault(); saveName(nameInput.value, user.id)">
+              <label for="account-name">Họ và tên</label>
+              <input #nameInput id="account-name" name="name" autocomplete="name" required maxlength="100"
+                [value]="user.name" [readOnly]="saving()" [attr.aria-invalid]="profileError() ? 'true' : null"
+                [attr.aria-describedby]="profileError() ? 'profile-error' : null" />
+              @if (profileError()) { <p id="profile-error" class="account-error" role="alert">{{ profileError() }}</p> }
+              <div class="account-actions">
+                <button type="submit" class="button primary" [disabled]="auth.pending()">{{ saving() ? 'Đang lưu…' : 'Lưu thay đổi' }}</button>
+                <button type="button" class="button secondary" [disabled]="auth.pending()" (click)="editProfile(false)">Hủy</button>
+              </div>
+            </form>
+          }
+
+          <dl class="account-details">
+            @if (!editing()) {
+              <div><dt>Họ và tên</dt><dd>{{ user.name }}</dd></div>
+            }
+            <div><dt>Email đăng nhập</dt><dd>{{ user.email }}</dd></div>
+          </dl>
+        </div>
+        @if (saved()) {
+          <p class="account-confirmation" role="status"><tg-icon name="check" /> Đã cập nhật họ và tên.</p>
+        }
+      </section>
+
+      <nav class="account-panel account-links" aria-labelledby="activity-heading">
+        <h2 id="activity-heading">Hoạt động của bạn</h2>
+        <ul>
+          @for (link of activityLinks; track link.path) {
+            <li>
+              <a [routerLink]="link.path">
+                <span class="account-link-icon"><tg-icon [name]="link.icon" /></span>
+                <span class="account-link-text">
+                  <strong>{{ link.label }}</strong>
+                  @if (link.icon === 'heart' && store.accountStatus() === 'ready') {
+                    <small>{{ store.favoriteIds().length }} địa điểm đã lưu</small>
+                  } @else {
+                    <small>{{ link.detail }}</small>
+                  }
+                </span>
+                <tg-icon class="account-link-arrow" name="arrow" />
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+    </div>
+  } @else {
+    <section class="account-panel account-guest" aria-labelledby="account-guest-heading">
+      @if (auth.ready()) {
+        <span class="account-guest-icon"><tg-icon name="user" /></span>
+        <h2 id="account-guest-heading">Đăng nhập vào TravelGo</h2>
+        <p>Mở hồ sơ để tiếp tục chuyến đi của bạn.</p>
+        <div class="account-actions">
+          <button type="button" class="button primary" (click)="auth.open()">Đăng nhập</button>
+          <button type="button" class="button secondary" (click)="auth.open('register')">Đăng ký</button>
+        </div>
+        <ul class="account-guest-benefits">
+          <li><tg-icon name="heart" /> Lưu địa điểm</li>
+          <li><tg-icon name="calendar" /> Lập lịch trình</li>
+          <li><tg-icon name="users" /> Tham gia phòng</li>
+        </ul>
+      } @else {
+        <h2 id="account-guest-heading" role="status">Đang mở tài khoản…</h2>
+      }
+    </section>
+  }
+</section>

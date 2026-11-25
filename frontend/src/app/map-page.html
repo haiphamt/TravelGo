@@ -201,9 +201,8 @@
         </div>
       </section>
     }
-    <p class="source-note">
-      @if (missingCoordinates()) { {{ missingCoordinates().toLocaleString('vi-VN') }} hồ sơ chưa có tọa độ vẫn có trong danh sách. }
-      <a routerLink="/nguon-du-lieu">Xem nguồn dữ liệu OSM và Góc Địa Phương</a>
-    </p>
+    @if (missingCoordinates()) {
+      <p class="source-note">{{ missingCoordinates().toLocaleString('vi-VN') }} hồ sơ chưa có tọa độ vẫn có trong danh sách.</p>
+    }
   }
 </div>

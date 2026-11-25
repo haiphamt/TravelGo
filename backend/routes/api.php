@@ -6,6 +6,7 @@ use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('places', [PlaceController::class, 'index']);
+Route::get('places/catalog', [PlaceController::class, 'catalog']);
 Route::get('places/detail', [PlaceController::class, 'show']);
 
 // Session and CSRF use Laravel's web guard, shared with Task 1 authentication.

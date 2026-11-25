@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contribution;
+use App\Models\Favorite;
+use App\Models\Place;
+use App\Models\Review;
+use App\Models\User;
 use App\Services\Moderation\ModerationCatalog;
 use App\Services\Moderation\ModerationWorkflow;
 use Carbon\CarbonImmutable;
@@ -30,6 +34,39 @@ class ModerationController extends Controller
         abort_unless($this->workflow->isAdmin($request->user()), 403);
 
         return $this->listing($request, true);
+    }
+
+    public function overview(Request $request): JsonResponse
+    {
+        abort_unless($this->workflow->isAdmin($request->user()), 403);
+
+        $publicReviews = Review::query()->whereNull('hidden_at');
+        $reviewSummary = (clone $publicReviews)
+            ->selectRaw('place_id, COUNT(*) AS review_count, AVG(rating) AS rating')
+            ->groupBy('place_id');
+        $topPlaces = Place::query()
+            ->joinSub($reviewSummary, 'summary', 'summary.place_id', '=', 'places.id')
+            ->orderByDesc('summary.review_count')
+            ->orderByDesc('summary.rating')
+            ->orderBy('places.id')
+            ->limit(5)
+            ->get(['places.public_id', 'places.name', 'places.area', 'summary.review_count', 'summary.rating']);
+
+        return response()->json(['data' => [
+            'catalog' => [
+                'places' => Place::query()->count(),
+                'users' => User::query()->count(),
+                'reviews' => $publicReviews->count(),
+                'favorites' => Favorite::query()->count(),
+            ],
+            'topPlaces' => $topPlaces->map(fn (Place $place) => [
+                'id' => $place->public_id,
+                'name' => $place->name,
+                'area' => $place->area,
+                'reviewCount' => (int) $place->review_count,
+                'rating' => round((float) $place->rating, 2),
+            ])->all(),
+        ]])->header('Cache-Control', 'no-store, private');
     }
 
     public function show(Request $request, Contribution $contribution): array

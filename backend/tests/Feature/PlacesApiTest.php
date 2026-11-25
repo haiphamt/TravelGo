@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Place;
 use App\Models\User;
+use Database\Seeders\CafeCoverSeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -39,19 +40,56 @@ class PlacesApiTest extends TestCase
         ]);
     }
 
+    public function test_bulk_catalog_matches_paginated_place_order_and_fields(): void
+    {
+        $plain = Place::factory()->create();
+        $withCover = Place::factory()->create(['image' => '/images/osm/sample.jpg']);
+        $paged = $this->getJson('/api/places')->assertOk()->json('data');
+        $bulk = $this->getJson('/api/places/catalog')->assertOk()->streamedContent();
+
+        $this->assertSame([$withCover->public_id, $plain->public_id], array_column($paged, 'id'));
+        $this->assertSame($paged, json_decode($bulk, true, flags: JSON_THROW_ON_ERROR)['data']);
+    }
+
+    public function test_cafe_cover_seed_is_repeatable_and_preserves_existing_covers(): void
+    {
+        $starbucks = Place::factory()->create([
+            'public_id' => 'osm:node/4928829323', 'source' => 'osm', 'category' => 'coffee',
+        ]);
+        $dinh = Place::factory()->create([
+            'public_id' => 'osm:way/1275902196', 'source' => 'osm', 'category' => 'coffee',
+            'image' => '/images/osm/previous.jpg', 'images' => ['/images/osm/previous.jpg'],
+        ]);
+
+        $this->seed(CafeCoverSeeder::class);
+        $this->seed(CafeCoverSeeder::class);
+
+        $this->assertDatabaseCount('places', 3);
+        $this->assertSame('/images/osm/previous.jpg', $dinh->refresh()->image);
+        $this->assertSame('CC BY-SA 2.0', $starbucks->refresh()->photo_source['license']);
+        $this->getJson($this->listUrl(['category' => 'coffee', 'has_image' => '1', 'per_page' => 8]))
+            ->assertOk()->assertJsonCount(3, 'data')
+            ->assertJsonFragment(['name' => 'City Garden Cafe', 'image' => '/images/cafes/city-garden-truong-cong-dinh.webp']);
+    }
+
     public function test_search_matches_vietnamese_accents_d_stroke_products_and_address(): void
     {
         $place = Place::factory()->create([
             'name' => 'Quán Đường Phố',
             'products' => ['Cà phê sữa', 'Bánh mì'],
-            'area' => 'Phường Bến Nghé, Quận 1',
+            'area' => '12 Ðường Nguyễn Huệ, Phường Bến Nghé, Quận 1',
         ]);
-        Place::factory()->create(['name' => 'Một địa điểm khác']);
+        Place::factory()->create(['name' => 'Một địa điểm khác', 'area' => 'Chưa cập nhật địa chỉ']);
 
-        foreach (['Đường Phố', 'DUONG PHO', 'ca phe sua', 'BÁNH MÌ', 'ben nghe', 'pho ca phe sua'] as $search) {
+        foreach (['Đường Phố', 'DUONG PHO', 'ca phe sua', 'BÁNH MÌ', 'ben nghe', 'pho ca phe sua', 'duong nguyen hue'] as $search) {
             $this->getJson($this->listUrl(['q' => $search]))->assertOk()
                 ->assertJsonPath('meta.total', 1)->assertJsonPath('data.0.id', $place->public_id);
         }
+
+        $this->getJson($this->listUrl(['area' => 'Đường Nguyễn Huệ']))->assertOk()
+            ->assertJsonPath('meta.total', 1)->assertJsonPath('data.0.id', $place->public_id);
+        $this->getJson($this->listUrl(['q' => 'chua cap nhat dia chi']))->assertOk()
+            ->assertJsonPath('meta.total', 0);
     }
 
     public function test_search_treats_sql_wildcards_as_literal_characters(): void

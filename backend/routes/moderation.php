@@ -8,6 +8,7 @@ Route::middleware(['auth:web', 'throttle:120,1'])->group(function () {
     Route::get('moderation/place', [ModerationController::class, 'place']);
     Route::get('moderation/reviews', [ModerationController::class, 'reviews']);
     Route::get('moderation/queue', [ModerationController::class, 'queue']);
+    Route::get('moderation/overview', [ModerationController::class, 'overview']);
     Route::post('moderation/{contribution}/decision', [ModerationController::class, 'decide']);
     Route::get('contributions', [ModerationController::class, 'index']);
     Route::post('contributions', [ModerationController::class, 'store']);

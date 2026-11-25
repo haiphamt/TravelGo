@@ -1,5 +1,6 @@
 import type { Place } from "./data.ts";
 import type { Review } from "./logic.ts";
+import { validPlaceId } from "./trip-storage.ts";
 import type { WorkflowRequest } from "./workflow.ts";
 
 export interface ServerReview extends Review {
@@ -14,7 +15,15 @@ export interface ServerWorkflowRequest extends WorkflowRequest {
   currentReview?: ServerReview | null;
 }
 export interface ModerationSession { id: string; admin: boolean }
+export interface AdminOverview {
+  catalog: { places: number; users: number; reviews: number; favorites: number };
+  topPlaces: { id: string; name: string; area: string | null; reviewCount: number; rating: number }[];
+}
 interface Page<T> { data: T[]; meta: { current_page: number; last_page: number } }
+
+function validCount(value: unknown): value is number {
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0;
+}
 
 export class ModerationError extends Error {
   status: number;
@@ -53,6 +62,20 @@ export class ModerationClient {
   }
 
   async session() { return (await this.request<{ data: ModerationSession }>("moderation/session")).data; }
+
+  async overview(): Promise<AdminOverview> {
+    const { data } = await this.request<{ data: AdminOverview }>("moderation/overview");
+    const totals = data?.catalog;
+    if (!totals || ![totals.places, totals.users, totals.reviews, totals.favorites].every(validCount) ||
+        !Array.isArray(data.topPlaces) || data.topPlaces.length > 5 || data.topPlaces.some(place =>
+          !place || !validPlaceId(place.id) || typeof place.name !== "string" || !place.name.trim() ||
+          (place.area !== null && typeof place.area !== "string") ||
+          !validCount(place.reviewCount) || place.reviewCount === 0 ||
+          !Number.isFinite(place.rating) || place.rating < 1 || place.rating > 5)) {
+      throw new ModerationError("Số liệu điều hành từ máy chủ không hợp lệ.", 200);
+    }
+    return data;
+  }
 
   async requests(admin: boolean): Promise<ServerWorkflowRequest[]> {
     const entries: ServerWorkflowRequest[] = [];

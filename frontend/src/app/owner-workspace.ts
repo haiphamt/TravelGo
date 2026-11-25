@@ -21,7 +21,7 @@ const viewCopy = {
   standalone: true,
   imports: [DatePipe, FormsModule, RouterLink, Icon, ProposalForm, WorkflowHistory, WorkflowPlacePicker],
   templateUrl: "./owner-workspace.html",
-  styleUrl: "./owner-workspace.css",
+  styleUrls: ["./workspace-heading.css", "./owner-workspace.css"],
 })
 export class OwnerWorkspace {
   private readonly route = inject(ActivatedRoute);
@@ -36,6 +36,7 @@ export class OwnerWorkspace {
   readonly view = signal<OwnerView>("places");
   readonly page = computed(() => viewCopy[this.view()]);
   readonly linkedId = signal("");
+  readonly isHome = computed(() => this.view() === "places" && !this.linkedId());
   readonly action = signal<"update" | "report" | null>(null);
   private readonly editingId = signal("");
   readonly withdrawing = signal(false);

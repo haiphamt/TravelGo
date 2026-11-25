@@ -61,6 +61,7 @@ export class MapPage implements AfterViewInit {
   locating = signal(false);
   nearby = signal<Coordinates | null>(null);
   locationMessage = signal("");
+  private readonly locateRequested = signal(false);
   private viewVersion = signal(0);
   private map?: LeafletMap;
   private leaflet?: typeof import("leaflet");
@@ -96,6 +97,7 @@ export class MapPage implements AfterViewInit {
   constructor() {
     try { if (sessionStorage.getItem("travelgo-map-layer") === "topo") this.tileProvider.set("topo"); } catch { /* The map remains usable when preference storage is unavailable. */ }
     this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
+      this.locateRequested.set(params.get("dinh-vi") === "1");
       const filters = parseDiscoveryFilters(params);
       const previous = this.filters();
       if ((filters.facet && filters.facet !== previous.facet) ||
@@ -114,6 +116,13 @@ export class MapPage implements AfterViewInit {
       const id = params.get("place") ?? "";
       if (id !== this.selectedId()) this.selectedPhotoFailed.set(false);
       this.selectedId.set(id);
+    });
+    effect(() => {
+      if (!this.mapReady() || !this.locateRequested()) return;
+      untracked(() => {
+        this.locate();
+        this.changeParams({ "dinh-vi": null });
+      });
     });
     effect(() => {
       const points = this.geocoded();

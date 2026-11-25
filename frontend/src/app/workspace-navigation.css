@@ -9,15 +9,8 @@
   --rail-accent: #c2410c;
 }
 
-:host(.admin-navigation) {
-  --rail-bg: #0f172a;
-  --rail-title: #fff;
-  --rail-text: #b9c5d6;
-  --rail-border: #2b374a;
-  --rail-hover: #1e293b;
-  --rail-current: #3a271f;
-  --rail-current-text: #fdba74;
-  --rail-accent: #fb923c;
+:host(.admin-navigation) :is(.role-account, .role-menu-button, .role-rail nav a) {
+  border-radius: 15px;
 }
 
 .role-rail {
@@ -41,22 +34,39 @@
 .role-brand {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   color: var(--rail-title);
   font-size: 26px;
   font-weight: 850;
   letter-spacing: -.035em;
+  line-height: 1;
   text-decoration: none;
 }
 
-.role-brand tg-icon { width: 25px; height: 25px; }
-.role-brand-dot { color: var(--rail-accent); }
+.role-brand-mark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 40px;
+  border-radius: 8px;
+}
 
-.role-identity p {
+.role-brand-mark img { object-fit: contain; }
+
+.role-identity-links {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.role-identity-links p {
   display: flex;
   align-items: center;
   gap: 7px;
-  margin: 9px 0 0 2px;
+  margin: 0 0 0 2px;
   color: var(--rail-text);
   font-size: 13px;
   font-weight: 650;
@@ -64,13 +74,27 @@
 
 .role-identity p tg-icon { width: 16px; height: 16px; color: var(--rail-accent); }
 
+.role-account {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--rail-border);
+  border-radius: 9px;
+  color: var(--rail-text);
+}
+
+.role-account:hover { background: var(--rail-hover); color: var(--rail-title); }
+.role-account tg-icon { width: 18px; height: 18px; }
+
 .role-rail nav {
   display: grid;
   gap: 4px;
   padding: 14px 10px;
 }
 
-.role-rail nav a, .role-bottom a {
+.role-rail nav a {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -85,21 +109,18 @@
 }
 
 .role-rail nav a i { flex: 0 0 19px; text-align: center; }
-.role-rail a:hover { background: var(--rail-hover); color: var(--rail-title); }
+.role-rail nav a:hover { background: var(--rail-hover); color: var(--rail-title); }
 .role-rail nav a.current {
   border-color: color-mix(in srgb, var(--rail-accent), transparent 72%);
   background: var(--rail-current);
   color: var(--rail-current-text);
 }
 
-.role-rail a:focus-visible, .role-menu-button:focus-visible {
+.role-rail a:focus-visible, .role-topbar a:focus-visible, .role-menu-button:focus-visible {
   outline: 2px solid var(--rail-accent);
   outline-offset: 2px;
 }
 
-.role-bottom { margin-top: auto; padding: 16px 10px; border-top: 1px solid var(--rail-border); }
-.role-bottom p { margin: 0 13px 4px; color: var(--rail-text); font-size: 12px; line-height: 1.45; }
-.role-bottom tg-icon { width: 17px; height: 17px; }
 .role-topbar, .role-mobile { display: none; }
 
 @media (max-width: 900px) {
@@ -109,12 +130,12 @@
     inset: 0 0 auto;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     height: var(--role-topbar-height);
-    padding: 0 14px;
-    border-bottom: 1px solid #e2e8f0;
-    background: #fff;
-    color: #0f172a;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--rail-border);
+    background: var(--rail-bg);
+    color: var(--rail-title);
   }
   .role-menu-button {
     display: inline-grid;
@@ -122,14 +143,15 @@
     height: 40px;
     flex: 0 0 40px;
     place-items: center;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--rail-border);
     border-radius: 10px;
-    background: #f8fafc;
-    color: #334155;
+    background: var(--rail-hover);
+    color: var(--rail-title);
   }
-  .role-topbar-brand { font-size: 21px; font-weight: 850; letter-spacing: -.035em; }
-  .role-topbar-brand span { color: #c2410c; }
-  .role-topbar-label { margin-inline-start: auto; text-align: end; color: #475569; font-size: 13px; font-weight: 650; }
+  .role-topbar .role-brand { font-size: 20px; }
+  .role-topbar .role-brand-mark { width: 26px; height: 34px; }
+  .role-topbar .role-brand-mark img { width: 20px; height: 27px; }
+  .role-topbar-label { margin-inline-start: auto; text-align: end; color: var(--rail-text); font-size: 13px; font-weight: 650; }
   .role-desktop { display: none; }
   .role-mobile[open] {
     display: block;

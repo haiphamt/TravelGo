@@ -36758,8 +36758,8 @@
       "area": "135 Nam Kỳ Khởi Nghĩa",
       "price": null,
       "hours": "Mo-Su 07:00-21:00",
-      "image": null,
-      "images": [],
+      "image": "/images/osm/way-1275902196.jpg",
+      "images": ["/images/osm/way-1275902196.jpg"],
       "description": "Địa điểm cà phê trong dữ liệu OpenStreetMap.",
       "lat": 10.7784499,
       "lng": 106.6959617,
@@ -36770,7 +36770,12 @@
       "sourceLicense": "ODbL-1.0",
       "sourceUpdatedAt": "2026-03-16T07:06:34+00:00",
       "referenceOnly": true,
-      "photoCredit": null
+      "photoCredit": "Café 30/4, 135 Nam Kỳ Khởi Nghĩa · 源義信 · Wikimedia Commons · CC BY 4.0 (ảnh năm 2023, trước khi đổi tên; đã thu nhỏ)",
+      "photoSource": {
+        "url": "https://commons.wikimedia.org/wiki/File:2023-12-10_Caf%C3%A9_30%EF%BC%8F4,_Nam_K%E1%BB%B3_Kh%E1%BB%9Fi_Ngh%C4%A9a_Street,_Ho_Chi_Minh_City.jpg",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+      }
     },
     {
       "id": "osm:node/14107123377",
@@ -45404,8 +45409,8 @@
       "area": "Chưa cập nhật địa chỉ",
       "price": null,
       "hours": "Mo-Su 06:30-00:00",
-      "image": null,
-      "images": [],
+      "image": "/images/osm/node-4928829323.jpg",
+      "images": ["/images/osm/node-4928829323.jpg"],
       "description": "Địa điểm cà phê trong dữ liệu OpenStreetMap.",
       "lat": 10.7710508,
       "lng": 106.6939121,
@@ -45416,7 +45421,12 @@
       "sourceLicense": "ODbL-1.0",
       "sourceUpdatedAt": "2026-05-04T08:39:43+00:00",
       "referenceOnly": true,
-      "photoCredit": null
+      "photoCredit": "Starbucks, Saigon · lightwrite · Flickr · CC BY-SA 2.0 (ảnh chụp năm 2014)",
+      "photoSource": {
+        "url": "https://www.flickr.com/photos/lightwrite/14547239334/",
+        "license": "CC BY-SA 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/"
+      }
     },
     {
       "id": "osm:node/5311759821",

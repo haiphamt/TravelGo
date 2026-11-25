@@ -1,19 +1,124 @@
-<header class="admin-page-heading">
-  <h1>{{ heading() }}</h1>
-  <p>Đối chiếu yêu cầu, ghi quyết định và theo dõi lịch sử xử lý.</p>
-</header>
+@if (overview()) {
+  <header class="workspace-heading admin-hero">
+    <div class="admin-hero-content">
+      <h1>Tổng quan quản trị</h1>
+      <p>Theo dõi hoạt động trên TravelGo và các yêu cầu cần xử lý.</p>
+      <a class="button primary admin-queue-link" routerLink="/quan-tri" [queryParams]="{ view: 'queue' }">
+        Hàng đợi xét duyệt <tg-icon name="arrow" />
+      </a>
+    </div>
+    <figure class="workspace-cover">
+      <img src="images/workspaces/bao-tang-thanh-pho.webp" alt="" width="520" height="312" decoding="async" fetchpriority="low" />
+      <figcaption>
+        <a href="https://commons.wikimedia.org/wiki/File:Museum_of_Ho_Chi_Minh_City_(formerly_Gia_Long_Palace).jpg"
+          title="Ảnh của Gary Todd · CC0 1.0" target="_blank" rel="noopener noreferrer">Bảo tàng TP. Hồ Chí Minh<tg-icon name="external" /></a>
+      </figcaption>
+    </figure>
+  </header>
 
-<p class="workflow-note">
-  <tg-icon name="info" />
-  Yêu cầu và quyết định được lưu trên máy chủ, kèm người xử lý, thời điểm và lý do.
-</p>
+  @let overviewData = workflow.adminOverview();
+  @let overviewError = workflow.adminOverviewError();
+  <section class="admin-activity" aria-labelledby="admin-activity-title" [attr.aria-busy]="!overviewData && !overviewError">
+    <h2 id="admin-activity-title">Hoạt động trên TravelGo</h2>
+    @if (overviewData; as stats) {
+      <dl class="admin-metrics">
+        @for (metric of metrics; track metric.key) {
+          <div>
+            <dt><span class="admin-metric-icon"><tg-icon [name]="metric.icon" /></span>{{ metric.label }}</dt>
+            <dd>{{ numberFormat.format(stats.catalog[metric.key]) }}</dd>
+          </div>
+        }
+      </dl>
+    } @else if (overviewError) {
+      <div class="admin-board-state">
+        <p role="alert">{{ overviewError }}</p>
+        <button class="button secondary" type="button" (click)="workflow.loadAdminOverview()">Tải lại thống kê</button>
+      </div>
+    } @else {
+      <p class="admin-board-state" role="status">Đang tải thống kê…</p>
+    }
+  </section>
 
-@if (store.catalogStatus() === 'error') {
-  <div class="admin-catalog-error">
-    <p role="alert">{{ store.catalogError() }}</p>
-    <button class="button secondary" type="button" (click)="store.loadCatalog()">Tải lại danh mục</button>
+  <div class="admin-overview-grid">
+    <section class="admin-board" aria-labelledby="admin-breakdown-title" [attr.aria-busy]="workflow.loading()">
+      <header class="admin-board-heading">
+        <h2 id="admin-breakdown-title">Yêu cầu theo loại</h2>
+        <p>Theo dõi tiến độ xét duyệt.</p>
+      </header>
+      @if (workflow.error(); as error) {
+        <p class="admin-board-state" role="alert">{{ error }}</p>
+      } @else if (workflow.loading()) {
+        <p class="admin-board-state" role="status">Đang tải yêu cầu…</p>
+      } @else {
+        <dl class="admin-queue-totals">
+          <div><dt>Đang chờ</dt><dd>{{ numberFormat.format(counts().pending) }}</dd></div>
+          <div><dt>Cần bổ sung</dt><dd>{{ numberFormat.format(counts()['needs-info']) }}</dd></div>
+          <div><dt>Đã xử lý</dt><dd>{{ numberFormat.format(counts().processed) }}</dd></div>
+        </dl>
+        <ul class="admin-breakdown">
+          @for (entry of requestBreakdown(); track entry.kind) {
+            <li>
+              <a routerLink="/quan-tri" [queryParams]="{loai: entry.kind}">
+                <span class="admin-breakdown-icon"><tg-icon [name]="queueSections[entry.kind].icon" /></span>
+                <span class="admin-breakdown-name"><strong>{{ labels.kind[entry.kind] }}</strong><small>{{ numberFormat.format(entry.pending) }} đang chờ</small></span>
+                <span class="admin-breakdown-count">{{ numberFormat.format(entry.total) }} yêu cầu</span>
+                <tg-icon name="arrow" />
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="admin-board admin-ranking" aria-labelledby="admin-ranking-title" [attr.aria-busy]="!overviewData && !overviewError">
+      <header class="admin-board-heading">
+        <h2 id="admin-ranking-title">Địa điểm được đánh giá nhiều nhất</h2>
+        <p>Xếp theo lượt đánh giá công khai trên TravelGo.</p>
+      </header>
+      @if (overviewData; as stats) {
+        @if (stats.topPlaces.length) {
+          <ol class="admin-ranked-places">
+            @for (place of stats.topPlaces; track place.id; let rank = $index) {
+              <li>
+                <a [routerLink]="['/dia-diem', place.id]">
+                  <span class="admin-rank" aria-hidden="true">{{ rank + 1 }}</span>
+                  <span class="admin-ranked-name"><strong>{{ place.name }}</strong>@if (place.area) { <small>{{ place.area }}</small> }</span>
+                  <span class="admin-ranked-score">
+                    <strong><tg-icon name="star" /> {{ ratingFormat.format(place.rating) }}/5</strong>
+                    <small>{{ numberFormat.format(place.reviewCount) }} đánh giá</small>
+                  </span>
+                </a>
+              </li>
+            }
+          </ol>
+        } @else {
+          <div class="admin-ranking-empty">
+            <span class="admin-empty-star"><tg-icon name="star" /></span>
+            <h3>Chưa có đánh giá công khai</h3>
+            <p>Địa điểm sẽ xuất hiện khi nhận được đánh giá công khai trên TravelGo.</p>
+          </div>
+        }
+      } @else {
+        <p class="admin-board-state">{{ overviewError ? 'Chưa tải được bảng xếp hạng.' : 'Đang tải bảng xếp hạng…' }}</p>
+      }
+    </section>
   </div>
-}
+} @else {
+  @let pageInfo = section();
+  <header class="workspace-heading admin-heading admin-queue-heading">
+    <span class="admin-heading-icon"><tg-icon [name]="pageInfo.icon" /></span>
+    <div>
+      <h1>{{ heading() }}</h1>
+      <p>{{ pageInfo.description }}</p>
+    </div>
+  </header>
+
+  @if (store.catalogStatus() === 'error') {
+    <div class="admin-catalog-error">
+      <p role="alert">{{ store.catalogError() }}</p>
+      <button class="button secondary" type="button" (click)="store.loadCatalog()">Tải lại danh mục</button>
+    </div>
+  }
 
 <section class="admin-queue" aria-labelledby="queue-title" [attr.aria-busy]="!store.ready()">
   <div class="admin-queue-controls">
@@ -32,14 +137,14 @@
           <span class="admin-search">
             <tg-icon name="search" />
             <input type="search" [ngModel]="query()" (ngModelChange)="changeQuery($event)"
-              placeholder="Địa điểm, người gửi, nội dung…" />
+              placeholder="Địa điểm, vai trò, nội dung…" />
           </span>
         </label>
         <label>
           Loại yêu cầu
           <select [ngModel]="kind()" (ngModelChange)="changeKind($event)">
             <option value="">Tất cả loại</option>
-            @for (entry of kinds; track entry[0]) { <option [value]="entry[0]">{{ entry[1] }}</option> }
+            @for (entry of kinds; track entry) { <option [value]="entry">{{ labels.kind[entry] }}</option> }
           </select>
         </label>
         <label>
@@ -122,17 +227,18 @@
     }
   } @else {
     <div class="admin-empty">
-      <tg-icon name="shield" />
+      <span class="admin-empty-icon"><tg-icon [name]="pageInfo.icon" /></span>
       @if (query() || status()) {
         <h3>Không có yêu cầu khớp bộ lọc</h3>
         <p>Thử tìm bằng từ khóa khác hoặc đổi trạng thái.</p>
       } @else {
         <h3>Chưa có yêu cầu{{ kind() ? ' thuộc loại này' : '' }}</h3>
-        <p>Yêu cầu từ Người dùng và Chủ cơ sở sẽ xuất hiện ở đây.</p>
+        <p>Yêu cầu mới sẽ xuất hiện trong danh sách này.</p>
       }
     </div>
   }
 </section>
+}
 
 <dialog class="admin-drawer" #requestDialog aria-labelledby="request-title"
   (click)="$event.target === requestDialog && requestDialog.close()" (close)="!requestDialog.open && closeDetails()">

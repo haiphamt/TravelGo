@@ -13,6 +13,7 @@ Review images use JSON Base64, so three 5 MiB files produce approximately 20 MiB
 ## Public place lookup
 
 - `GET /api/places`: `city=hcm` (default), `q` (max 200 characters), `category=all|coffee|food|nature|culture|drink|lodging`, `local=0|1`, `has_image=0|1`, `area`, `district`, `localType`, `facet`, `sort=default|name|price`, `page`, `per_page` (default 24, maximum 200).
+- `GET /api/places/catalog`: streams `{ "data": [...] }` in the default list order for views that need the complete TP.HCM catalog. Entries use the same fields as the paginated list.
 - Home suggestions request `has_image=1&per_page=8` with the selected category and optional facet. The server filters to places with a cover image before pagination.
 - `facet`: `always-open|wifi|outdoor|takeaway|wheelchair|hotel|homestay|viewpoint`. `always-open` means the source records exactly `24/7`; it does not infer current opening status.
 - `q` searches name, products and address with Vietnamese accent/case folding, including `đ`. `%` and `_` are literal text. `area` is a partial match; `district` matches the entire normalized district. `localType` matches the exact Local category label and implies `local=1`.

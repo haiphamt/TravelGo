@@ -13,14 +13,14 @@ const OWNER_LINKS = [
 ];
 
 const ADMIN_LINKS = [
-  { value: "", label: "Hàng đợi xét duyệt", icon: "fa-layer-group" },
+  { value: "", label: "Tổng quan", icon: "fa-chart-simple" },
+  { value: "queue", label: "Hàng đợi xét duyệt", icon: "fa-layer-group" },
   { value: "new", label: "Đóng góp địa điểm", icon: "fa-location-dot" },
   { value: "update", label: "Cập nhật địa điểm", icon: "fa-pen-to-square" },
   { value: "claim", label: "Quyền quản lý", icon: "fa-shield-halved" },
   { value: "report", label: "Báo cáo đánh giá", icon: "fa-flag" },
 ];
 
-// The admin rail follows Didaune's admin shell. The owner rail uses its public shell palette.
 @Component({
   selector: "tg-workspace-navigation",
   standalone: true,
@@ -34,8 +34,9 @@ const ADMIN_LINKS = [
     <header class="role-topbar">
       <button class="role-menu-button" type="button" aria-controls="role-mobile-rail" aria-label="Mở menu khu vực"
         [attr.aria-expanded]="open()" (click)="openMenu()"><tg-icon name="menu" /></button>
-      <span class="role-topbar-brand">TravelGo<span>.</span></span>
+      <ng-container [ngTemplateOutlet]="brand" />
       <span class="role-topbar-label">{{ label() }}</span>
+      <ng-container [ngTemplateOutlet]="account" />
     </header>
 
     <aside class="role-rail role-desktop" [attr.aria-label]="label()">
@@ -50,10 +51,26 @@ const ADMIN_LINKS = [
       </div>
     </dialog>
 
+    <ng-template #brand>
+      <a class="role-brand" [routerLink]="path()" [attr.aria-label]="'TravelGo – Trang chủ ' + label()" (click)="closeMenu()">
+        <span class="role-brand-mark"><img src="images/travelgo-mark.svg" alt="" width="25" height="34" /></span>
+        <span>TravelGo</span>
+      </a>
+    </ng-template>
+
+    <ng-template #account>
+      <a class="role-account" routerLink="/tai-khoan" aria-label="Tài khoản của bạn" title="Tài khoản của bạn" (click)="closeMenu()">
+        <tg-icon name="user" />
+      </a>
+    </ng-template>
+
     <ng-template #railContent>
       <div class="role-identity">
-        <a class="role-brand" routerLink="/" (click)="closeMenu()"><tg-icon name="pin" /> <span>TravelGo<span class="role-brand-dot">.</span></span></a>
-        <p><tg-icon [name]="role() === 'admin' ? 'shield' : 'store'" /> {{ label() }}</p>
+        <ng-container [ngTemplateOutlet]="brand" />
+        <div class="role-identity-links">
+          <p><tg-icon [name]="role() === 'admin' ? 'shield' : 'store'" /> {{ label() }}</p>
+          <ng-container [ngTemplateOutlet]="account" />
+        </div>
       </div>
       <nav [attr.aria-label]="'Điều hướng ' + label()">
         @for (link of links(); track link.value) {
@@ -63,10 +80,6 @@ const ADMIN_LINKS = [
           </a>
         }
       </nav>
-      <div class="role-bottom">
-        <p>Dữ liệu theo tài khoản của bạn</p>
-        <a routerLink="/" (click)="closeMenu()"><tg-icon name="back" /> Về trang Người dùng</a>
-      </div>
     </ng-template>
   `,
 })
@@ -82,7 +95,8 @@ export class WorkspaceNavigation {
     const params = this.params();
     if (this.role() === "admin") {
       const type = params?.get("loai");
-      return ADMIN_LINKS.find(link => link.value === type)?.value ?? "";
+      return ADMIN_LINKS.find(link => link.value === type && link.value !== "queue")?.value ??
+        (params?.get("view") === "queue" ? "queue" : "");
     }
     const view = params?.get("view");
     if (view === "history") return view;
@@ -91,7 +105,8 @@ export class WorkspaceNavigation {
 
   queryFor(value: string) {
     if (!value) return null;
-    return this.role() === "admin" ? { loai: value } : { view: value };
+    if (this.role() === "owner" || value === "queue") return { view: value };
+    return { loai: value };
   }
 
   openMenu() {

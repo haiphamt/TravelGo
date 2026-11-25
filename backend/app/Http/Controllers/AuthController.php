@@ -15,6 +15,14 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    private const NAME_RULES = ['bail', 'required', 'string', 'max:100'];
+
+    private const NAME_MESSAGES = [
+        'name.required' => 'Hãy nhập họ và tên.',
+        'name.string' => 'Họ và tên phải là văn bản.',
+        'name.max' => 'Họ và tên chỉ được dài tối đa 100 ký tự.',
+    ];
+
     public function __construct(private ModerationWorkflow $moderation) {}
 
     public function session(Request $request, int $status = 200): JsonResponse
@@ -69,6 +77,20 @@ class AuthController extends Controller
         return response()->noContent();
     }
 
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $user = $request->user('web');
+        $profile = $request->validate([
+            'name' => self::NAME_RULES,
+            'account_id' => ['required', 'string'],
+        ], self::NAME_MESSAGES);
+
+        abort_unless($profile['account_id'] === (string) $user->id, 409);
+        $user->update(['name' => $profile['name']]);
+
+        return $this->session($request);
+    }
+
     private function validateCredentials(Request $request, bool $registering = false): array
     {
         if (is_string($request->input('email'))) {
@@ -86,14 +108,13 @@ class AuthController extends Controller
         ];
 
         if ($registering) {
-            $rules['name'] = ['bail', 'required', 'string', 'max:100'];
+            $rules['name'] = self::NAME_RULES;
             $rules['email'][] = 'unique:users,email';
             $rules['password'] = [...$rules['password'], 'min:8', 'confirmed'];
         }
 
         return $request->validate($rules, [
-            'name.required' => 'Hãy nhập họ và tên.',
-            'name.max' => 'Họ và tên chỉ được dài tối đa 100 ký tự.',
+            ...self::NAME_MESSAGES,
             'email.required' => 'Hãy nhập email.',
             'email.email' => 'Email chưa đúng định dạng.',
             'email.max' => 'Email chỉ được dài tối đa 254 ký tự.',

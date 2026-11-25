@@ -1,0 +1,208 @@
+.account-page {
+  --account-radius: 20px;
+  container: account / inline-size;
+  max-width: 960px;
+  margin-inline: auto;
+}
+
+.account-page:has(> .account-guest) { max-width: 590px; }
+
+.account-page > h1 {
+  margin: 0 0 24px;
+  letter-spacing: -.035em;
+}
+
+.account-primary {
+  display: grid;
+  align-items: start;
+  gap: 16px;
+}
+
+.account-panel {
+  min-width: 0;
+  padding: clamp(16px, 3cqi, 28px);
+  border: 1px solid var(--border);
+  border-radius: var(--account-radius);
+  background: var(--surface);
+}
+
+.account-panel h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.account-panel .button {
+  min-height: 44px;
+  border-radius: 12px;
+}
+
+.account-panel-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px 14px;
+  margin-bottom: 16px;
+}
+
+.account-fields {
+  display: grid;
+  padding-inline: 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--canvas);
+}
+
+.account-details { margin: 0; }
+
+.account-details > div,
+.account-form { padding-block: 14px; }
+
+.account-details > div + div,
+.account-form + .account-details { border-top: 1px solid var(--border); }
+
+.account-details dt {
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: .875rem;
+}
+
+.account-details dd {
+  margin: 0;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.account-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.account-form input {
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.account-form input[aria-invalid="true"] { border-color: #b42318; }
+
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.account-panel .account-error {
+  margin: 8px 0 0;
+  color: #b42318;
+}
+
+.account-confirmation {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 14px 0 0;
+  color: #166534;
+}
+
+.account-links h2 { margin-bottom: 10px; }
+
+.account-links ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.account-links li + li { border-top: 1px solid var(--border); }
+
+.account-links a {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 9px 4px;
+  border-radius: 10px;
+}
+
+.account-links a:hover { background: var(--canvas); }
+
+.account-link-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--soft);
+  color: var(--brand-text);
+}
+
+.account-link-text strong,
+.account-link-text small { display: block; }
+.account-link-text strong { font-size: .9rem; }
+.account-link-text small { color: var(--muted); line-height: 1.35; }
+
+.account-link-arrow {
+  width: 15px;
+  height: 15px;
+  color: var(--muted);
+}
+
+.account-guest {
+  padding: clamp(20px, 5cqi, 40px);
+  text-align: center;
+}
+
+.account-guest p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.account-guest-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 16px;
+  border-radius: 16px;
+  background: var(--soft);
+  color: var(--brand-text);
+}
+
+.account-guest .account-actions { justify-content: center; margin-top: 20px; }
+
+.account-guest-benefits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 20px;
+  margin: 24px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: .8125rem;
+  list-style: none;
+}
+
+.account-guest-benefits li {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.account-guest-benefits tg-icon { width: 16px; height: 16px; color: var(--brand-text); }
+
+@container account (min-width: 48rem) {
+  .account-primary { grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .account-page > h1 { margin-bottom: 16px; }
+}

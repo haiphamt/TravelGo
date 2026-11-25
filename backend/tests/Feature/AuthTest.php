@@ -69,6 +69,36 @@ class AuthTest extends TestCase
         $this->assertDatabaseCount('users', 1);
     }
 
+    public function test_profile_update_validates_name_and_updates_only_the_current_account(): void
+    {
+        $this->postJson('/api/auth/profile')->assertUnauthorized();
+
+        $user = User::factory()->create(['name' => 'Khách TravelGo']);
+        $other = User::factory()->create();
+        $this->actingAs($user, 'web');
+
+        $this->postJson('/api/auth/profile', ['account_id' => (string) $user->id, 'name' => '  '])
+            ->assertUnprocessable()->assertJsonValidationErrors('name');
+        $this->postJson('/api/auth/profile', ['account_id' => (string) $user->id, 'name' => str_repeat('á', 101)])
+            ->assertUnprocessable()->assertJsonValidationErrors('name');
+        $this->postJson('/api/auth/profile', ['account_id' => (string) $other->id, 'name' => 'Tên sai tài khoản'])
+            ->assertConflict();
+        $this->assertSame('Khách TravelGo', $user->fresh()->name);
+        $this->assertSame($other->name, $other->fresh()->name);
+
+        $this->postJson('/api/auth/profile', [
+            'account_id' => (string) $user->id,
+            'name' => '  Người dùng TravelGo  ',
+            'email' => 'updated@example.com',
+            'role' => 'admin',
+        ])->assertOk()->assertJsonPath('user.id', (string) $user->id)
+            ->assertJsonPath('user.name', 'Người dùng TravelGo')->assertJsonPath('user.email', $user->email)
+            ->assertJsonPath('user.admin', false);
+
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'name' => 'Người dùng TravelGo', 'email' => $user->email]);
+        $this->getJson('/api/auth/session')->assertOk()->assertJsonPath('user.name', 'Người dùng TravelGo');
+    }
+
     public function test_email_writes_require_csrf(): void
     {
         $this->app->bind(PreventRequestForgery::class, fn ($app) => new class($app, $app['encrypter']) extends PreventRequestForgery
@@ -79,7 +109,7 @@ class AuthTest extends TestCase
             }
         });
 
-        foreach (['register', 'login', 'logout'] as $action) {
+        foreach (['register', 'login', 'logout', 'profile'] as $action) {
             $this->postJson('/api/auth/'.$action)->assertStatus(419);
         }
     }

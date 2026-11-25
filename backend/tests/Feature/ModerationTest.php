@@ -3,6 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\Contribution;
+use App\Models\Favorite;
+use App\Models\Place;
+use App\Models\Review;
 use App\Models\User;
 use App\Services\Moderation\ModerationCatalog;
 use Carbon\CarbonImmutable;
@@ -41,6 +44,42 @@ class ModerationTest extends TestCase
         $data = $this->actingAs($user)->postJson('/api/contributions', $this->newDraft() + ['actor' => 'admin', 'user_id' => 999, 'status' => 'approved'])->assertCreated()->json('data');
         $this->assertDatabaseHas('contributions', ['id' => $data['id'], 'user_id' => $user->id, 'actor' => 'user', 'status' => 'pending']);
         $this->getJson('/api/moderation/queue')->assertForbidden();
+    }
+
+    public function test_admin_overview_uses_public_reviews_and_real_catalog_counts(): void
+    {
+        $url = '/api/moderation/overview';
+        $this->getJson($url)->assertUnauthorized();
+        [$first, $second, $third] = User::factory()->count(3)->create();
+        $this->actingAs($first)->getJson($url)->assertForbidden();
+        $admin = $this->admin();
+        $this->actingAs($admin)->getJson($url)->assertOk()->assertJsonPath('data.topPlaces', []);
+
+        $popular = Place::factory()->create(['name' => 'Quán nhiều đánh giá', 'area' => 'TP. Hồ Chí Minh']);
+        $highestRated = Place::factory()->create();
+        $singleReview = Place::factory()->create();
+        $hiddenOnly = Place::factory()->create();
+        foreach ([
+            [$popular, $first, 2], [$popular, $second, 3], [$popular, $third, 4],
+            [$highestRated, $first, 5], [$highestRated, $second, 5], [$highestRated, $third, 2],
+            [$singleReview, $first, 5], [$hiddenOnly, $first, 5],
+        ] as [$place, $author, $rating]) {
+            $review = Review::query()->create(['place_id' => $place->id, 'user_id' => $author->id, 'rating' => $rating]);
+            if ($place->is($hiddenOnly)) {
+                $review->forceFill(['hidden_at' => now()])->save();
+            }
+        }
+        Favorite::query()->create(['place_id' => $popular->id, 'user_id' => $first->id]);
+
+        $this->getJson($url)->assertOk()
+            ->assertJsonPath('data.catalog', ['places' => 4, 'users' => 4, 'reviews' => 7, 'favorites' => 1])
+            ->assertJsonCount(3, 'data.topPlaces')
+            ->assertJsonPath('data.topPlaces.0.id', $highestRated->public_id)
+            ->assertJsonPath('data.topPlaces.0.rating', 4)
+            ->assertJsonPath('data.topPlaces.1.id', $popular->public_id)
+            ->assertJsonPath('data.topPlaces.1.area', $popular->area)
+            ->assertJsonPath('data.topPlaces.1.reviewCount', 3)
+            ->assertJsonPath('data.topPlaces.2.id', $singleReview->public_id);
     }
 
     public function test_new_place_only_appears_after_approval_and_keeps_its_assigned_public_id(): void

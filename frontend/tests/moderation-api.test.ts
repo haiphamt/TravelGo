@@ -53,6 +53,23 @@ test("invalid pagination fails instead of returning an incomplete queue", async 
   await assert.rejects(client.requests(false), /Phân trang máy chủ không hợp lệ/);
 });
 
+test("admin overview keeps real counts and rejects incomplete ranking data", async () => {
+  const data = {
+    catalog: {places: 5, users: 2, reviews: 0, favorites: 0},
+    topPlaces: [],
+  };
+  const client = new ModerationClient(async (url, options) => {
+    assert.equal(url, "/api/moderation/overview");
+    assert.equal(options?.credentials, "same-origin");
+    return Response.json({data});
+  });
+  assert.deepEqual(await client.overview(), data);
+  const malformed = new ModerationClient(async () => Response.json({data: {
+    ...data, topPlaces: [{id: "osm:node/123", name: "Cà phê", area: null, reviewCount: 0, rating: 5}],
+  }}));
+  await assert.rejects(malformed.overview(), /Số liệu điều hành từ máy chủ không hợp lệ/);
+});
+
 test("writes preserve server version and use session cookies and CSRF header", async () => {
   const client = new ModerationClient(async (url, options) => {
     assert.equal(url, "/api/moderation/demo/decision");

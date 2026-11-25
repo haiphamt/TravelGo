@@ -37,14 +37,16 @@ export function filterPlaces(places: readonly Place[], filters: DiscoveryFilters
   const query = normalize(filters.query);
   const area = normalize(filters.area ?? "");
   const district = normalize(filters.district ?? "");
-  const results = places.filter((place) =>
-    (!filters.localOnly || place.local) &&
-    (filters.category === "all" || place.category === filters.category) &&
-    (!filters.localType || (place.local && place.localProfile?.categoryLabel === filters.localType)) &&
-    (!filters.facet || matchesFacet(place, filters.facet)) &&
-    (!area || (place.area !== "Chưa cập nhật địa chỉ" && normalize(place.area).includes(area))) &&
-    (!district || normalize(place.sourceDistrict ?? "") === district) &&
-    (!query || normalize([place.name, ...place.products, place.area].join(" ")).includes(query)));
+  const results = places.filter((place) => {
+    const address = place.area === "Chưa cập nhật địa chỉ" ? "" : place.area;
+    return (!filters.localOnly || place.local) &&
+      (filters.category === "all" || place.category === filters.category) &&
+      (!filters.localType || (place.local && place.localProfile?.categoryLabel === filters.localType)) &&
+      (!filters.facet || matchesFacet(place, filters.facet)) &&
+      (!area || normalize(address).includes(area)) &&
+      (!district || normalize(place.sourceDistrict ?? "") === district) &&
+      (!query || normalize([place.name, ...place.products, address].join(" ")).includes(query));
+  });
   if (filters.sort === "name") results.sort((a, b) => a.name.localeCompare(b.name, "vi"));
   if (filters.sort === "price") results.sort((a, b) => {
     if (a.price === null) return b.price === null ? 0 : 1;

@@ -167,21 +167,13 @@ export class PlacesApi {
     if (facet) query.set("facet", facet);
     return (await this.placesPage(query, signal)).data;
   }
-  async catalogPage(page = 1) {
-    return this.placesPage(new URLSearchParams({ per_page: "200", page: String(page) }));
-  }
   async catalog(): Promise<Place[]> {
-    const first = await this.catalogPage();
-    const places = [...first.data];
-    for (let page = 2; page <= first.meta.last_page; page += 4) {
-      const pages = await Promise.all(Array.from({ length: Math.min(4, first.meta.last_page - page + 1) }, (_, index) => this.catalogPage(page + index)));
-      for (const result of pages) {
-        if (result.meta.total !== first.meta.total) throw new Error("Danh mục vừa thay đổi. Hãy thử tải lại.");
-        places.push(...result.data);
-      }
+    const body = await this.request("/api/places/catalog");
+    if (!Array.isArray(body["data"])) throw new Error("Danh mục API không hợp lệ.");
+    const places = body["data"].map(parseApiPlace);
+    if (new Set(places.map(place => place.id)).size !== places.length) {
+      throw new Error("Danh mục chứa địa điểm trùng lặp. Hãy thử tải lại.");
     }
-    if (new Set(places.map(place => place.id)).size !== places.length || places.length !== first.meta.total)
-      throw new Error("Danh mục vừa thay đổi. Hãy thử tải lại.");
     return places;
   }
   async detail(id: string): Promise<Place> {

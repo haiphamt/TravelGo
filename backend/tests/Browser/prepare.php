@@ -21,4 +21,9 @@ foreach ($fixture['places'] as $place) {
 foreach (['a', 'b'] as $account) {
     User::factory()->create(['name' => 'TravelGo Browser Demo '.$account, 'email' => 'itinerary-browser-'.$account.'@example.invalid']);
 }
-echo "Prepared travelgo_test with two fixture users and four demo places.\n";
+User::factory()->create([
+    'name' => 'TravelGo Browser Admin',
+    'email' => 'moderation-browser@example.invalid',
+    'role' => 'admin',
+]);
+echo "Prepared travelgo_test with three fixture users and four demo places.\n";

@@ -124,7 +124,7 @@
     }
   ],
   "images": [],
-  "catalogSha256": "ffdde52a0ee9f9772075bdccc58b2e9194569a0bd06abfad850de4db80f9c435",
+  "catalogSha256": "7bcef1dc051c32e4e412a7c2b8bf6dfb797a4936ed4b20b7b076811fadeaf518",
   "osmPhotos": {
     "manifestUrl": "/data/osm-photo-sources.json",
     "manifestSha256": "e4292bfd05314e05fe4de27100565898bd51103bcff829867746875e311941e5",

@@ -1,10 +1,19 @@
-<header class="owner-heading">
+<header class="workspace-heading" [class.workspace-landing]="isHome()">
   <div>
     <h1>{{ page().title }}</h1>
     <p>{{ page().description }}</p>
+    @if (view() === 'places' && (isHome() || managed().length)) {
+      <a class="button primary" routerLink="/chu-co-so" [queryParams]="{view: 'claim'}"><tg-icon name="plus" />Xin quyền quản lý</a>
+    }
   </div>
-  @if (view() === 'places' && managed().length) {
-    <a class="button primary" routerLink="/chu-co-so" [queryParams]="{view: 'claim'}"><tg-icon name="plus" />Xin quyền quản lý</a>
+  @if (isHome()) {
+    <figure class="workspace-cover">
+      <img src="images/workspaces/cho-binh-tay.webp" alt="" width="520" height="312" decoding="async" fetchpriority="low" />
+      <figcaption>
+        <a href="https://commons.wikimedia.org/wiki/File:Binh_Tay_market_20.jpg" title="Ảnh của Syced · CC0 1.0"
+          target="_blank" rel="noopener noreferrer">Chợ Bình Tây<tg-icon name="external" /></a>
+      </figcaption>
+    </figure>
   }
 </header>
 
@@ -148,7 +157,10 @@
             <li>
               <a routerLink="/chu-co-so" [queryParams]="{view: 'manage', place: item.id}"
                 [attr.aria-current]="selectedId() === item.id ? 'true' : null">
-                <tg-icon name="store" />
+                <span class="owner-place-thumbnail">
+                  @if (item.image) { <img [src]="item.image" width="44" height="44" alt="" loading="lazy" decoding="async" /> }
+                  @else { <tg-icon name="store" /> }
+                </span>
                 <span><strong>{{ item.name }}</strong><small>{{ item.area }}</small></span>
                 <tg-icon name="arrow" />
               </a>
@@ -226,8 +238,7 @@
       <section class="owner-panel owner-empty" aria-labelledby="owner-empty-title">
         <span class="owner-empty-icon"><tg-icon name="store" /></span>
         <h2 id="owner-empty-title">Chưa có địa điểm được cấp quyền</h2>
-        <p class="muted">Gửi yêu cầu quản lý một địa điểm trong danh mục để bắt đầu. Khi được duyệt, địa điểm sẽ xuất hiện ở đây.</p>
-        <a class="button primary" routerLink="/chu-co-so" [queryParams]="{view: 'claim'}"><tg-icon name="plus" />Xin quyền quản lý</a>
+        <p class="muted">Tìm cơ sở của bạn trong danh mục và gửi yêu cầu quản lý. Địa điểm được cấp quyền sẽ xuất hiện ở đây.</p>
       </section>
       <section class="owner-panel owner-guide" aria-labelledby="owner-verification-title">
         <h2 id="owner-verification-title">Theo dõi xác minh</h2>

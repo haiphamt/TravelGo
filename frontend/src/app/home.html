@@ -1,4 +1,4 @@
-<div class="p-4 lg:p-8 pb-24 md:pb-10 max-w-7xl mx-auto">
+<div class="p-4 lg:p-8 max-w-7xl mx-auto">
   @if (store.catalogStatus() === 'error') {
     <section class="mb-6 rounded-[28px] border border-red-200 bg-red-50 px-5 py-4 text-red-700 shadow-sm"
       role="alert">
@@ -13,31 +13,6 @@
     </section>
   }
 
-  <ul id="top-menu-right" [class.expanded]="quickMenuExpanded()"
-    aria-label="Chọn danh mục gợi ý"
-    (keydown.escape)="quickMenuExpanded.set(false); quickMenuButton.focus()">
-    <li>
-      <button type="button" id="toggle-menu-button" #quickMenuButton
-        (click)="quickMenuExpanded.set(!quickMenuExpanded())"
-        [attr.aria-expanded]="quickMenuExpanded()"
-        [attr.aria-label]="'Đổi danh mục gợi ý. Hiện tại: ' + activeHomeCategory().name">
-        <i [class]="'fa-solid ' + activeHomeCategory().icon" aria-hidden="true"></i>
-        <span aria-hidden="true">{{ activeHomeCategory().name }}</span>
-      </button>
-    </li>
-    @for (category of homeCategoryOptions; track category.id) {
-      @if (category.id !== selectedHomeCategory()) {
-        <li>
-          <button type="button" [attr.aria-label]="'Gợi ý ' + category.name"
-            (click)="selectedHomeCategory.set(category.id); quickMenuExpanded.set(false); quickMenuButton.focus()">
-            <i [class]="'fa-solid ' + category.icon" aria-hidden="true"></i>
-            <span aria-hidden="true">{{ category.name }}</span>
-          </button>
-        </li>
-      }
-    }
-  </ul>
-
   <section class="mb-12">
     <div class="mb-5">
       <h1 class="text-xl md:text-2xl font-bold text-slate-800">
@@ -45,7 +20,7 @@
       </h1>
       <p class="text-sm text-slate-500 mt-1">Lựa chọn của bạn là gì?</p>
     </div>
-    <div class="flex gap-6 overflow-x-auto hide-scrollbar pb-2">
+    <div class="home-categories flex gap-6 overflow-x-auto hide-scrollbar pb-2">
       @for (category of demandCategories(); track category.id) {
         <a routerLink="/kham-pha" [queryParams]="categoryContext(category)"
           class="group flex min-w-[88px] flex-col items-center gap-3">
@@ -64,13 +39,14 @@
     </div>
   </section>
 
-  <section class="mb-14">
+  <section class="mb-14" aria-labelledby="home-suggestions-title">
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h2 class="max-w-2xl text-xl font-bold leading-tight text-slate-800 md:text-2xl" aria-live="polite">
+        <h2 id="home-suggestions-title" class="max-w-2xl text-xl font-bold leading-tight text-slate-800 md:text-2xl" aria-live="polite">
           Gợi ý {{ activeHomeCategory().heading || activeHomeCategory().name }} tại
           <span class="text-primary">Thành phố Hồ Chí Minh</span>
         </h2>
+        <a class="home-data-credit" routerLink="/nguon-du-lieu">© OpenStreetMap · ODbL</a>
       </div>
       <a routerLink="/kham-pha" [queryParams]="suggestionContext()"
         class="inline-flex items-center gap-1 self-start text-sm font-semibold text-primary hover:underline">
@@ -78,6 +54,31 @@
         <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
       </a>
     </div>
+
+    <ul id="top-menu-right" [class.expanded]="quickMenuExpanded()"
+      aria-label="Chọn danh mục gợi ý"
+      (keydown.escape)="quickMenuExpanded.set(false); quickMenuButton.focus()">
+      <li>
+        <button type="button" id="toggle-menu-button" #quickMenuButton
+          (click)="quickMenuExpanded.set(!quickMenuExpanded())"
+          [attr.aria-expanded]="quickMenuExpanded()"
+          [attr.aria-label]="'Đổi danh mục gợi ý. Hiện tại: ' + activeHomeCategory().name">
+          <i [class]="'fa-solid ' + activeHomeCategory().icon" aria-hidden="true"></i>
+          <span aria-hidden="true">{{ activeHomeCategory().name }}</span>
+        </button>
+      </li>
+      @for (category of homeCategoryOptions; track category.id) {
+        @if (category.id !== selectedHomeCategory()) {
+          <li>
+            <button type="button" [attr.aria-label]="'Gợi ý ' + category.name"
+              (click)="selectedHomeCategory.set(category.id); quickMenuExpanded.set(false); quickMenuButton.focus()">
+              <i [class]="'fa-solid ' + category.icon" aria-hidden="true"></i>
+              <span aria-hidden="true">{{ category.name }}</span>
+            </button>
+          </li>
+        }
+      }
+    </ul>
 
     @let suggestion = suggestions();
     @if (suggestion.status === 'loading') {
@@ -94,7 +95,7 @@
       </div>
     } @else {
       @if (suggestion.places.length) {
-        <div class="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
+        <div class="home-suggestion-grid grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
           @for (place of suggestion.places; track place.id) {
             <tg-place-card [place]="place" [context]="suggestionContext()" />
           }
@@ -103,7 +104,7 @@
         <div class="rounded-3xl border border-dashed border-slate-300 bg-white/70 px-6 py-8 text-center">
           <i class="fa-solid fa-map-location-dot text-2xl text-primary" aria-hidden="true"></i>
           <p class="mt-4 text-sm text-slate-500">
-            Đang bổ sung ảnh cho danh mục {{ activeHomeCategory().name }}. Bạn có thể xem địa điểm qua “Xem tất cả”.
+            Chưa có gợi ý trong danh mục {{ activeHomeCategory().name }}. Chọn “Xem tất cả” để mở Khám phá.
           </p>
         </div>
       }
@@ -185,18 +186,17 @@
           </a>
         }
       </div>
-      <p class="mt-4 text-xs text-slate-500">Hồ sơ và ảnh tham khảo từ nguồn cộng đồng. TravelGo chưa xác minh thực địa.</p>
     </section>
   }
 
-  <section class="mb-14" aria-labelledby="home-voucher-title">
+  <section class="home-vouchers" aria-labelledby="home-voucher-title">
     <div class="mb-5">
       <h2 id="home-voucher-title" class="text-xl md:text-2xl font-bold text-slate-800">
         <span class="text-primary">TravelGo</span> - Vouchers
       </h2>
       <p class="mt-1 text-sm text-slate-500">Thiết kế minh họa cho TravelGo. Các ưu đãi mẫu chưa áp dụng.</p>
     </div>
-    <ul class="voucher-grid">
+    <ul class="voucher-grid" aria-label="Các voucher minh họa" tabindex="0">
       @for (voucher of voucherPreviews; track voucher.color) {
         <li class="voucher-preview" [class]="'voucher-' + voucher.color">
           <img [src]="voucher.image" alt="" loading="lazy" width="900" height="600" />
@@ -249,7 +249,7 @@
     }
   </section>
 
-  <section class="mb-16" aria-labelledby="home-areas-title">
+  <section class="home-areas" aria-labelledby="home-areas-title">
     <div class="mb-5">
       <h2 id="home-areas-title" class="text-xl md:text-2xl font-bold text-slate-800">Khu vực nổi bật</h2>
       <p class="mt-1 text-sm text-slate-500">Khám phá theo khu vực ghi trong địa chỉ nguồn.</p>
@@ -287,13 +287,13 @@
     <div class="relative max-w-lg">
       <h2 id="home-owner-title" class="mb-3 text-2xl md:text-3xl font-extrabold text-white">Bạn là Chủ cơ sở?</h2>
       <p class="text-sm md:text-base leading-relaxed text-slate-300">
-        Gửi yêu cầu quản lý địa điểm và cập nhật thông tin cho người ghé sau khi được duyệt.
+        Gửi yêu cầu quản lý địa điểm của bạn trên TravelGo.
       </p>
     </div>
     <a routerLink="/chu-co-so"
-      class="relative inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-4 font-bold text-[#431407] transition hover:bg-orange-400 sm:px-8">
+      class="relative inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-[#431407] transition hover:bg-orange-400 sm:px-6">
       <i class="fa-solid fa-store" aria-hidden="true"></i>
-      Khu vực Chủ cơ sở
+      Quản lý cơ sở
     </a>
   </section>
 </div>
