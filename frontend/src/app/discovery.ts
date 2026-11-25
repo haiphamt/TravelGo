@@ -50,11 +50,16 @@ export function filterPlaces(places: readonly Place[], filters: DiscoveryFilters
     if (a.price === null) return b.price === null ? 0 : 1;
     return b.price === null ? -1 : a.price - b.price;
   });
-  if (filters.sort === "default" && !filters.localOnly) {
+  if (filters.sort === "default") {
     // Keep the same order on the directory and map so their page context matches.
-    results.sort((a, b) => Number(!!b.photoSource) - Number(!!a.photoSource) || Number(!!b.image) - Number(!!a.image));
+    results.sort((a, b) => photoRank(a) - photoRank(b));
   }
   return results;
+}
+
+function photoRank(place: Place): number {
+  if (!place.image) return 2;
+  return place.photoSource ? 0 : 1;
 }
 
 function matchesFacet(place: Place, facet: PlaceFacet): boolean {

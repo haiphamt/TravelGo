@@ -43,6 +43,21 @@ test("price sorting keeps unknown prices last and preserves their source order w
   assert.equal(places[0].price, null);
 });
 
+test("default discovery order puts every cover first, including in Góc Địa Phương", () => {
+  const photoSource = { url: "https://example.org/photo", license: "CC0", licenseUrl: "https://creativecommons.org/publicdomain/zero/1.0/" };
+  const places = [
+    place({ id: "no-cover", name: "A", local: true, photoSource }),
+    place({ id: "local-cover", name: "B", local: true, image: "/images/local/cover.webp" }),
+    place({ id: "credited-cover", name: "C", image: "/images/osm/cover.jpg", photoSource }),
+    place({ id: "no-image", name: "D", local: true }),
+  ];
+  const filters = parseDiscoveryFilters(new URLSearchParams());
+
+  assert.deepEqual(filterPlaces(places, filters).map(p => p.id), ["credited-cover", "local-cover", "no-cover", "no-image"]);
+  assert.deepEqual(filterPlaces(places, { ...filters, localOnly: true }).map(p => p.id), ["local-cover", "no-cover", "no-image"]);
+  assert.deepEqual(filterPlaces(places, { ...filters, sort: "name" }).map(p => p.id), ["no-cover", "local-cover", "credited-cover", "no-image"]);
+});
+
 test("map/list query serialization preserves actual filter scope and removes default fields", () => {
   const filters = parseDiscoveryFilters(new URLSearchParams("q=%20che%20&category=food&local=1&sort=name&page=3&from=other"));
   assert.deepEqual(discoveryQuery(filters), {q: "che", category: "food", local: "1", sort: "name"});

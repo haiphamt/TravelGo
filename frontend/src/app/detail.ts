@@ -49,18 +49,12 @@ export class Detail {
   confirmDelete = signal(false);
   backRoute = computed(() => {
     const from = this.params().get("from");
-    return from && ["/kham-pha", "/goc-dia-phuong", "/yeu-thich", "/ban-do", "/ho-so-uu-tien"].includes(from)
+    if (from === "/ho-so-uu-tien") return "/kham-pha";
+    return from && ["/kham-pha", "/goc-dia-phuong", "/yeu-thich", "/ban-do"].includes(from)
       ? from : this.place()?.local ? "/goc-dia-phuong" : "/kham-pha";
   });
-  backLabel = computed(() => ({"/kham-pha": "Khám phá địa điểm", "/goc-dia-phuong": "Góc Địa Phương", "/yeu-thich": "Địa điểm yêu thích", "/ban-do": "Quay lại bản đồ", "/ho-so-uu-tien": "250 cơ sở ưu tiên"} as Record<string, string>)[this.backRoute()]);
+  backLabel = computed(() => ({"/kham-pha": "Khám phá địa điểm", "/goc-dia-phuong": "Góc Địa Phương", "/yeu-thich": "Địa điểm yêu thích", "/ban-do": "Quay lại bản đồ"} as Record<string, string>)[this.backRoute()]);
   returnParams = computed<Record<string, string | null>>(() => {
-    if (this.backRoute() === "/ho-so-uu-tien") {
-      const status = this.params().get("status");
-      return {
-        status: status && ["licensed", "reference", "missing", "all"].includes(status) ? status : "licensed",
-        q: (this.params().get("q") ?? "").slice(0, 180) || null,
-      };
-    }
     const params = discoveryQuery(parseDiscoveryFilters(this.params()));
     const page = Number(this.params().get("page"));
     if (Number.isSafeInteger(page) && (page > 1 || (page === 1 && this.backRoute() === "/ban-do"))) params["page"] = String(page);

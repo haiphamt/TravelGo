@@ -39,16 +39,11 @@
   </ul>
 
   <section class="mb-12">
-    <div class="flex items-end justify-between gap-4 mb-5">
-      <div>
-        <h1 class="text-xl md:text-2xl font-bold text-slate-800">
-          Khám phá theo nhu cầu
-        </h1>
-        <p class="text-sm text-slate-500 mt-1">Lựa chọn của bạn là gì?</p>
-      </div>
-      <a routerLink="/ho-so-uu-tien" class="inline-flex min-h-11 shrink-0 items-center gap-2 text-sm font-semibold text-orange-800 hover:underline">
-        250 cơ sở ưu tiên<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-      </a>
+    <div class="mb-5">
+      <h1 class="text-xl md:text-2xl font-bold text-slate-800">
+        Khám phá theo nhu cầu
+      </h1>
+      <p class="text-sm text-slate-500 mt-1">Lựa chọn của bạn là gì?</p>
     </div>
     <div class="flex gap-6 overflow-x-auto hide-scrollbar pb-2">
       @for (category of demandCategories(); track category.id) {
@@ -84,17 +79,23 @@
       </a>
     </div>
 
-    @if (store.catalogStatus() === 'loading') {
-      <p class="mb-4 text-sm text-slate-500" role="status">Đang tải danh mục địa điểm TP.HCM…</p>
+    @let suggestion = suggestions();
+    @if (suggestion.status === 'loading') {
+      <p class="mb-4 text-sm text-slate-500" role="status">Đang tải gợi ý địa điểm…</p>
       <div class="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6" aria-hidden="true">
         @for (item of [1, 2, 3, 4]; track item) {
           <div class="loading-card"></div>
         }
       </div>
-    } @else if (store.catalogStatus() === 'ready') {
-      @if (suggestedPlaces().length) {
+    } @else if (suggestion.status === 'error') {
+      <div class="rounded-3xl border border-dashed border-slate-300 bg-white/70 px-6 py-8 text-center" role="alert">
+        <p class="text-sm text-slate-500">{{ suggestion.message }}</p>
+        <button class="button secondary mt-3" type="button" (click)="retrySuggestions()">Thử lại gợi ý</button>
+      </div>
+    } @else {
+      @if (suggestion.places.length) {
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
-          @for (place of suggestedPlaces(); track place.id) {
+          @for (place of suggestion.places; track place.id) {
             <tg-place-card [place]="place" [context]="suggestionContext()" />
           }
         </div>
@@ -132,7 +133,7 @@
     </section>
   }
 
-  @if (localPlaces().length) {
+  @if (store.catalogStatus() === 'ready' && localPlaces().length) {
     <section class="mb-14">
       <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>

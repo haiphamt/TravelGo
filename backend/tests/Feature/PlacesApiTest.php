@@ -102,6 +102,21 @@ class PlacesApiTest extends TestCase
             ->assertJsonPath('meta.total', 1)->assertJsonPath('data.0.id', $regular->public_id);
     }
 
+    public function test_image_filter_applies_before_paginating_a_category_and_facet(): void
+    {
+        $matching = ['category' => 'coffee', 'facets' => ['wifi']];
+        Place::factory()->create($matching + ['image' => null]);
+        Place::factory()->create($matching + ['image' => '']);
+        $first = Place::factory()->create($matching + ['image' => '/images/osm/node-3.jpg']);
+        Place::factory()->create($matching + ['image' => '/images/osm/node-4.jpg']);
+        Place::factory()->create(['category' => 'coffee', 'facets' => [], 'image' => '/images/osm/node-5.jpg']);
+        Place::factory()->create(['category' => 'food', 'facets' => ['wifi'], 'image' => '/images/osm/node-6.jpg']);
+
+        $this->getJson($this->listUrl(['category' => 'coffee', 'facet' => 'wifi', 'has_image' => '1', 'per_page' => 1]))
+            ->assertOk()->assertJsonPath('meta.total', 2)->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $first->public_id);
+    }
+
     public function test_always_open_uses_confirmed_hours_and_unknown_address_is_not_an_area(): void
     {
         $open = Place::factory()->create(['hours' => '24/7', 'area' => null]);
@@ -195,6 +210,19 @@ class PlacesApiTest extends TestCase
             ->assertJsonPath('data.1.id', $second->public_id)->assertJsonPath('data.2.id', $first->public_id);
     }
 
+    public function test_default_image_order_applies_to_local_results_before_pagination(): void
+    {
+        $noCover = Place::factory()->create(['local' => true]);
+        $emptyCover = Place::factory()->create(['local' => true, 'image' => '']);
+        $firstCover = Place::factory()->create(['local' => true, 'image' => '/images/local/first.webp']);
+        $secondCover = Place::factory()->create(['local' => true, 'image' => '/images/local/second.webp']);
+
+        $this->getJson($this->listUrl(['local' => 1, 'per_page' => 2, 'page' => 1]))->assertOk()
+            ->assertJsonPath('data.0.id', $firstCover->public_id)->assertJsonPath('data.1.id', $secondCover->public_id);
+        $this->getJson($this->listUrl(['local' => 1, 'per_page' => 2, 'page' => 2]))->assertOk()
+            ->assertJsonPath('data.0.id', $noCover->public_id)->assertJsonPath('data.1.id', $emptyCover->public_id);
+    }
+
     public function test_hidden_reviews_do_not_contribute_to_public_count_or_average(): void
     {
         $place = Place::factory()->create();
@@ -230,6 +258,7 @@ class PlacesApiTest extends TestCase
             'array query' => [['q' => ['search']], 'q'],
             'oversized district' => [['district' => str_repeat('x', 81)], 'district'],
             'invalid local flag' => [['local' => 'maybe'], 'local'],
+            'invalid image flag' => [['has_image' => 'maybe'], 'has_image'],
         ];
     }
 

@@ -9,6 +9,7 @@ import { DiscoveryFilters, discoveryQuery, filterPlaces, mapQuery, parseDiscover
 import { Icon } from "./icon";
 import { PlaceCard } from "./place-card";
 import { TravelStore } from "./store";
+import { Auth } from "./auth";
 
 const QUICK_FACETS = [
   { id: "always-open", icon: "fa-clock" },
@@ -34,6 +35,7 @@ const districtOrder = new Intl.Collator("vi", { numeric: true });
 })
 export class Explore {
   readonly store = inject(TravelStore);
+  readonly auth = inject(Auth);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly searchChanges = new Subject<void>();

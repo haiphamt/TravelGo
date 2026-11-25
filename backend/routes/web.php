@@ -1,11 +1,22 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\TripRoomController;
 use App\Http\Middleware\AuthenticateRoom;
 use Illuminate\Support\Facades\Route;
 
 // The shared foundation currently authenticates using Laravel's web session guard.
 // Keep these routes in the web group: sessions and CSRF must remain enabled.
+Route::prefix('api/auth')->group(function () {
+    Route::get('session', [AuthController::class, 'session']);
+    Route::post('login', [AuthController::class, 'login'])->middleware('throttle:10,1,auth-login');
+    Route::post('register', [AuthController::class, 'register'])->middleware('throttle:5,1,auth-register');
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('google', [GoogleAuthController::class, 'redirect'])->middleware('throttle:20,1,auth-google');
+    Route::get('google/callback', [GoogleAuthController::class, 'callback']);
+});
+
 Route::prefix('api/rooms')->group(function () {
     Route::get('csrf', fn () => response()->noContent());
 

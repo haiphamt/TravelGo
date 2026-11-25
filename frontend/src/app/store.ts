@@ -1,5 +1,5 @@
-import { Injectable, computed, effect, signal } from "@angular/core";
-import { City, Place } from "./data";
+import { Injectable, computed, effect, inject, signal } from "@angular/core";
+import { City, Place, type Category, type PlaceFacet } from "./data";
 import { ApiError, PlacesApi, type ApiReview } from "./places-api";
 import {
   DemoState,
@@ -15,6 +15,7 @@ import {
 } from "./logic";
 import { activateTrip, currentTrip, hasActiveTrip, restoreTripFields } from "./trip-storage";
 import { ItineraryApi, ItineraryApiError, type SuggestionRequest } from "./itinerary-api";
+import { Auth } from "./auth";
 import { restoreRoomState } from "./room-state";
 import {
   EMPTY_WORKFLOW,
@@ -28,6 +29,7 @@ import {
 
 @Injectable({ providedIn: "root" })
 export class TravelStore {
+  private readonly auth = inject(Auth);
   private itineraryApi: ItineraryApi | undefined;
   readonly itineraryStorage = signal<"demo" | "api">("demo");
   readonly itineraryError = signal("");
@@ -93,9 +95,23 @@ export class TravelStore {
         Math.min(2_147_483_647, Math.max(0, Date.parse(boundary) - Date.now())));
       onCleanup(() => clearTimeout(timer));
     });
-    void this.loadCatalog();
     void this.load();
     void this.refreshAccount();
+  }
+  ensureCatalog() {
+    if (this.catalogStatus() === "loading") void this.loadCatalog();
+  }
+  async loadSuggestions(category: Category, facet: PlaceFacet | undefined, signal: AbortSignal) {
+    const suggestions = await this.api.suggestions(category, facet, signal);
+    if (!signal.aborted && suggestions.length) {
+      // Register these places so card actions work while the rest of the catalog loads.
+      this.sourcePlaces.update(current => {
+        const byId = new Map(current.map(place => [place.id, place]));
+        for (const place of suggestions) byId.set(place.id, place);
+        return [...byId.values()];
+      });
+    }
+    return suggestions;
   }
   async loadCatalog() {
     if (this.catalogLoading) return;
@@ -125,15 +141,10 @@ export class TravelStore {
   }
   private catalogHas(id: string) {
     if (this.detailStatus()[id] === "ready" && this.detailPlaces()[id]) return true;
-    if (this.catalogStatus() !== "ready") {
-      this.toast("Danh mục chưa tải xong. Hãy thử lại sau khi danh sách xuất hiện.");
-      return false;
-    }
-    if (!this.places().some((place) => place.id === id)) {
-      this.toast("Địa điểm không có trong danh mục hiện tại.");
-      return false;
-    }
-    return true;
+    if (this.places().some(place => place.id === id)) return true;
+    this.toast(this.catalogStatus() === "ready" ? "Địa điểm không có trong danh mục hiện tại."
+      : "Danh mục chưa tải xong. Hãy thử lại sau khi danh sách xuất hiện.");
+    return false;
   }
   private async load() {
     try {
@@ -179,18 +190,20 @@ export class TravelStore {
         "Trình duyệt chưa cho phép lưu bản dùng thử. Hãy bật lưu trữ của trang rồi tải lại.",
       );
     } finally {
-      if (this.itineraryApi) {
-        try {
-          const trips = await this.itineraryApi.list();
-          let state: DemoState = { ...this.state(), ...restoreTripFields(structuredClone(EMPTY_STATE)) };
-          if (trips.length) state = activateTrip(state, trips[0]);
-          state.savedTrips = trips.slice(1);
-          this.state.set(state);
-          this.itineraryError.set("");
-        } catch (error) { this.reportItineraryError(error); }
-      }
+      await this.refreshItineraries();
       this.ready.set(true);
     }
+  }
+  async refreshItineraries() {
+    if (!this.itineraryApi) return;
+    try {
+      const trips = await this.itineraryApi.list();
+      let state: DemoState = { ...this.state(), ...restoreTripFields(EMPTY_STATE) };
+      if (trips.length) state = activateTrip(state, trips[0]);
+      state.savedTrips = trips.slice(1);
+      this.state.set(state);
+      this.itineraryError.set("");
+    } catch (error) { this.reportItineraryError(error); }
   }
   async update(
     change: (state: DemoState) => DemoState | null,
@@ -274,7 +287,9 @@ export class TravelStore {
       this.accountStatus.set("ready");
     } catch (error) {
       if (epoch !== this.accountEpoch) return;
-      this.accountStatus.set(error instanceof ApiError && error.status === 401 ? "guest" : "error");
+      const guest = error instanceof ApiError && error.status === 401;
+      if (guest) this.auth.user.set(null);
+      this.accountStatus.set(guest ? "guest" : "error");
       this.accountError.set(this.apiMessage(error));
     } finally {
       if (epoch === this.accountEpoch) await Promise.all(reviewPlaces.map(id => this.loadOwnReview(id)));
@@ -285,6 +300,7 @@ export class TravelStore {
   }
   private accountFailure(error: unknown) {
     if (error instanceof ApiError && error.status === 401) {
+      this.auth.user.set(null);
       ++this.accountEpoch;
       this.accountGeneration.set(this.accountEpoch);
       this.favoriteIds.set([]);
@@ -296,11 +312,15 @@ export class TravelStore {
   }
   private async requireAccount() {
     if (this.accountStatus() === "guest") {
-      this.toast("Hãy đăng nhập để lưu yêu thích và đánh giá.");
+      this.auth.open();
       return false;
     }
     if (this.accountStatus() !== "ready") await this.refreshAccount();
     if (this.accountStatus() === "ready") return true;
+    if (this.accountStatus() === "guest") {
+      this.auth.open();
+      return false;
+    }
     this.toast(this.accountError() || "Hãy đăng nhập để lưu yêu thích và đánh giá.");
     return false;
   }

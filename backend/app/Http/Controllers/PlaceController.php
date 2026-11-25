@@ -18,6 +18,7 @@ class PlaceController extends Controller
             'city' => ['sometimes', 'string', Rule::in(['hcm'])],
             'category' => ['sometimes', 'string', Rule::in(['all', 'coffee', 'food', 'nature', 'culture', 'drink', 'lodging'])],
             'local' => ['sometimes', 'boolean'],
+            'has_image' => ['sometimes', 'boolean'],
             'area' => ['sometimes', 'nullable', 'string', 'max:200'],
             'district' => ['sometimes', 'nullable', 'string', 'max:80'],
             'localType' => ['sometimes', 'nullable', 'string', 'max:80'],
@@ -29,7 +30,6 @@ class PlaceController extends Controller
 
         $query = Place::query()->where('city', $filters['city'] ?? 'hcm')->withPublicReviewSummary();
         $localType = trim($filters['localType'] ?? '');
-        $localOnly = $localType !== '' || (bool) ($filters['local'] ?? false);
 
         if ($localType !== '') {
             $query->where('local', true)
@@ -40,6 +40,10 @@ class PlaceController extends Controller
 
         if (($filters['category'] ?? 'all') !== 'all') {
             $query->where('category', $filters['category']);
+        }
+
+        if ($filters['has_image'] ?? false) {
+            $query->whereNotNull('image')->where('image', '!=', '');
         }
 
         $search = trim($filters['q'] ?? '');
@@ -68,7 +72,7 @@ class PlaceController extends Controller
         match ($filters['sort'] ?? 'default') {
             'name' => $query->orderBy('name'),
             'price' => $query->orderByRaw('price IS NULL')->orderBy('price'),
-            default => $localOnly ? $query : $query->orderByRaw('photo_source IS NULL')->orderByRaw('image IS NULL'),
+            default => $query->orderByRaw("CASE WHEN image IS NULL OR image = '' THEN 2 WHEN photo_source IS NULL THEN 1 ELSE 0 END"),
         };
 
         $page = $query->orderBy('places.id')->paginate($filters['per_page'] ?? 24);

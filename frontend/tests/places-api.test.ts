@@ -129,6 +129,23 @@ test("catalog consumes API pages and rejects duplicates or changed totals instea
   await assert.rejects(makeApi(false, true).catalog(), /vừa thay đổi/);
 });
 
+test("home suggestions only request the first page for the selected category and facet", async () => {
+  const photo = catalog.places.find((item: {photoSource?: unknown}) => item.photoSource);
+  const controller = new AbortController();
+  let calls = 0;
+  const api = new PlacesApi((async (input, init) => {
+    ++calls;
+    const url = new URL(String(input), "https://travelgo.test");
+    assert.equal(url.pathname, "/api/places");
+    assert.deepEqual(Object.fromEntries(url.searchParams), { category: "all", has_image: "1", per_page: "8", facet: "wifi" });
+    assert.equal(init?.signal, controller.signal);
+    return json({ data: [photo], meta: { current_page: 1, last_page: 2, per_page: 8, total: 9 } });
+  }) as typeof fetch, () => "");
+
+  assert.equal((await api.suggestions("all", "wifi", controller.signal))[0].id, photo.id);
+  assert.equal(calls, 1);
+});
+
 test("editing submits stable retained photo URLs and empty visit date as null", async () => {
   let payload: unknown;
   const api = new PlacesApi((async (_input, init) => {

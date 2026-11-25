@@ -68,7 +68,7 @@
       <label class="sort">
         <span class="sr-only">Sắp xếp địa điểm</span>
         <select [ngModel]="filters().sort" (ngModelChange)="changeFilters({sort: $event === 'default' ? null : $event})">
-          <option value="default">Thứ tự danh mục</option>
+          <option value="default">Có ảnh trước</option>
           <option value="name">Tên A – Z</option>
           <option value="price">Giá tăng dần (nếu có)</option>
         </select>
@@ -241,7 +241,16 @@
   } @else if (mode() === 'favorites' && store.accountStatus() === 'loading') {
     <div class="catalog-status" role="status"><tg-icon name="clock" />Đang tải các địa điểm đã lưu…</div>
   } @else if (mode() === 'favorites' && store.accountStatus() !== 'ready') {
-    <div class="empty-state" role="status"><tg-icon name="heart" /><h2>{{ store.accountStatus() === 'guest' ? 'Đăng nhập để xem yêu thích' : 'Chưa tải được yêu thích' }}</h2><p>{{ store.accountError() }}</p><button type="button" class="button primary" (click)="store.refreshAccount()">Thử lại</button></div>
+    <div class="empty-state" role="status">
+      <tg-icon name="heart" />
+      <h2>{{ store.accountStatus() === 'guest' ? 'Đăng nhập để xem yêu thích' : 'Chưa tải được yêu thích' }}</h2>
+      <p>{{ store.accountError() }}</p>
+      @if (store.accountStatus() === 'guest') {
+        <button type="button" class="button primary" (click)="auth.open()">Đăng nhập</button>
+      } @else {
+        <button type="button" class="button primary" (click)="store.refreshAccount()">Thử lại</button>
+      }
+    </div>
   } @else {
     <section class="mb-10" aria-labelledby="discover-results">
       <div class="mb-3 flex flex-wrap items-center justify-between gap-2"
@@ -493,7 +502,7 @@
   <select name="sort" aria-label="Sắp xếp địa điểm" [ngModel]="filters().sort"
     (ngModelChange)="changeFilters({sort: $event === 'default' ? null : $event})"
     class="w-full min-w-0 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
-    <option value="default">{{ filters().localOnly ? 'Thứ tự danh mục' : 'Có ảnh trước' }}</option>
+    <option value="default">Có ảnh trước</option>
     <option value="name">Tên A – Z</option>
     <option value="price">Giá tăng dần (nếu có)</option>
   </select>

@@ -55,6 +55,16 @@ WHERE email IN ('travelgo-demo-1@example.invalid', 'travelgo-demo-2@example.inva
 ORDER BY id;
 ```
 
+## Đăng nhập và đăng ký
+
+Chạy `php artisan migrate` để thêm mã định danh Google vào `users`. Đăng ký và đăng nhập bằng email dùng phiên web Laravel chung với Yêu thích, Đánh giá và Phòng. Frontend gọi `GET /api/auth/session` để đọc tài khoản và nhận cookie `XSRF-TOKEN` trước khi gửi các yêu cầu `POST /api/auth/register`, `POST /api/auth/login` hoặc `POST /api/auth/logout`. Đăng ký cần `name`, `email`, `password` và `password_confirmation`. Đăng nhập cần `email` và `password`.
+
+Để bật Google, tạo OAuth client kiểu **Web application** và điền `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI` trong `.env`. Thêm chính xác URL callback vào **Authorized redirect URIs**. Khi frontend chạy với cấu hình proxy mặc định, dùng `http://127.0.0.1:4200/api/auth/google/callback` và truy cập ứng dụng qua `127.0.0.1:4200`. Khi triển khai, dùng URL HTTPS của frontend trỏ `/api` vào backend cùng origin. Chạy `php artisan config:clear` sau khi đổi biến môi trường.
+
+TravelGo đối chiếu Google bằng mã định danh `sub`. Nếu email đã thuộc một tài khoản địa phương, người dùng tiếp tục đăng nhập bằng phương thức đã đăng ký cho tài khoản đó. [Tài liệu Google OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect)
+
+Nếu PHP portable trên Windows báo cURL error 60, đặt `GOOGLE_CA_BUNDLE` bằng đường dẫn tuyệt đối tới bộ chứng chỉ CA tin cậy, chẳng hạn [bộ CA do curl phân phối](https://curl.se/docs/caextract.html). Để trống biến này khi PHP đã có cấu hình chứng chỉ HTTPS.
+
 ## PHPUnit trên MySQL
 
 Tạo `.env.testing` cục bộ từ `.env` rồi đặt `APP_ENV=testing`, `DB_CONNECTION=mysql`, `DB_DATABASE=travelgo_test`, `DB_USERNAME=travelgo_test` và mật khẩu test tương ứng. Dùng đúng host và port của MySQL cục bộ. Nếu shell đang đặt biến `DB_*` hoặc `DB_URL`, bỏ các giá trị ghi đè trước khi chạy.

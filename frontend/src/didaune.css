@@ -77,7 +77,6 @@
 }
 
 #main-content.workspace-main .page-footer { margin-inline: 0; }
-.sidebar-footer a + a { display: flex; width: fit-content; }
 
 @media (max-width: 900px) {
   #main-content.workspace-main {

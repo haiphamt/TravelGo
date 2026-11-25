@@ -1,4 +1,4 @@
-import { isPlaceFacet, type Place } from "./data.ts";
+import { isPlaceFacet, type Category, type Place, type PlaceFacet } from "./data.ts";
 import { parseLocalProfile } from "./catalog.ts";
 import { validPlaceId } from "./trip-storage.ts";
 import { validTripDate, type Review } from "./logic.ts";
@@ -129,7 +129,7 @@ export class PlacesApi {
     this.fetcher = fetcher;
     this.cookie = cookie;
   }
-  async request(path: string, method = "GET", payload?: unknown): Promise<RecordValue> {
+  async request(path: string, method = "GET", payload?: unknown, signal?: AbortSignal): Promise<RecordValue> {
     const headers: Record<string, string> = { Accept: "application/json" };
     if (method !== "GET") {
       headers["Content-Type"] = "application/json";
@@ -138,7 +138,7 @@ export class PlacesApi {
     }
     let response: Response;
     try {
-      response = await this.fetcher(path, { method, credentials: "same-origin", headers,
+      response = await this.fetcher(path, { method, credentials: "same-origin", headers, signal,
         ...(payload === undefined ? {} : { body: JSON.stringify(payload) }) });
     } catch { throw new ApiError(0, "Không kết nối được máy chủ. Hãy thử lại."); }
     const body: unknown = await response.json().catch(() => null);
@@ -157,10 +157,18 @@ export class PlacesApi {
     }
     return record(body);
   }
-  async catalogPage(page = 1) {
-    const body = await this.request(`/api/places?per_page=200&page=${page}`);
+  private async placesPage(query: URLSearchParams, signal?: AbortSignal) {
+    const body = await this.request(`/api/places?${query}`, "GET", undefined, signal);
     if (!Array.isArray(body["data"])) throw new Error("Danh mục API không hợp lệ.");
     return { data: body["data"].map(parseApiPlace), meta: meta(body["meta"]) };
+  }
+  async suggestions(category: Category, facet?: PlaceFacet, signal?: AbortSignal): Promise<Place[]> {
+    const query = new URLSearchParams({ category, has_image: "1", per_page: "8" });
+    if (facet) query.set("facet", facet);
+    return (await this.placesPage(query, signal)).data;
+  }
+  async catalogPage(page = 1) {
+    return this.placesPage(new URLSearchParams({ per_page: "200", page: String(page) }));
   }
   async catalog(): Promise<Place[]> {
     const first = await this.catalogPage();

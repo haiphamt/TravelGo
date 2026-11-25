@@ -1,0 +1,120 @@
+<dialog
+  #dialog
+  class="auth-dialog"
+  aria-labelledby="travelgo-auth-title"
+  aria-describedby="travelgo-auth-description"
+  (cancel)="onCancel($event)"
+  (close)="onClose()"
+>
+  <header class="auth-header">
+    <span class="auth-mark" aria-hidden="true">
+      <img src="images/travelgo-mark.svg" alt="" width="20" height="26" />
+    </span>
+    <div class="auth-heading">
+      <h2 id="travelgo-auth-title" tabindex="-1" autofocus>
+        {{ mode() === "login" ? "Đăng nhập TravelGo" : "Tạo tài khoản" }}
+      </h2>
+      <p id="travelgo-auth-description">
+        {{ mode() === "login" ? "Lưu địa điểm yêu thích và viết đánh giá." : "Lên kế hoạch và lưu điểm đến của bạn." }}
+      </p>
+    </div>
+    <button type="button" class="auth-close" aria-label="Đóng hộp thoại" [disabled]="pending()" (click)="requestClose()">
+      <tg-icon name="close" />
+    </button>
+  </header>
+
+  <div class="auth-content">
+    <div class="auth-modes" role="group" aria-label="Chọn thao tác tài khoản">
+      <button type="button" [attr.aria-pressed]="mode() === 'login'" [disabled]="pending()" (click)="switchMode('login')">
+        Đăng nhập
+      </button>
+      <button type="button" [attr.aria-pressed]="mode() === 'register'" [disabled]="pending()" (click)="switchMode('register')">
+        Đăng ký
+      </button>
+    </div>
+
+    <form #form (submit)="submit($event)" (input)="localError.set('')" [attr.aria-busy]="pending()">
+      <fieldset class="auth-fields" [disabled]="pending()">
+        <legend class="sr-only">{{ mode() === "login" ? "Thông tin đăng nhập" : "Thông tin đăng ký" }}</legend>
+
+        @if (mode() === "login") {
+          <div class="auth-provider">
+            <button
+              type="button"
+              class="auth-google"
+              [disabled]="!googleEnabled()"
+              [attr.aria-describedby]="googleEnabled() ? null : 'travelgo-google-unavailable'"
+              (click)="googleRequested.emit()"
+            >
+              <i class="fa-brands fa-google" aria-hidden="true"></i>
+              Tiếp tục với Google
+            </button>
+            @if (!googleEnabled()) {
+              <p id="travelgo-google-unavailable" class="auth-hint">Đăng nhập bằng Google hiện chưa khả dụng.</p>
+            }
+          </div>
+          <div class="auth-divider">hoặc dùng email</div>
+        }
+
+        @if (mode() === "register") {
+          <label>
+            Họ và tên
+            <input name="name" type="text" placeholder="Nhập họ và tên" autocomplete="name" maxlength="100" required />
+          </label>
+        }
+
+        <label>
+          Email
+          <input name="email" type="email" placeholder="ban@example.com" [attr.autocomplete]="mode() === 'login' ? 'username' : 'email'" maxlength="254" required />
+        </label>
+
+        <div class="auth-field">
+          <label for="travelgo-auth-password">Mật khẩu</label>
+          <input
+            #password
+            id="travelgo-auth-password"
+            name="password"
+            type="password"
+            placeholder="Nhập mật khẩu"
+            [attr.autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'"
+            [attr.minlength]="mode() === 'register' ? 8 : null"
+            [attr.aria-describedby]="mode() === 'register' ? 'travelgo-password-hint' : null"
+            required
+          />
+          @if (mode() === "register") {
+            <span id="travelgo-password-hint" class="auth-hint">Dùng ít nhất 8 ký tự.</span>
+          }
+        </div>
+
+        @if (mode() === "register") {
+          <label>
+            Xác nhận mật khẩu
+            <input name="password_confirmation" type="password" placeholder="Nhập lại mật khẩu" autocomplete="new-password" required />
+          </label>
+        }
+
+        @if (localError() || error(); as authError) {
+          <p class="auth-error" role="alert">{{ authError }}</p>
+        }
+
+        <button type="submit" class="auth-submit">
+          @if (mode() === "login") {
+            {{ pending() ? "Đang đăng nhập…" : "Đăng nhập" }}
+          } @else {
+            {{ pending() ? "Đang tạo tài khoản…" : "Tạo tài khoản" }}
+          }
+          <tg-icon name="arrow" />
+        </button>
+      </fieldset>
+    </form>
+    <p class="auth-switch">
+      @if (mode() === "login") {
+        Chưa có tài khoản?
+        <button type="button" [disabled]="pending()" (click)="switchMode('register')">Đăng ký ngay</button>
+      } @else {
+        Đã có tài khoản?
+        <button type="button" [disabled]="pending()" (click)="switchMode('login')">Đăng nhập ngay</button>
+      }
+    </p>
+  </div>
+</dialog>

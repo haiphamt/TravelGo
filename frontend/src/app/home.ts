@@ -1,6 +1,6 @@
-import { Component, computed, inject, signal } from "@angular/core";
+import { afterNextRender, Component, computed, effect, inject, Injector, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import type { Category, PlaceFacet } from "./data";
+import type { Category, Place, PlaceFacet } from "./data";
 import { filterPlaces, type DiscoveryFilters } from "./discovery";
 import { normalize } from "./logic";
 import { PlaceCard } from "./place-card";
@@ -16,6 +16,8 @@ interface HomeCategory {
   category: Category;
   facet?: PlaceFacet;
 }
+
+type SuggestionState = { status: "loading" } | { status: "ready"; places: Place[] } | { status: "error"; message: string };
 const homeCategories: readonly HomeCategory[] = [
   { id: "coffee", name: "Quán cà phê", heading: "Cà phê", icon: "fa-mug-hot", color: "text-orange-500", category: "coffee" },
   { id: "hotel", name: "Khách sạn", icon: "fa-bed", color: "text-sky-600", category: "all", facet: "hotel" },
@@ -43,6 +45,7 @@ const voucherPreviews = [
   styleUrl: "./home.css",
 })
 export class Home {
+  private readonly injector = inject(Injector);
   readonly store = inject(TravelStore);
   readonly recentPlaces = inject(RecentPlaces);
   readonly recentlyViewed = computed(() => {
@@ -60,7 +63,9 @@ export class Home {
   readonly quickMenuExpanded = signal(false);
   readonly activeHomeCategory = computed(() =>
     this.homeCategoryOptions.find(category => category.id === this.selectedHomeCategory())!);
-  readonly localPlaces = computed(() => this.store.places().filter(place => place.local));
+  readonly localPlaces = computed(() => filterPlaces(this.store.places(), {
+    query: "", category: "all", localOnly: true, sort: "default",
+  }));
   readonly numberFormat = new Intl.NumberFormat("vi-VN");
   readonly demandCategories = computed(() => {
     const counts = new Map<Category | PlaceFacet, number>();
@@ -80,8 +85,8 @@ export class Home {
     localOnly: false,
     sort: "default",
   }));
-  readonly suggestedPlaces = computed(() =>
-    filterPlaces(this.store.places(), this.suggestionFilters()).filter(place => place.image).slice(0, 8));
+  readonly suggestions = signal<SuggestionState>({ status: "loading" });
+  private readonly suggestionAttempt = signal(0);
   readonly suggestionContext = computed(() => this.categoryContext(this.activeHomeCategory()));
   readonly interestedPlaces = computed(() => {
     const savedIds = new Set(this.store.favoriteIds());
@@ -99,6 +104,33 @@ export class Home {
       .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "vi"))
       .slice(0, 6);
   });
+
+  constructor() {
+    effect(onCleanup => {
+      const { category, facet } = this.activeHomeCategory();
+      this.suggestionAttempt();
+      const controller = new AbortController();
+      onCleanup(() => controller.abort());
+      void this.loadSuggestions(category, facet, controller.signal);
+    });
+  }
+
+  retrySuggestions() {
+    this.suggestionAttempt.update(attempt => attempt + 1);
+  }
+
+  private async loadSuggestions(category: Category, facet: PlaceFacet | undefined, signal: AbortSignal) {
+    this.suggestions.set({ status: "loading" });
+    try {
+      const places = await this.store.loadSuggestions(category, facet, signal);
+      if (!signal.aborted) this.suggestions.set({ status: "ready", places });
+    } catch (error) {
+      if (!signal.aborted) this.suggestions.set({ status: "error",
+        message: error instanceof Error ? error.message : "Chưa tải được gợi ý địa điểm." });
+    } finally {
+      if (!signal.aborted) afterNextRender(() => this.store.ensureCatalog(), { injector: this.injector });
+    }
+  }
 
   categoryContext(category: HomeCategory) {
     return { category: category.category === "all" ? null : category.category, facet: category.facet ?? null };

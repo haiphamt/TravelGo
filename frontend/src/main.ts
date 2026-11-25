@@ -35,8 +35,10 @@ bootstrapApplication(App, {
         },
         {
           path: "ho-so-uu-tien",
-          loadComponent: () => import("./app/priority-review").then(m => m.PriorityReview),
-          title: "250 cơ sở ưu tiên · TravelGo",
+          pathMatch: "full",
+          redirectTo: ({ queryParams }) => inject(Router).createUrlTree(["/kham-pha"], {
+            queryParams: { q: queryParams["q"] },
+          }),
         },
         {
           path: "kham-pha",
@@ -132,11 +134,16 @@ bootstrapApplication(App, {
           loadComponent: () => import("./app/admin-workspace").then(m => m.AdminWorkspace),
           title: "Quản trị viên · TravelGo",
         },
-        ...[
-          { path: "tai-khoan", kind: "account", title: "Tài khoản · TravelGo" },
-          { path: "nguon-du-lieu", kind: "sources", title: "Nguồn dữ liệu · TravelGo" },
-        ].map(route => ({ path: route.path, title: route.title, data: { kind: route.kind },
-          loadComponent: () => import("./app/feature-status").then(m => m.FeatureStatus) })),
+        {
+          path: "tai-khoan",
+          title: "Tài khoản · TravelGo",
+          loadComponent: () => import("./app/account").then(m => m.Account),
+        },
+        {
+          path: "nguon-du-lieu",
+          title: "Nguồn dữ liệu · TravelGo",
+          loadComponent: () => import("./app/feature-status").then(m => m.FeatureStatus),
+        },
         { path: "**", redirectTo: "" },
       ],
       withInMemoryScrolling({ scrollPositionRestoration: "enabled" }),
